@@ -1,5 +1,6 @@
 vendor/*
-test/*
+test/templates_c/*
+!test/templates_c/.gitkeep
 !vendor/.htaccess
 .vscode/*
 config.inc.php
