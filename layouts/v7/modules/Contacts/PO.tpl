@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PURCHASE & STORAGE ORDER</title>
+    <meta charset="UTF-8">
+
+    <style>
+        {{assign var="sansRegular" value="layouts/v7/resources/fonts/OpenSans-Regular.ttf"}}
+        {{assign var="sansBold" value="layouts/v7/resources/fonts/OpenSans-Bold.ttf"}}
+
+        {if isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload eq true}
+            {assign var="rootPath" value=$ROOT_DIRECTORY|replace:'\\':'/'}
+            {assign var="sansRegular" value="file:///$rootPath/layouts/v7/resources/fonts/OpenSans-Regular.ttf"}
+            {assign var="sansBold" value="file:///$rootPath/layouts/v7/resources/fonts/OpenSans-Bold.ttf"}
+        {/if}
+
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 400;
+            src: url('{$sansRegular}') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 700;
+            src: url('{$sansBold}') format('truetype');
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Open Sans';
+            font-size: 8pt;
+            color: #666;
+        }
+
+        #downloadBtn,
+        .select2-container {
+            font-size: 12pt;
+        }
+
+        .printAreaContainer {
+            width: 210mm;
+            height: 297mm;
+            margin: auto;
+            padding: 4mm;
+        }
+
+        .pdf-wrapper {
+            position: relative;
+            background-color: #fff;
+            top: -7mm;
+        }
+
+        /* Header */
+        .header-table {
+            width: 100%;
+            /* margin-bottom: 1mm; */
+            border-collapse: collapse;
+        }
+
+        .table-heading {
+            margin-bottom: 2mm;
+        }
+
+        .header-table td {
+            vertical-align: top;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            padding-top: 1mm;
+        }
+
+        /* REAL TABLE FOR FROM / TO SECTION */
+        .company-box {
+            width: 100%;
+            height: 38mm;
+            border: 1px solid #000;
+            display: flex;
+            margin-top: 1mm;
+        }
+
+        .company-half {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .company-left {
+            border-right: 1px solid #000;
+        }
+
+        .company-top {
+            height: 24mm;
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+
+        .company-bottom {
+            height: 14mm;
+            padding: 2mm;
+            overflow: hidden;
+        }
+
+        .company-label {
+            width: 18mm;
+            padding: 2mm 0 0 2mm;
+            border-right: 1px solid #000;
+            flex-shrink: 0;
+        }
+
+        .company-content {
+            flex: 1;
+            padding: 2mm 2mm 0 2mm;
+            overflow: hidden;
+            line-height: 1.35;
+        }
+
+        /* Section 2 */
+        .section-title {
+            margin: 2mm 0 1mm 2mm;
+        }
+
+        /* Metals Table */
+        .metals-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            font-size: 8pt;
+            margin-bottom: 2mm;
+            table-layout: fixed;
+        }
+
+        .metals-table th,
+        .metals-table td {
+            border: 1px solid #000;
+            padding: 1mm;
+            text-align: center;
+        }
+
+        .metals-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        td.metal-row-label {
+            text-align: left;
+            font-weight: bold;
+            padding-left: 2mm;
+        }
+
+        /* Serials Box */
+        .serials-box {
+            padding: 1.5mm;
+        }
+
+        /* Additional Sections */
+        .additional-section {
+            margin: 1mm 0;
+            line-height: 1.4;
+        }
+
+        .additional-section strong {
+            font-weight: bold;
+        }
+
+        .indent {
+            margin-left: 5mm;
+        }
+
+        .line {
+            display: inline-block;
+        }
+
+        .long-line {
+            display: inline-block;
+        }
+
+        /* Bank Details Section */
+        .bank-details {
+            margin: 2mm 0;
+        }
+
+        .bank-row {
+            margin-bottom: 1.5mm;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            margin-top: 4mm;
+            padding: 0 2mm;
+        }
+
+        .signature-line {
+            display: inline-block;
+            margin-top: 4mm;
+        }
+
+        .main-table {
+            border: 1px solid #000;
+            margin-top: 1mm;
+            padding: 2mm;
+        }
+
+        .bolder-element {
+            font-weight: bold;
+        }
+
+        .details-container {
+            padding: 0 4mm;
+        }
+
+        .signature-section-item {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2mm;
+        }
+
+        .signature-section-left {
+            width: 40%;
+        }
+
+        .signature-section-right {
+            width: 57%;
+        }
+
+        input[type="checkbox"] {
+            width: 5mm;
+            height: 5mm;
+            vertical-align: middle;
+            margin-right: 1.5mm;
+            accent-color: #000;
+        }
+
+        .bank-codes-container {
+            display: flex;
+            gap: 10mm;
+        }
+
+        .bank-details-container {
+            display: flex;
+        }
+
+        .bank-details-item {
+            width: 50%;
+        }
+
+        .bank-item {
+            margin-bottom: 1mm;
+        }
+
+        .editable-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+        }
+
+        .custom-editable-input {
+            border: none;
+            position: relative;
+            padding-bottom: 0.5mm;
+            flex: 1;
+            min-width: 40mm;
+            border-bottom: 1px dotted #000;
+        }
+
+        .metals-table .custom-editable-input {
+            padding-top: 0.5mm;
+            padding-bottom: 0.5mm;
+            text-align: center;
+        }
+
+        .custom-editable-input:focus {
+            outline: none;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        .custom-editable-table-input {
+            min-width: auto;
+        }
+
+        .custom-checkbox {
+            font-size: 3.5mm;
+            border: 1px solid transparent;
+            padding: 2px 2px;
+            display: inline-block;
+            height: 5mm;
+            width: 5mm;
+            line-height: 3.5mm;
+        }
+
+        /* Max 2 rows */
+        .company-heading {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* max 2 rows */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-size: 7.5pt;
+
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+        {assign var=selected_bank value=""}
+
+        {if isset($SELECTED_BANK) && $SELECTED_BANK && method_exists($SELECTED_BANK, 'getId')}
+            {assign var=selected_bank value=$SELECTED_BANK->getId()}
+        {/if}
+
+        <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
+        <link type='text/css' rel='stylesheet' href='layouts/v7/lib/jquery/select2/select2.css'>
+        <link type='text/css' rel='stylesheet' href='layouts/v7/lib/select2-bootstrap/select2-bootstrap.css'>
+        <script type="text/javascript" src="layouts/v7/lib/jquery/select2/select2.min.js"></script>
+
+        <ul style="list-style-type:none;margin:0;padding:0;overflow:hidden;background-color:#333;">
+            <li style="float:right">
+                <a id="downloadBtn"
+                    style="display:block;color:white;text-align:center;padding:14px 16px;text-decoration:none;background-color:#bea364;"
+                    href="index.php?module=Contacts&view=PurchaseOrderView&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo|default:''}&PDFDownload=true&hideCustomerInfo={$smarty.request.hideCustomerInfo|default:0}">
+                    Download
+                </a>
+            </li>
+
+            {assign var=bank_account_id value=$smarty.request.bank|default:$SELECTED_BANK->getId()}
+
+            <li style="float: right;margin-top: 5px;margin-right: 5px;width: 198px;">
+                <select class="inputElement select2" name="bank_accounts" id="bank_accounts">
+                    <option value="">Select Bank Account</option>
+                    {foreach item=account from=$ALL_BANK_ACCOUNTS}
+                        <option {if $bank_account_id  eq $account->getId() } selected {/if} value="{$account->getId()}">
+                            {$account->get('bank_alias_name')}</option>
+                    {/foreach}
+                </select>
+            </li>
+        </ul>
+
+        {literal}
+            <style>
+                .select2-container .select2-choice>.select2-chosen {
+                    width: 171px;
+                }
+            </style>
+            <script>
+                $(document).ready(function() {
+                    $('.select2').select2();
+                });
+                jQuery("body").on('change', '#bank_accounts', function(e) {
+                    var element = jQuery(e.currentTarget);
+                    var bankId = Number(element.val());
+                    window.location.replace(window.location.href.split('&bank=')[0] + '&bank=' + bankId);
+                });
+            </script>
+        {/literal}
+    {/if}
+
+    <div
+        class="printAreaContainer {if isset($smarty.request.PDFDownload) && $smarty.request.PDFDownload eq true}pdf-wrapper{/if}">
+
+        <!-- HEADER -->
+        <div class="logo">
+            {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                <img src="layouts/v7/modules/Contacts/resources/gpm-new-logo.png" style="width:50mm;">
+            {else}
+                <img src="file://{$ROOT_DIRECTORY}/layouts/v7/modules/Contacts/resources/gpm-new-logo.png"
+                    style="width:40mm;">
+            {/if}
+        </div>
+
+        <table class="header-table table-heading">
+            <tr>
+                <td class="title" style="text-decoration: underline; text-align: center;">PURCHASE & STORAGE ORDER</td>
+            </tr>
+        </table>
+
+        <!-- FROM / TO SECTION -->
+        <div class="company-box">
+            <div class="company-half company-left">
+                <div class="company-top">
+                    <div class="company-label"><strong>From:</strong></div>
+                    <div class="company-content">
+                        <div>
+                            {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
+                        </div>
+
+                        <div>
+                            {if !empty($RECORD_MODEL->get('mailingstreet'))}
+                                {$RECORD_MODEL->get('mailingstreet')}<br>
+                            {/if}
+
+                            {if empty($RECORD_MODEL->get('mailingpobox'))}
+
+                                {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip'))}
+                                    {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')}<br>
+                                {elseif !empty($RECORD_MODEL->get('mailingcity'))}
+                                    {$RECORD_MODEL->get('mailingcity')}<br>
+                                {else}
+                                    {$RECORD_MODEL->get('mailingzip')}<br>
+                                {/if}
+
+                                {$RECORD_MODEL->get('mailingcountry')}
+
+                            {else}
+
+                                {if !empty($RECORD_MODEL->get('mailingcity'))}
+                                    P.O. Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
+                                {else}
+                                    P.O. Box {$RECORD_MODEL->get('mailingpobox')}<br>
+                                {/if}
+
+                                {if !empty($RECORD_MODEL->get('mailingstate'))}
+                                    {$RECORD_MODEL->get('mailingstate')}, {$RECORD_MODEL->get('mailingcountry')}
+                                {else}
+                                    {$RECORD_MODEL->get('mailingcountry')}
+                                {/if}
+
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-bottom">
+                    Customer number:
+                    <span style="font-weight: 600;">{$RECORD_MODEL->get('cf_898')}</span>
+                </div>
+            </div>
+
+            <div class="company-half company-right">
+                <div class="company-top">
+                    <div class="company-label"><strong>To:</strong></div>
+                    <div class="company-content">
+                        <div style="text-transform: capitalize; font-weight: 600;">
+                            {if isset($COMPANY)}
+                                {$COMPANY->get('company_name')}
+                            {/if}
+                        </div>
+
+                        <div style="margin-top: 1.5mm;">
+                            {if isset($COMPANY)}
+                                {$COMPANY->get('company_address')}
+                            {/if}
+                            <br />
+                            {if isset($COMPANY)}
+                                {if !empty($COMPANY->get('city'))}
+                                    {$COMPANY->get('city')},
+                                {/if}
+                                {$COMPANY->get('state')} {$COMPANY->get('code')}<br>
+                                {$COMPANY->get('country')}
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-bottom">
+                    {if isset($COMPANY)}
+                        {if !empty($COMPANY->get('email'))}
+                            <p>Contact: <span style="font-style: italic;">{$COMPANY->get('email')}</span></p>
+                        {/if}
+                        {if !empty($COMPANY->get('company_phone'))}
+                            <p>or <span style="font-style: italic;">{$COMPANY->get('company_phone')}</span></p>
+                        {/if}
+                    {/if}
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section class="main-table">
+            <div class="additional-section bolder-element">
+                <strong>1.</strong> I/We hereby instruct GPM:
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="section-title">
+                (a) <span class="bolder-element"> to purchase</span> in its name and on my/our behalf the following
+                physical precious
+                metals (Please indicate the quantity and type
+                of bars required):
+            </div>
+
+            <!-- METALS TABLE -->
+            {assign var="metals" value=[
+            'Gold 999.9',
+            'Silver 999.0',
+            'Platinum 999.5',
+            'Palladium 999.5'
+        ]}
+
+            {assign var="weights" value=[
+            ["label" => "1000oz", "grams" => "31,103g"],
+            ["label" => "400oz", "grams" => "12,441g"],
+            ["label" => "100oz", "grams" => "3,110g"],
+            ["label" => "32.15oz", "grams" => "1,000g"],
+            ["label" => "16.08oz", "grams" => "500g"],
+            ["label" => "10oz", "grams" => "311g"],
+            ["label" => "3.22oz", "grams" => "100g"],
+            ["label" => "1oz", "grams" => "31g"],
+            ["label" => "Other", "grams" => "(pls specify)"]
+        ]}
+
+            <table class="metals-table">
+                <colgroup>
+                    <col style="width:18%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                    <col style="width:9.11%;">
+                </colgroup>
+                <tr>
+                    <th>Metal</th>
+                    {foreach from=$weights item=w}
+                        <th>
+                            {$w.label}<br>
+                            {if $w.grams}{$w.grams}{/if}
+                        </th>
+                    {/foreach}
+                </tr>
+
+                {foreach from=$metals item=m key=mi}
+                    <tr>
+                        <td class="metal-row-label">{$m}</td>
+
+                        {foreach from=$weights item=w key=wi}
+                            <td>
+                                <input type="text" class="custom-editable-input custom-editable-table-input"
+                                    name="metal_{$mi}_weight_{$wi}"
+                                    style="width:100%; border:0; outline:none; background:transparent;" />
+                            </td>
+                        {/foreach}
+                    </tr>
+                {/foreach}
+            </table>
+
+            <!-- SERIALS BOX -->
+            <div class="serials-box">
+                (b) <span class="bolder-element"> for the sum of
+                    {if isset($SELECTED_BANK)}
+                        {$SELECTED_BANK->get('account_currency')}
+                    {/if}
+                </span>
+                <span>
+                    <input type="text" name="currency" class="custom-editable-input" />
+                    <span style="font-style: italic;"> (the “Purchase Amount”)</span>
+                </span>
+            </div>
+
+            <div class="serials-box">(c) <span class="bolder-element">and thereafter to</span></div>
+
+            <div style="margin-left: 5mm;">
+                <div style="margin-top: 2mm;padding-left: 2mm;">
+                    {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                        <input type="checkbox" name="country_option">
+                    {else}
+                        <span class="custom-checkbox"></span>
+                    {/if}
+                    <span>deliver & store the above metal in a facility located in:</span>
+                    <span> <input type="text" name="location" class="custom-editable-input" /> </span>
+                    <span style="font-style: italic;">(Please specify country)</span>
+                </div>
+
+                <div style="margin-top: 2mm;padding-left: 2mm;">
+                    {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                        <input type="checkbox" name="address_option">
+                    {else}
+                        <span class="custom-checkbox"></span>
+                    {/if}
+                    <span>deliver the above metal to:</span>
+                    <span> <input type="text" name="address" style="width: 75mm;" class="custom-editable-input" />
+                    </span>
+                    <span style="font-style: italic;">(Please specify full address)</span>
+                </div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="additional-section ">
+                <strong>2.</strong><span class="bolder-element"> I/We make the payment of the above Purchase Amount:
+                </span>
+                <div style="padding-left: 5mm;margin-top:1.5mm">
+                    <div>(a) <span class="bolder-element">from the following jurisdiction:</span></div>
+
+                    <div style="padding-left: 5mm; margin-top: 2mm;">Country:
+                        <span> <input type="text" name="country" style="width: 60mm;"
+                                class="custom-editable-input" /></span>
+                    </div>
+
+                    <div style="margin:1.5mm 0;">(b) <span class="bolder-element">to GPM’s bank account </span>as
+                        follows:</div>
+
+                    <div style="padding-left: 5mm;">
+                        {if $SELECTED_BANK}
+                            {assign var=iban value=$SELECTED_BANK->get('iban_no')|lower|replace:' ':''}
+                            {assign var=bank_routing_no value=$SELECTED_BANK->get('bank_routing_no')|lower|replace:' ':''}
+
+                            {if isset($SELECTED_BANK) && $SELECTED_BANK && method_exists($SELECTED_BANK, 'getId')}
+                                <input type="hidden" class="selected-bank" value="{$SELECTED_BANK->getId()}">
+                            {/if}
+
+                            <div>
+                                Please transfer the payment net of charges to our bank account:<br>
+                                Beneficiary: {$SELECTED_BANK->get('beneficiary_name')}<br>
+                                Account No: {$SELECTED_BANK->get('account_no')}
+                                {$SELECTED_BANK->get('account_currency')}<br>
+
+                                {if $iban neq 'x'}
+                                    IBAN: {$SELECTED_BANK->get('iban_no')}<br>
+                                {/if}
+
+                                Bank: {$SELECTED_BANK->get('bank_name')}<br>
+                                Bank Address: {$SELECTED_BANK->get('bank_address')}<br>
+                                Swift Code: {$SELECTED_BANK->get('swift_code')}<br>
+
+                                {if $bank_routing_no neq 'x'}
+                                    Bank Code: {$SELECTED_BANK->get('bank_code')}<br>
+                                    Branch Code: {$SELECTED_BANK->get('branch_code')}<br>
+                                {else}
+                                    Routing No: {$SELECTED_BANK->get('bank_routing_no')}<br>
+                                    <br>
+                                {/if}
+
+
+                                {if !empty($SELECTED_BANK->get('intermediary_bank'))}
+                                    Intermediary Bank: {$SELECTED_BANK->get('intermediary_bank')}<br>
+                                    Swift Code: {$SELECTED_BANK->get('intermediary_swift_code')}<br>
+                                {/if}
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3 -->
+            <div class="additional-section">
+                <span class="bolder-element">
+                    3. I/We hereby elect the following Pricing Option (Please select one option):
+                </span>
+
+                <div style="margin-left: 5mm; margin-top:2mm;">
+
+                    <div>
+                        <label>
+                            {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                                <input type="checkbox" name="pricing_option_one" class="checkbox-radio pricing-option-one"
+                                    {if $PRICING_OPTION neq '2'}checked{/if}>
+                            {else}
+                                <span class="custom-checkbox"></span>
+                            {/if}
+                            Pricing Option 1 (as defined in Clause 3.3.1)
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 2mm;">
+                        <label>
+                            {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                                <input type="checkbox" name="pricing_option_two" class="checkbox-radio pricing-option-two"
+                                    {if $PRICING_OPTION eq '2'}checked{/if}>
+                            {else}
+                                <span class="custom-checkbox"></span>
+                            {/if}
+                            Pricing Option 2 (as defined in Clause 3.3.2)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="additional-section company-heading" style="margin-top:4mm;">
+                    <span class="bolder-element">4. This Purchase & Storage Order and any agreement with GPM resulting
+                        therefrom shall be subject to and governed by
+                        the terms and conditions of the Customer Metal Agreement executed and entered into by and
+                        between
+                        me/us and
+                        {if isset($COMPANY)}
+                            <span style="text-transform: capitalize;">{$COMPANY->get('company_name')}</span>
+                        {/if}</span>
+                </div>
+
+                <!-- SIGNATURE SECTION -->
+                <div class="signature-section">
+                    <div class="signature-section-item">
+                        <div class="signature-section-left">
+                            <div class="editable-input-wrapper">
+                                <span> Place:</span> <input type="text" name="place_input"
+                                    class="custom-editable-input" />
+                            </div>
+                            <div class="editable-input-wrapper" style="margin-top: 2.5mm;">
+                                <span>Date:</span> <input type="text" name="date_input" class="custom-editable-input" />
+                            </div>
+                        </div>
+
+                        <div class="signature-section-right">
+                            <div class="editable-input-wrapper">
+                                <span> Signed by: </span>
+                                <input type="text" name="signed_by" class="custom-editable-input" />
+                            </div>
+                            <div class="editable-input-wrapper" style="margin-top: 2.5mm;">
+                                <span> On behalf of:</span>
+                                <input type="text" name="on_behalf_of" class="custom-editable-input" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:1mm;">
+                        <div class="signature-line">.......................</div><br>
+                        Signature
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+
+    <script>
+        document.querySelectorAll('.checkbox-radio').forEach(function(element) {
+            element.addEventListener('change', function() {
+                if (this.classList.contains('pricing-option-one')) {
+                    document.querySelector('.pricing-option-two').checked = false;
+                } else if (this.classList.contains('pricing-option-two')) {
+                    document.querySelector('.pricing-option-one').checked = false;
+                }
+            });
+        });
+
+        document.getElementById('downloadBtn').addEventListener('click', function(e) {
+
+            const firstChecked = document.querySelector('input.pricing-option-one:checked');
+            const secondChecked = document.querySelector('input.pricing-option-two:checked');
+
+            const countryOption = document.querySelector('input[name="country_option"]');
+            const addressOption = document.querySelector('input[name="address_option"]');
+
+            let checked = null;
+            if (firstChecked) {
+                checked = "1";
+            } else if (secondChecked) {
+                checked = "2";
+            }
+
+            const url = new URL(this.href);
+            if (checked) url.searchParams.set('pricing_option', checked);
+            else url.searchParams.delete('pricing_option');
+
+            if (countryOption && countryOption.checked) {
+                url.searchParams.set('countryOption', '1');
+            } else {
+                url.searchParams.delete('countryOption');
+            }
+
+            if (addressOption && addressOption.checked) {
+                url.searchParams.set('addressOption', '1');
+            } else {
+                url.searchParams.delete('addressOption');
+            }
+
+            document.querySelectorAll('.custom-editable-input').forEach(input => {
+                if (!input.name) return;
+
+                const val = (input.value ?? '').trim();
+                if (val) url.searchParams.set(input.name, val);
+                else url.searchParams.delete(input.name);
+            });
+
+            this.href = url.toString();
+        });
+    </script>
+</body>
+
+</html>

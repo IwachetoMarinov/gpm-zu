@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ACTIVITY SUMMARY</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 400;
+            src: url('layouts/v7/resources/fonts/OpenSans-Regular.woff') format('woff');
+        }
+
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 700;
+            src: url('layouts/v7/resources/fonts/OpenSans-Bold.woff') format('woff');
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .printAreaContainer {
+            width: 210mm;
+            height: 297mm;
+            padding: 15mm;
+            box-sizing: border-box;
+            margin: 0 auto;
+            position: relative;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        .printAreaContainer:last-child {
+            page-break-after: auto;
+            break-after: auto;
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+        }
+
+        .printAreaContainer * {
+            box-sizing: border-box;
+            font-family: 'Open Sans';
+            color: #666;
+        }
+
+        .printAreaContainer .full-width {
+            width: 100%;
+        }
+
+        .printAreaContainer .header-logo {
+            width: 50%;
+            height: 11mm;
+        }
+
+        .printAreaContainer .header-text {
+            width: 50%;
+            height: 11mm;
+            color: #fff;
+            background: #008ECA;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        .printAreaContainer .header-text span {
+            font-weight: normal;
+            color: #fff;
+        }
+
+        .printAreaContainer .print-tbl {
+            border-collapse: collapse;
+            width: 100%;
+            border: none;
+        }
+
+        .print-txt-center {
+            text-align: center;
+        }
+
+        .print-txt-left {
+            text-align: left;
+        }
+
+        .print-txt-right {
+            text-align: right;
+        }
+
+        .print-footer {
+            height: 20mm;
+            background: #008ECA;
+        }
+
+        .big-label {
+            color: #cd3330;
+            font-weight: bold;
+            font-size: 20pt;
+        }
+
+        table.content-table th {
+            border: 1px dotted #666666;
+            font-size: 10pt;
+            background: #ECECEC;
+            font-weight: bold;
+            padding: 4px
+        }
+
+        table.content-table tr.footer th {
+            color: #008ECA;
+        }
+
+        table.content-table td {
+            border: none;
+            font-size: 10pt;
+            font-weight: normal;
+            padding: 4px
+        }
+
+        table.graph-table td {
+            width: 50%;
+            font-size: 10pt;
+            padding: 4px 0px;
+        }
+
+        .graph-bar {
+            height: 1.5mm
+        }
+
+        .graph-bar.blue {
+            background: #008ECA;
+        }
+
+        .graph-bar.green {
+            background: #BACE10;
+        }
+
+        .doted-bg {
+            background: url(graph_bg.jpg);
+            background-size: 338px auto;
+        }
+
+        table.activity-tbl {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #333;
+        }
+
+        table.activity-tbl td,
+        table.activity-tbl th {
+            border: 1px solid #000;
+            padding: 1mm 2mm;
+            text-align: left;
+        }
+
+        table.activity-tbl th {
+            background: #bca263;
+        }
+
+        .logo-bg-bottom {
+            background: url(layouts/v7/modules/Contacts/resources/Gold_Logo_Higher_Res.png) no-repeat;
+            background-size: 244mm;
+            height: 70mm;
+            width: 82mm;
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            opacity: .4;
+        }
+    </style>
+</head>
+
+<body style="margin: 0px;">
+    {if $ENABLE_DOWNLOAD_BUTTON}
+        <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
+
+        <ul style="list-style-type: none; margin: 0; padding: 0;overflow: hidden;background-color: #333;">
+            <li id="downloadBtn" style="float:right"><a style="display: block;
+                color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
+                    href="index.php?module=Contacts&view=ActivtySummeryPrintPreview&record={$RECORD_MODEL->getId()}&ActivtySummeryDate={$smarty.request.ActivtySummeryDate}&PDFDownload=true">Download</a>
+            </li>
+
+            <li id='printConf' style="float:right">
+                <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
+                display: block;
+                text-align: center;
+                padding: 14px;cursor: pointer;">Settings</span>
+            </li>
+        </ul>
+        <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/ASPrintConf.js"></script>
+        {include file='ASPrintConf.tpl'|vtemplate_path:'Contacts'}
+        </ul>
+    {/if}
+
+    {* New balance, totalMovement and endingBalance *}
+    {assign var="balance" value=$OPENING_BALANCE|default:0}
+    {assign var="totalMovement" value=0}
+    {assign var="endingBalance" value=$OPENING_BALANCE|default:0}
+
+    {assign var="start" value=0}
+    {assign var="end" value=1}
+    {assign var="currency" value=$smarty.request.ActivtySummeryCurrency|default:''}
+
+    {for $page=1 to $PAGES}
+        {if $page eq 1}
+            {assign var="end" value=25}
+        {else}
+            {assign var="end" value=($end+30)}
+        {/if}
+        <div class="printAreaContainer">
+            <div class="full-width">
+                <table class="print-tbl">
+                    <tr>
+                        <td style="height: 144px;vertical-align: top;">
+                            <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
+                                style="height: 103px; margin-top: -14px;float:right;width: 154px;">
+                            <div style="font-size:11pt;">
+                                {$RECORD_MODEL->get('cf_898')}<br>
+                                {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
+                                {if !empty($RECORD_MODEL->get('cf_968'))} {$RECORD_MODEL->get('cf_968')}<br>{/if}
+                                {if !empty($RECORD_MODEL->get('mailingstreet'))}
+                                {$RECORD_MODEL->get('mailingstreet')}<br>{/if}
+                                {if !empty($RECORD_MODEL->get('cf_970'))} {$RECORD_MODEL->get('cf_970')}<br>{/if}
+                                {if empty($RECORD_MODEL->get('mailingpobox'))}
+                                    {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip')) }
+                                        {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')}<br>
+                                    {else if !empty($RECORD_MODEL->get('mailingcity'))}
+                                        {$RECORD_MODEL->get('mailingcity')}<br>
+                                    {else}
+                                        {$RECORD_MODEL->get('mailingzip')}<br>
+                                    {/if}
+                                    {$RECORD_MODEL->get('mailingcountry')}
+                                {else}
+                                    {if !empty($RECORD_MODEL->get('mailingcity'))}
+                                        P.O. Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
+                                    {else}
+                                        P.O. Box {$RECORD_MODEL->get('mailingpobox')}<br>
+                                    {/if}
+                                    {if !empty($RECORD_MODEL->get('mailingstate'))}
+                                        {$RECORD_MODEL->get('mailingstate')}, {$RECORD_MODEL->get('mailingcountry')}
+                                    {else}
+                                        {$RECORD_MODEL->get('mailingcountry')}
+                                    {/if}
+                                {/if}
+                            </div>
+                        </td>
+                    </tr>
+                    {if $page eq 1}
+                        <tr>
+                            <td style="height: 10mm; text-decoration: underline;text-align: center">
+                                <strong>ACTIVITY SUMMARY</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="height: 10mm;text-align: left;font-size:11pt">
+                                {if $EARLIEST_DATE && $LATEST_DATE}
+                                    For the period of: {$EARLIEST_DATE} to {$LATEST_DATE}
+                                {else}
+                                    Date: {date("Y-m-d")}
+                                {/if}
+                            </td>
+                        </tr>
+                    {/if}
+                    <tr>
+                        <td style="text-align: right;font-size: 9pt">
+                            All amounts in {if isset($currency) and $currency neq ''}{$currency} {else} currency {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 10pt; height: {if $page eq 1}203{else}224{/if}mm; vertical-align: top;">
+                            <table class="activity-tbl">
+                                <tr>
+                                    <th>DOCUMENT NO.</th>
+                                    <th style="width: 22mm;text-align: center;min-width: 28mm;">DATE</th>
+                                    <th>DESCRIPTION</th>
+                                    <th style="width: 22mm;">DEPOSIT/(WITHDRAWAL)</th>
+                                    <th style="text-align: center">BALANCE</th>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="4"><strong>OPENING BALANCE</strong></td>
+                                    <td style="text-align:right"><strong>
+                                            {if $OPENING_BALANCE > 0 }{number_format($OPENING_BALANCE, 2, '.', ',')}{else}({number_format(abs($OPENING_BALANCE), 2, '.', ',')}){/if}</strong>
+                                    </td>
+                                </tr>
+
+                                {for $loopStart=$start to $end}
+
+                                    {if $loopStart >= count($TRANSACTIONS)}{break}{/if}
+
+                                    {assign var="start" value=($loopStart+1)}
+                                    {assign var="TRANSACTION" value=$TRANSACTIONS[$loopStart]}
+
+                                    {* Asign description *}
+                                    {assign var="description" value=$TRANSACTION['description']|default:''}
+
+                                    {* Asign depositWithdrawal *}
+                                    {assign var="depositWithdrawal" value=$TRANSACTION['amount_in_account_currency']|default:0}
+
+                                    {* Asign totalMovement *}
+                                    {assign var="totalMovement" value=$totalMovement + $depositWithdrawal}
+
+                                    {* Asign balance *}
+                                    {assign var="balance" value=$balance + $depositWithdrawal}
+
+                                    {* Asign Ending balance *}
+                                    {assign var="endingBalance" value=$endingBalance + $depositWithdrawal}
+
+
+                                    {* Normalize values to avoid null warnings *}
+                                    {assign var="docNo" value=$TRANSACTION['voucher_no']|default:''}
+
+                                    {assign var="transDate" value=$TRANSACTION['document_date']|default:''}
+
+                                    {* Skip FX / MP transactions *}
+                                    {if in_array($docNo|substr:0:3, array('FXP','FXR','MPD','MRD'))}
+                                        {continue}
+                                    {/if}
+
+                                    <tr>
+                                        {* Doc number column *}
+                                        <td>{$docNo}</td>
+
+                                        {* Transaction date column *}
+                                        <td>
+                                            {if $transDate ne ''}
+                                                {$transDate|date_format:"%d-%b-%y"}
+                                            {/if}
+                                        </td>
+
+                                        {* Description column *}
+                                        <td>{$description}</td>
+
+                                        {* Deposit/Withdrawal column *}
+                                        <td style="text-align:right">
+                                            {if $depositWithdrawal > 0}
+                                                {number_format($depositWithdrawal, 2, '.', ',')}
+                                            {else}
+                                                ({number_format($depositWithdrawal*-1, 2, '.', ',')})
+                                            {/if}
+                                        </td>
+
+                                        {* Balance column *}
+                                        <td style="text-align:right">
+                                            {if $balance gte 0}
+                                                {number_format($balance,2, '.', ',')}
+                                            {else}
+                                                ({number_format($balance*-1,2, '.', ',')})
+                                            {/if}
+                                        </td>
+                                    </tr>
+                                {/for}
+
+
+                                {if $PAGES eq $page}
+                                    <tr>
+                                        <td><strong>Total Movement</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="text-align:right">
+                                            <strong>{if $totalMovement gte 0 }{number_format($totalMovement,2, '.', ',')}{else}({number_format($totalMovement*-1,2, '.', ',')}){/if}</strong>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Ending Balance</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th style="text-align:right">{if $endingBalance gte 0 }
+                                                {if $endingBalance eq 0}
+                                                    --
+                                                {else}
+                                                    {number_format($endingBalance,2, '.', ',')}
+                                                {/if}
+                                            {else}
+                                                ({number_format($endingBalance*-1,2, '.', ',')})
+                                            {/if}
+                                        </th>
+                                    </tr>
+                                {/if}
+                            </table>
+                            {if $PAGES eq $page}
+                                <div style="text-align: right;font-size: 9pt;margin-top: 2mm">
+                                    {if $endingBalance > 0 } This amount is owed to you by GPM.{/if}
+                                    {if $endingBalance < 0 } This amount is owed from you to GPM.{/if}
+                                </div>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style='font-size: 8pt;font-weight: bold;'>
+                            <div>
+                                <div style="float:left">
+                                    {if isset($COMPANY)}
+                                        {$COMPANY->get('company_name')} {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg.
+                                        No. {$COMPANY->get('company_reg_no')}){/if}<br>
+                                        {$COMPANY->get('company_address')}<br>
+                                        T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax:
+                                        {$COMPANY->get('company_fax')} {/if} | {$COMPANY->get('email')}<br>
+                                    {/if}
+                                </div>
+                                <div style="float:right;"><br><br>Page {$page} | {$PAGES}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    {/for}
+</body>
+
+</html>

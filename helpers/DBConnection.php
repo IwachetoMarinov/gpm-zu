@@ -1,0 +1,67 @@
+<?php
+
+namespace helpers;
+
+use Dotenv\Dotenv;
+
+class DBConnection
+{
+    private static $connection = null;
+
+    public static function getConnection()
+    {
+        if (self::$connection !== null) return self::$connection;
+
+        try {
+            $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+            $dotenv->safeLoad();
+
+            $db_username = $_ENV['DB_USERNAME'] ?? getenv('DB_USERNAME') ?: '';
+            $db_password = $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?: '';
+            $server_name = $_ENV['DB_SERVER_NAME'] ?? getenv('DB_SERVER_NAME') ?: '';
+            $db_name = $_ENV['DB_EXTERNAL_NAME'] ?? getenv('DB_EXTERNAL_NAME') ?: '';
+
+            // echo "<pre>";
+            // echo "Credentials:\n";
+            // var_dump($db_username, $db_password, $server_name, $db_name);
+            // echo "</pre>";
+
+            if (!$db_username || !$db_password || !$server_name || !$db_name) return null;
+
+            $serverName = $server_name;
+            $connectionOptions = [
+                "Database" => $db_name,
+                "Uid" => $db_username,
+                "PWD" => $db_password,
+                "TrustServerCertificate" => true,
+                "Encrypt" => false,
+                "LoginTimeout" => 5
+            ];
+
+            $conn = sqlsrv_connect($serverName, $connectionOptions);
+
+            if ($conn === false) return null;
+
+            self::$connection = $conn;
+            return self::$connection;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public static function getDatabasePrefix()
+    {
+        if (self::$connection === null) return null;
+
+        try {
+            $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+            $dotenv->safeLoad();
+
+            $db_prefix = $_ENV['DB_PREFIX'] ?? getenv('DB_PREFIX') ?: '';
+
+            return $db_prefix ?: null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+}
