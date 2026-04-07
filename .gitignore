@@ -7,7 +7,7 @@ config.inc.php
 .htaccess
 logs/
 storage/
-cache/
+# cache/
 # === Debug logs ===
 wkhtml_debug.log
 pdf_debug.log
