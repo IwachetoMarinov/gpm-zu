@@ -52,10 +52,6 @@ class MetalsAPI
         $sql = "SELECT * FROM $this->database_prefix.[DW_Items]";
         // $sql = "SELECT * FROM $this->database_prefix.[DW_MetalType]";
 
-        echo "<pre>";
-        echo "SQL: $sql\n";
-        echo "</pre>";
-
         $stmt = sqlsrv_query($this->connection, $sql, $params);
 
         if ($stmt === false) die(print_r(sqlsrv_errors(), true));
