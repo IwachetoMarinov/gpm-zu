@@ -234,6 +234,13 @@
                                                 {$TX.voucher_no}
                                             </a>
 
+                                        {else if in_array($TX.voucher_type, ['STI'])}
+                                            <a class="transaction-link"
+                                                href="index.php?module=Contacts&view=STIPrintPreview&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$TX.table_name}"
+                                                target="_blank">
+                                                {$TX.voucher_no}
+                                            </a>
+
                                         {else if in_array($TX.voucher_type, ['SAL', 'SWD'])}
                                             {assign var="docNo" value="{$TX.voucher_no}"}
                                             {assign var="tableName" value="{$TX.table_name}"}
@@ -290,20 +297,6 @@
                                             <a class="transaction-link" href="#">{$TX.voucher_no}</a>
                                         {/if}
                                     </td>
-
-
-                                    {* <td style="width: 140px;">
-                                        {if $TX.voucher_type == 'SAL'}
-                                            <a href="index.php?module=Contacts&view=CollectionAcknowledgement&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$TX.table_name}"
-                                                target="_blank">
-                                                <button type="button" class="btn btn-default module-buttons">
-                                                    {$TX.voucher_no}
-                                                </button>
-                                            </a>
-                                        {else}
-                                            {$TX.voucher_no}
-                                        {/if}
-                                    </td> *}
 
                                     <!-- INV button (only for Sales/Purchase Invoice) -->
                                     <td>
