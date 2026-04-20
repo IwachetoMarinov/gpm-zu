@@ -48,6 +48,8 @@ class Contacts_ActivitySummaryService
         // 9. Get opening balance for this client and period
         $opening_balance = $activity->getActivitySummaryOpeningBalance($client_id, $selected_currency, $start_date);
 
+        echo "Opening balance for client_id $client_id, currency $selected_currency, as of $start_date: $opening_balance\n";
+
         // 10. Calculate pagination (for PDF layout)
         $pages = $this->makeDataPage($activities);
 
@@ -60,6 +62,7 @@ class Contacts_ActivitySummaryService
         // 12. Register custom template resolver for vTiger templates
         $templateRoot = dirname(__DIR__, 3) . '/layouts/v7/modules';
         $smarty->registerPlugin('modifier', 'vtemplate_path', function ($templateName, $moduleName) use ($templateRoot) {
+            echo "Resolving template path for: $templateName, module: $moduleName\n";
             return $templateRoot . '/' . $moduleName . '/' . $templateName;
         });
 
