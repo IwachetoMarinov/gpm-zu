@@ -39,7 +39,7 @@ class ActivitySummary
 
         $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
-        if(!is_array($summary) || count($summary) === 0) return [];
+        if (!is_array($summary) || count($summary) === 0) return [];
 
         $results  = [];
         foreach ($summary as $item) {
@@ -285,7 +285,6 @@ class ActivitySummary
         if (!preg_match('/^[A-Za-z0-9_]+$/', $table_name)) return [];
 
         try {
-            // $transaction = $this->getSingleTransaction($doc_no, "DW_TxHx");
             $transaction = $this->getSingleTransaction($doc_no, $table_name);
 
             $params = [];
@@ -321,7 +320,6 @@ class ActivitySummary
                 $params[] = $doc_no;
             }
 
-            // $sql = "SELECT * FROM [HFS_SQLEXPRESS].[GPM].[dbo].[DW_DocSO]";
             $sql = "SELECT * FROM $this->database_prefix.[$table_name] $where";
 
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
