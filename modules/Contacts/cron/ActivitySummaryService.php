@@ -167,15 +167,15 @@ class Contacts_ActivitySummaryService
         return $row ? (int)$row['contactid'] : 0;
     }
 
-    protected function makeDataPage($transaction)
+    protected function makeDataPage($transactions)
     {
         // Calculates number of pages for PDF layout
         // First page holds 22 records, next pages 30 each
 
         $totalPage = 1;
 
-        if (count($transaction) > 22) {
-            $totaldataAfterFirstPage = count($transaction) - 22;
+        if (count($transactions) > 22) {
+            $totaldataAfterFirstPage = count($transactions) - 22;
             $totalPage = ceil($totaldataAfterFirstPage / 30) + 1;
         }
 
@@ -183,6 +183,43 @@ class Contacts_ActivitySummaryService
     }
 
     protected function generatePdf($html, $client_id, $date_range)
+    {
+        global $root_directory;
+
+        $startDate = date('d-M-Y', strtotime($date_range[0]));
+        $endDate = date('d-M-Y', strtotime($date_range[1]));
+
+        $fileName = sprintf(
+            '%s-AS-%s-%s',
+            $client_id,
+            $startDate,
+            $endDate
+        );
+
+        $htmlPath = $root_directory . $fileName . '.html';
+        $pdfPath = $root_directory . $fileName . '.pdf';
+
+        file_put_contents($htmlPath, $html);
+
+        $command = '/usr/bin/wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking '
+            . escapeshellarg($htmlPath) . ' '
+            . escapeshellarg($pdfPath) . ' 2>&1';
+
+        $output = [];
+        $returnVar = 0;
+        exec($command, $output, $returnVar);
+
+        echo "wkhtmltopdf return code: " . $returnVar . "\n";
+        echo implode("\n", $output) . "\n";
+
+        if (file_exists($htmlPath)) {
+            unlink($htmlPath);
+        }
+
+        return $pdfPath;
+    }
+
+    protected function generatePdf2($html, $client_id, $date_range)
     {
         global $root_directory;
 
