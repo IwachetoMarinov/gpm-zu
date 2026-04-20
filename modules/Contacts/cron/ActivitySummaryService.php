@@ -28,7 +28,7 @@ class Contacts_ActivitySummaryService
         echo "Processing client_id: $client_id, transactions found: " . count($activities) . "\n";
 
         // TEMP: prove insert works first
-        $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, 'TEST');
+        // $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, 'TEST');
 
         // 4. Get Contact record model (used for template rendering)
         $contactRecord = $this->getContactRecordByClientId($client_id);
@@ -79,16 +79,20 @@ class Contacts_ActivitySummaryService
         $html = $smarty->fetch('file:' . $templatePath);
 
         // 15. Generate PDF from HTML using wkhtmltopdf
+        echo "Before generatePdf\n";
         $pdfPath = $this->generatePdf($html, $client_id, $date_range);
-
+        echo "After generatePdf: " . $pdfPath . "\n";
         // 16. If PDF generation failed → stop here
-        if (!file_exists($pdfPath)) return;
+        if (!file_exists($pdfPath)) {
+            echo "PDF not created\n";
+            return;
+        }
 
         // 17. Store generated PDF in vTiger Documents module
         $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
 
         // 18. Insert into monthly transactions table for record-keeping
-        // $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
+        $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
 
         // 19. Cleanup generated PDF file
         if (file_exists($pdfPath)) unlink($pdfPath);
