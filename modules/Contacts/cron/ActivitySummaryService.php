@@ -27,6 +27,9 @@ class Contacts_ActivitySummaryService
 
         echo "Processing client_id: $client_id, transactions found: " . count($activities) . "\n";
 
+        // TEMP: prove insert works first
+        $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, 'TEST');
+
         // 4. Get Contact record model (used for template rendering)
         $contactRecord = $this->getContactRecordByClientId($client_id);
 
@@ -85,7 +88,7 @@ class Contacts_ActivitySummaryService
         $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
 
         // 18. Insert into monthly transactions table for record-keeping
-        $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
+        // $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
 
         // 19. Cleanup generated PDF file
         if (file_exists($pdfPath)) unlink($pdfPath);
