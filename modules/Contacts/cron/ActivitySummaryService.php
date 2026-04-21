@@ -314,8 +314,9 @@ class Contacts_ActivitySummaryService
         $storedFileName = $attachmentId . '_' . $fileName;
         $destination = $uploadDir . $storedFileName;
 
-        if (!copy($pdfPath, $destination)) {
-            throw new Exception('Failed to copy PDF to storage directory: ' . $destination);
+        // MOVE instead of copy
+        if (!rename($pdfPath, $destination)) {
+            throw new Exception('Failed to move PDF to storage: ' . $destination);
         }
 
         // Insert attachment entity
