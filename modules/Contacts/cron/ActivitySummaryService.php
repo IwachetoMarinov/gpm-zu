@@ -303,16 +303,20 @@ class Contacts_ActivitySummaryService
         $attachmentId = $adb->getUniqueID('vtiger_crmentity');
 
         // Determine upload directory (vTiger storage)
-        $uploadDir = decideFilePath();
+        // $uploadDir = decideFilePath();
+        $basePath = realpath(dirname(__DIR__, 3));
+        $uploadDir = $basePath . '/' . decideFilePath();
 
-        if (!is_dir($uploadDir))  mkdir($uploadDir, 0775, true);
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0775, true);
+        }
 
-        // Physical file name in storage
         $storedFileName = $attachmentId . '_' . $fileName;
         $destination = $uploadDir . $storedFileName;
 
-        // Copy PDF into storage
-        if (!copy($pdfPath, $destination)) throw new Exception('Failed to copy PDF to storage directory: ' . $destination);
+        if (!copy($pdfPath, $destination)) {
+            throw new Exception('Failed to copy PDF to storage directory: ' . $destination);
+        }
 
         // Insert attachment entity
         $adb->pquery(
