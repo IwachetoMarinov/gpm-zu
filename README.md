@@ -279,4 +279,7 @@ sudo chmod -R 775 /var/www/html/crm_kl/cache/import`
 45. Allow these special characters to can add in picklists `/&-` 
     search for this function `registerAddItemSaveEvent` and check this `var specialChars = ....`
 
-46. Add Monthly transaction cron job to download all transaction in past month run `crontab -e` and press 1 and this one `0 4 1 * * /usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php` 
+46. Add Monthly transaction cron job:
+   `sudo crontab -u www-data -e`
+   add: press 1 and add: 
+   `0 4 1 * * /usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php`
