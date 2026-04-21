@@ -189,20 +189,15 @@ class Contacts_ActivitySummaryService
         $startDate = date('d-M-Y', strtotime($date_range[0]));
         $endDate = date('d-M-Y', strtotime($date_range[1]));
 
-        $fileName = sprintf(
-            '%s-AS-%s-%s',
-            $client_id,
-            $startDate,
-            $endDate
-        );
+        $fileName = sprintf('%s-AS-%s-%s', $client_id, $startDate, $endDate);
 
         $htmlPath = $root_directory . $fileName . '.html';
         $pdfPath = $root_directory . $fileName . '.pdf';
 
         file_put_contents($htmlPath, $html);
 
-        $command = '/usr/bin/wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking '
-            . escapeshellarg($htmlPath) . ' '
+        $command = '/usr/bin/wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 '
+            . escapeshellarg('file://' . $htmlPath) . ' '
             . escapeshellarg($pdfPath) . ' 2>&1';
 
         $output = [];
