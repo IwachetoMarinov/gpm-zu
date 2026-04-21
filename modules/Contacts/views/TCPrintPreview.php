@@ -129,81 +129,56 @@ class Contacts_TCPrintPreview_View extends Vtiger_Index_View
         $recordModel = $this->record->getRecord();
         $clientID = $recordModel->get('cf_898');
 
-        // Base filename (safe)
-        $baseName = $clientID . '-' . str_replace('/', '-', $request->get('docNo')) . "-TC";
+        $baseName = $clientID . '-' . str_replace('/', '-', $request->get('docNo')) . '-TC';
+        $storagePath = rtrim($root_directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'pdf-temp' . DIRECTORY_SEPARATOR;
 
-        // Storage directory
-        $storagePath = rtrim($root_directory, '/') . '/storage/pdf-temp/';
-
-        // Ensure directory exists
-        if (!is_dir($storagePath)) {
-            if (!mkdir($storagePath, 0755, true) && !is_dir($storagePath)) {
-                throw new \RuntimeException("Cannot create storage directory: $storagePath");
-            }
+        if (!is_dir($storagePath) && !mkdir($storagePath, 0755, true) && !is_dir($storagePath)) {
+            die('Cannot create temp directory: ' . $storagePath);
         }
 
-        // Unique filenames (avoid collisions)
         $unique = uniqid($baseName . '-', true);
         $htmlFile = $storagePath . $unique . '.html';
         $pdfFile = $storagePath . $unique . '.pdf';
 
-        try {
-            // Write HTML safely
-            if (file_put_contents($htmlFile, $html) === false) {
-                throw new \RuntimeException("Cannot write HTML file: $htmlFile");
-            }
+        file_put_contents($htmlFile, $html);
 
-            // Build command safely
-            $cmd = sprintf(
-                'wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking %s %s 2>&1',
-                escapeshellarg($htmlFile),
-                escapeshellarg($pdfFile)
-            );
+        // Adjust this if your server has wkhtmltopdf elsewhere.
+        $wkhtmltopdf = '/usr/bin/wkhtmltopdf';
 
-            exec($cmd, $output, $exitCode);
-
-            // Check if PDF was generated
-            if ($exitCode !== 0 || !file_exists($pdfFile)) {
-                throw new \RuntimeException(
-                    "PDF generation failed:\nCommand: $cmd\nOutput:\n" . implode("\n", $output)
-                );
-            }
-
-            // Remove HTML file immediately
+        if (!file_exists($wkhtmltopdf)) {
             @unlink($htmlFile);
-
-            // Send headers
-            header("Content-Type: application/pdf");
-            header("Cache-Control: private");
-            header("Content-Disposition: attachment; filename=\"{$baseName}.pdf\"");
-            header("Content-Description: Generated PDF");
-            header("Content-Length: " . filesize($pdfFile));
-
-            // Clean output buffer
-            if (ob_get_length()) {
-                ob_clean();
-            }
-
-            flush();
-
-            // Output file
-            readfile($pdfFile);
-        } catch (\Throwable $e) {
-            // Cleanup on error
-            @unlink($htmlFile);
-            @unlink($pdfFile);
-
-            // Log error (you can replace this with your logger)
-            error_log($e->getMessage());
-
-            // Optional: show message
-            http_response_code(500);
-            echo "PDF generation failed.";
+            die('wkhtmltopdf not found at: ' . $wkhtmltopdf);
         }
 
-        // Final cleanup
-        @unlink($pdfFile);
+        $command = escapeshellarg($wkhtmltopdf)
+            . ' --enable-local-file-access'
+            . ' -L 0 -R 0 -B 0 -T 0'
+            . ' --disable-smart-shrinking '
+            . escapeshellarg($htmlFile) . ' '
+            . escapeshellarg($pdfFile)
+            . ' 2>&1';
 
+        exec($command, $output, $returnCode);
+
+        @unlink($htmlFile);
+
+        if ($returnCode !== 0 || !file_exists($pdfFile)) {
+            @unlink($pdfFile);
+            die("PDF generation failed.\nCommand: " . $command . "\nOutput:\n" . implode("\n", $output));
+        }
+
+        header('Content-Type: application/pdf');
+        header('Cache-Control: private');
+        header('Content-Disposition: attachment; filename="' . $baseName . '.pdf"');
+        header('Content-Length: ' . filesize($pdfFile));
+
+        if (ob_get_length()) {
+            ob_clean();
+        }
+        flush();
+
+        readfile($pdfFile);
+        @unlink($pdfFile);
         exit;
     }
 }
