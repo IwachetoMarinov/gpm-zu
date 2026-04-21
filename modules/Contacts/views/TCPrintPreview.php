@@ -134,7 +134,7 @@ class Contacts_TCPrintPreview_View extends Vtiger_Index_View
         fclose($handle);
 
         // exec("wkhtmltopdf --enable-local-file-access  -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking " . $root_directory . "$fileName.html " . $root_directory . "$fileName.pdf");
-        exec("wkhtmltopdf --enable-local-file-access --page-size A4 -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking " . $root_directory . "$fileName.html " . $root_directory . "$fileName.pdf");
+        exec("wkhtmltopdf --enable-local-file-access --page-width 210mm --page-height 297mm -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking " . $root_directory . "$fileName.html " . $root_directory . "$fileName.pdf");
         unlink($root_directory . $fileName . '.html');
 
         header("Content-type: application/pdf");
