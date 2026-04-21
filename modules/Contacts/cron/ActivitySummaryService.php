@@ -23,6 +23,11 @@ class Contacts_ActivitySummaryService
         // 3. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date);
 
+        if (!is_array($activities) || count($activities) === 0) return;
+
+        // TEMP: prove insert works first
+        // $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, 'TEST');
+
         // 4. Get Contact record model (used for template rendering)
         $contactRecord = $this->getContactRecordByClientId($client_id);
 
@@ -79,6 +84,33 @@ class Contacts_ActivitySummaryService
 
         // 17. Store generated PDF in vTiger Documents module
         $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+
+        // 18. Insert into monthly transactions table for record-keeping
+        $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
+
+        // 19. Cleanup generated PDF file
+        if (file_exists($pdfPath)) unlink($pdfPath);
+    }
+
+    protected function insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $currency)
+    {
+        $db = PearDatabase::getInstance();
+        $result = $db->pquery(
+            "SELECT 1 FROM vtiger_monthly_transactions 
+     WHERE client_id = ? AND start_date = ? AND end_date = ?",
+            [$client_id, $start_date, $end_date]
+        );
+
+        $description = sprintf('Monthly activity summary for client_id %s, period: %s to %s, currency: %s', $client_id, $start_date, $end_date, $currency);
+
+
+        if ($db->num_rows($result) == 0) {
+            $db->pquery(
+                "INSERT INTO vtiger_monthly_transactions (client_id, start_date, end_date, description, created_at)
+     VALUES (?, ?, ?, ?, NOW())",
+                [$client_id, $start_date, $end_date, $description]
+            );
+        }
     }
 
     protected function getContactRecordByClientId($client_id)
@@ -126,15 +158,15 @@ class Contacts_ActivitySummaryService
         return $row ? (int)$row['contactid'] : 0;
     }
 
-    protected function makeDataPage($transaction)
+    protected function makeDataPage($transactions)
     {
         // Calculates number of pages for PDF layout
         // First page holds 22 records, next pages 30 each
 
         $totalPage = 1;
 
-        if (count($transaction) > 22) {
-            $totaldataAfterFirstPage = count($transaction) - 22;
+        if (count($transactions) > 22) {
+            $totaldataAfterFirstPage = count($transactions) - 22;
             $totalPage = ceil($totaldataAfterFirstPage / 30) + 1;
         }
 
@@ -143,37 +175,32 @@ class Contacts_ActivitySummaryService
 
     protected function generatePdf($html, $client_id, $date_range)
     {
-        global $root_directory;
-
-        // Format date range for filename
         $startDate = date('d-M-Y', strtotime($date_range[0]));
         $endDate = date('d-M-Y', strtotime($date_range[1]));
 
-        // Example: M2001-AS-01-Mar-2026-31-Mar-2026
-        $fileName = sprintf(
-            '%s-AS-%s-%s',
-            $client_id,
-            $startDate,
-            $endDate
-        );
+        $fileName = sprintf('%s-AS-%s-%s', $client_id, $startDate, $endDate);
 
         // Temporary HTML + final PDF paths
-        $htmlPath = $root_directory . $fileName . '.html';
-        $pdfPath = $root_directory . $fileName . '.pdf';
+        $basePath = realpath(dirname(__DIR__, 3));
+        $tmpDir = sys_get_temp_dir();
 
-        // Save HTML to file
+        if (!$basePath) throw new Exception('Cannot resolve base path');
+
+        $htmlPath = $tmpDir . '/' . $fileName . '.html';
+        $pdfPath  = $tmpDir . '/' . $fileName . '.pdf';
+
         file_put_contents($htmlPath, $html);
 
-        // Execute wkhtmltopdf command
-        $command = 'wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking '
-            . escapeshellarg($htmlPath) . ' '
+        $inputFile = 'file://' . $htmlPath;
+
+        $command = '/usr/bin/wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 '
+            . escapeshellarg($inputFile) . ' '
             . escapeshellarg($pdfPath) . ' 2>&1';
 
         $output = [];
         $returnVar = 0;
         exec($command, $output, $returnVar);
 
-        // Cleanup temp HTML file
         if (file_exists($htmlPath)) unlink($htmlPath);
 
         return $pdfPath;
@@ -226,25 +253,27 @@ class Contacts_ActivitySummaryService
         $notes->save('Documents');
 
         $documentId = $notes->id;
-        if (!$documentId) {
-            throw new Exception('Failed to create Documents record.');
-        }
+        if (!$documentId) throw new Exception('Failed to create Documents record.');
 
         // Create attachment entry
         $attachmentId = $adb->getUniqueID('vtiger_crmentity');
 
         // Determine upload directory (vTiger storage)
-        $uploadDir = decideFilePath();
+        // $uploadDir = decideFilePath();
+        $basePath = realpath(dirname(__DIR__, 3));
+        $uploadDir = $basePath . '/' . decideFilePath();
+
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0775, true);
         }
 
-        // Physical file name in storage
         $storedFileName = $attachmentId . '_' . $fileName;
         $destination = $uploadDir . $storedFileName;
 
-        // Copy PDF into storage
-        if (!copy($pdfPath, $destination)) throw new Exception('Failed to copy PDF to storage directory: ' . $destination);
+        // MOVE instead of copy
+        if (!rename($pdfPath, $destination)) {
+            throw new Exception('Failed to move PDF to storage: ' . $destination);
+        }
 
         // Insert attachment entity
         $adb->pquery(
