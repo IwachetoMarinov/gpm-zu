@@ -83,11 +83,7 @@ class Contacts_ActivitySummaryService
         if (!file_exists($pdfPath)) return;
 
         // 17. Store generated PDF in vTiger Documents module
-        try {
-            $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
-        } catch (Exception $e) {
-            echo "ERROR in storePdfInDocuments: " . $e->getMessage() . "\n";
-        }
+        $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
 
         // 18. Insert into monthly transactions table for record-keeping
         $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
@@ -205,46 +201,6 @@ class Contacts_ActivitySummaryService
         $returnVar = 0;
         exec($command, $output, $returnVar);
 
-        if (file_exists($htmlPath)) unlink($htmlPath);
-
-        return $pdfPath;
-    }
-
-    protected function generatePdf2($html, $client_id, $date_range)
-    {
-        // Format date range for filename
-        $startDate = date('d-M-Y', strtotime($date_range[0]));
-        $endDate = date('d-M-Y', strtotime($date_range[1]));
-
-        // Example: M2001-AS-01-Mar-2026-31-Mar-2026
-        $fileName = sprintf(
-            '%s-AS-%s-%s',
-            $client_id,
-            $startDate,
-            $endDate
-        );
-
-        // Temporary HTML + final PDF paths
-        $basePath = realpath(dirname(__DIR__, 3));
-
-        if (!$basePath) throw new Exception('Cannot resolve base path');
-
-        $htmlPath = $basePath . '/' . $fileName . '.html';
-        $pdfPath  = $basePath . '/' . $fileName . '.pdf';
-
-        // Save HTML to file
-        file_put_contents($htmlPath, $html);
-
-        // Execute wkhtmltopdf command
-        $command = 'wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking '
-            . escapeshellarg($htmlPath) . ' '
-            . escapeshellarg($pdfPath) . ' 2>&1';
-
-        $output = [];
-        $returnVar = 0;
-        exec($command, $output, $returnVar);
-
-        // Cleanup temp HTML file
         if (file_exists($htmlPath)) unlink($htmlPath);
 
         return $pdfPath;
