@@ -125,60 +125,25 @@ class Contacts_TCPrintPreview_View extends Vtiger_Index_View
     function downloadPDF($html, Vtiger_Request $request)
     {
         global $root_directory;
-
         $recordModel = $this->record->getRecord();
         $clientID = $recordModel->get('cf_898');
 
-        $baseName = $clientID . '-' . str_replace('/', '-', $request->get('docNo')) . '-TC';
-        $storagePath = rtrim($root_directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'pdf-temp' . DIRECTORY_SEPARATOR;
+        $fileName = $clientID . '-' . str_replace('/', '-', $request->get('docNo')) . "-TC";
+        $handle = fopen($root_directory . $fileName . '.html', 'a') or die('Cannot open file:  ');
+        fwrite($handle, $html);
+        fclose($handle);
 
-        if (!is_dir($storagePath) && !mkdir($storagePath, 0755, true) && !is_dir($storagePath)) {
-            die('Cannot create temp directory: ' . $storagePath);
-        }
+        exec("wkhtmltopdf --enable-local-file-access  -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking " . $root_directory . "$fileName.html " . $root_directory . "$fileName.pdf");
+        unlink($root_directory . $fileName . '.html');
 
-        $unique = uniqid($baseName . '-', true);
-        $htmlFile = $storagePath . $unique . '.html';
-        $pdfFile = $storagePath . $unique . '.pdf';
-
-        file_put_contents($htmlFile, $html);
-
-        // Adjust this if your server has wkhtmltopdf elsewhere.
-        $wkhtmltopdf = '/usr/bin/wkhtmltopdf';
-
-        if (!file_exists($wkhtmltopdf)) {
-            @unlink($htmlFile);
-            die('wkhtmltopdf not found at: ' . $wkhtmltopdf);
-        }
-
-        $command = escapeshellarg($wkhtmltopdf)
-            . ' --enable-local-file-access'
-            . ' -L 0 -R 0 -B 0 -T 0'
-            . ' --disable-smart-shrinking '
-            . escapeshellarg($htmlFile) . ' '
-            . escapeshellarg($pdfFile)
-            . ' 2>&1';
-
-        exec($command, $output, $returnCode);
-
-        @unlink($htmlFile);
-
-        if ($returnCode !== 0 || !file_exists($pdfFile)) {
-            @unlink($pdfFile);
-            die("PDF generation failed.\nCommand: " . $command . "\nOutput:\n" . implode("\n", $output));
-        }
-
-        header('Content-Type: application/pdf');
-        header('Cache-Control: private');
-        header('Content-Disposition: attachment; filename="' . $baseName . '.pdf"');
-        header('Content-Length: ' . filesize($pdfFile));
-
-        if (ob_get_length()) {
-            ob_clean();
-        }
+        header("Content-type: application/pdf");
+        header("Cache-Control: private");
+        header("Content-Disposition: attachment; filename=$fileName.pdf");
+        header("Content-Description: Global Precious Metals CRM Data");
+        ob_clean();
         flush();
-
-        readfile($pdfFile);
-        @unlink($pdfFile);
+        readfile($root_directory . "$fileName.pdf");
+        unlink($root_directory . "$fileName.pdf");
         exit;
     }
 }
