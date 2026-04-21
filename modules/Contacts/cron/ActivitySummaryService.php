@@ -235,8 +235,17 @@ class Contacts_ActivitySummaryService
         );
 
         // Temporary HTML + final PDF paths
-        $htmlPath = $root_directory . $fileName . '.html';
-        $pdfPath = $root_directory . $fileName . '.pdf';
+        $basePath = realpath(dirname(__DIR__, 3));
+
+        if (!$basePath) throw new Exception('Cannot resolve base path');
+
+        // $htmlPath = $root_directory . $fileName . '.html';
+        // $pdfPath = $root_directory . $fileName . '.pdf';
+        $htmlPath = $basePath . '/' . $fileName . '.html';
+        $pdfPath  = $basePath . '/' . $fileName . '.pdf';
+
+        echo "basePath: $basePath\n";
+        echo "htmlPath: $htmlPath\n";
 
         // Save HTML to file
         file_put_contents($htmlPath, $html);
