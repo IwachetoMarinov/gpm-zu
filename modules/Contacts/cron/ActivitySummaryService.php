@@ -25,8 +25,6 @@ class Contacts_ActivitySummaryService
 
         if (!is_array($activities) || count($activities) === 0) return;
 
-        echo "Processing client_id: $client_id, transactions found: " . count($activities) . "\n";
-
         // TEMP: prove insert works first
         // $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, 'TEST');
 
@@ -48,8 +46,6 @@ class Contacts_ActivitySummaryService
         // 9. Get opening balance for this client and period
         $opening_balance = $activity->getActivitySummaryOpeningBalance($client_id, $selected_currency, $start_date);
 
-        echo "Opening balance for client_id $client_id, currency $selected_currency, as of $start_date: $opening_balance\n";
-
         // 10. Calculate pagination (for PDF layout)
         $pages = $this->makeDataPage($activities);
 
@@ -62,7 +58,6 @@ class Contacts_ActivitySummaryService
         // 12. Register custom template resolver for vTiger templates
         $templateRoot = dirname(__DIR__, 3) . '/layouts/v7/modules';
         $smarty->registerPlugin('modifier', 'vtemplate_path', function ($templateName, $moduleName) use ($templateRoot) {
-            echo "Resolving template path for: $templateName, module: $moduleName\n";
             return $templateRoot . '/' . $moduleName . '/' . $templateName;
         });
 
@@ -82,17 +77,17 @@ class Contacts_ActivitySummaryService
         $html = $smarty->fetch('file:' . $templatePath);
 
         // 15. Generate PDF from HTML using wkhtmltopdf
-        echo "Before generatePdf\n";
         $pdfPath = $this->generatePdf($html, $client_id, $date_range);
-        echo "After generatePdf: " . $pdfPath . "\n";
+
         // 16. If PDF generation failed → stop here
-        if (!file_exists($pdfPath)) {
-            echo "PDF not created\n";
-            return;
-        }
+        if (!file_exists($pdfPath)) return;
 
         // 17. Store generated PDF in vTiger Documents module
-        $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+        try {
+            $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+        } catch (Exception $e) {
+            echo "ERROR in storePdfInDocuments: " . $e->getMessage() . "\n";
+        }
 
         // 18. Insert into monthly transactions table for record-keeping
         $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
@@ -184,8 +179,6 @@ class Contacts_ActivitySummaryService
 
     protected function generatePdf($html, $client_id, $date_range)
     {
-        global $root_directory;
-
         $startDate = date('d-M-Y', strtotime($date_range[0]));
         $endDate = date('d-M-Y', strtotime($date_range[1]));
 
@@ -197,15 +190,8 @@ class Contacts_ActivitySummaryService
 
         if (!$basePath) throw new Exception('Cannot resolve base path');
 
-        // $htmlPath = $root_directory . $fileName . '.html';
-        // $pdfPath = $root_directory . $fileName . '.pdf';
-        // $htmlPath = $basePath . '/' . $fileName . '.html';
-        // $pdfPath  = $basePath . '/' . $fileName . '.pdf';
         $htmlPath = $tmpDir . '/' . $fileName . '.html';
         $pdfPath  = $tmpDir . '/' . $fileName . '.pdf';
-
-        echo "basePath: $basePath\n";
-        echo "htmlPath: $htmlPath\n";
 
         file_put_contents($htmlPath, $html);
 
@@ -215,26 +201,17 @@ class Contacts_ActivitySummaryService
             . escapeshellarg($inputFile) . ' '
             . escapeshellarg($pdfPath) . ' 2>&1';
 
-        echo "COMMAND: $command\n";
-
         $output = [];
         $returnVar = 0;
         exec($command, $output, $returnVar);
 
-        echo "wkhtmltopdf return code: " . $returnVar . "\n";
-        echo implode("\n", $output) . "\n";
-
-        if (file_exists($htmlPath)) {
-            unlink($htmlPath);
-        }
+        if (file_exists($htmlPath)) unlink($htmlPath);
 
         return $pdfPath;
     }
 
     protected function generatePdf2($html, $client_id, $date_range)
     {
-        global $root_directory;
-
         // Format date range for filename
         $startDate = date('d-M-Y', strtotime($date_range[0]));
         $endDate = date('d-M-Y', strtotime($date_range[1]));
@@ -252,13 +229,8 @@ class Contacts_ActivitySummaryService
 
         if (!$basePath) throw new Exception('Cannot resolve base path');
 
-        // $htmlPath = $root_directory . $fileName . '.html';
-        // $pdfPath = $root_directory . $fileName . '.pdf';
         $htmlPath = $basePath . '/' . $fileName . '.html';
         $pdfPath  = $basePath . '/' . $fileName . '.pdf';
-
-        echo "basePath: $basePath\n";
-        echo "htmlPath: $htmlPath\n";
 
         // Save HTML to file
         file_put_contents($htmlPath, $html);
@@ -325,18 +297,15 @@ class Contacts_ActivitySummaryService
         $notes->save('Documents');
 
         $documentId = $notes->id;
-        if (!$documentId) {
-            throw new Exception('Failed to create Documents record.');
-        }
+        if (!$documentId) throw new Exception('Failed to create Documents record.');
 
         // Create attachment entry
         $attachmentId = $adb->getUniqueID('vtiger_crmentity');
 
         // Determine upload directory (vTiger storage)
         $uploadDir = decideFilePath();
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0775, true);
-        }
+
+        if (!is_dir($uploadDir))  mkdir($uploadDir, 0775, true);
 
         // Physical file name in storage
         $storedFileName = $attachmentId . '_' . $fileName;
