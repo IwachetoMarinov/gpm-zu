@@ -196,9 +196,13 @@ class Contacts_ActivitySummaryService
 
         file_put_contents($htmlPath, $html);
 
+        $inputFile = 'file://' . $htmlPath;
+
         $command = '/usr/bin/wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 '
-            . escapeshellarg('file://' . $htmlPath) . ' '
+            . escapeshellarg($inputFile) . ' '
             . escapeshellarg($pdfPath) . ' 2>&1';
+
+        echo "COMMAND: $command\n";
 
         $output = [];
         $returnVar = 0;
