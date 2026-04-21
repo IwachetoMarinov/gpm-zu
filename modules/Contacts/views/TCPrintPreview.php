@@ -125,26 +125,85 @@ class Contacts_TCPrintPreview_View extends Vtiger_Index_View
     function downloadPDF($html, Vtiger_Request $request)
     {
         global $root_directory;
+
         $recordModel = $this->record->getRecord();
         $clientID = $recordModel->get('cf_898');
 
-        $fileName = $clientID . '-' . str_replace('/', '-', $request->get('docNo')) . "-TC";
-        $handle = fopen($root_directory . $fileName . '.html', 'a') or die('Cannot open file:  ');
-        fwrite($handle, $html);
-        fclose($handle);
+        // Base filename (safe)
+        $baseName = $clientID . '-' . str_replace('/', '-', $request->get('docNo')) . "-TC";
 
-        // exec("wkhtmltopdf --enable-local-file-access  -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking " . $root_directory . "$fileName.html " . $root_directory . "$fileName.pdf");
-        exec("wkhtmltopdf --enable-local-file-access --page-width 210mm --page-height 297mm -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking " . $root_directory . "$fileName.html " . $root_directory . "$fileName.pdf");
-        unlink($root_directory . $fileName . '.html');
+        // Storage directory
+        $storagePath = rtrim($root_directory, '/') . '/storage/pdf-temp/';
 
-        header("Content-type: application/pdf");
-        header("Cache-Control: private");
-        header("Content-Disposition: attachment; filename=$fileName.pdf");
-        header("Content-Description: Global Precious Metals CRM Data");
-        ob_clean();
-        flush();
-        readfile($root_directory . "$fileName.pdf");
-        unlink($root_directory . "$fileName.pdf");
+        // Ensure directory exists
+        if (!is_dir($storagePath)) {
+            if (!mkdir($storagePath, 0755, true) && !is_dir($storagePath)) {
+                throw new \RuntimeException("Cannot create storage directory: $storagePath");
+            }
+        }
+
+        // Unique filenames (avoid collisions)
+        $unique = uniqid($baseName . '-', true);
+        $htmlFile = $storagePath . $unique . '.html';
+        $pdfFile = $storagePath . $unique . '.pdf';
+
+        try {
+            // Write HTML safely
+            if (file_put_contents($htmlFile, $html) === false) {
+                throw new \RuntimeException("Cannot write HTML file: $htmlFile");
+            }
+
+            // Build command safely
+            $cmd = sprintf(
+                'wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking %s %s 2>&1',
+                escapeshellarg($htmlFile),
+                escapeshellarg($pdfFile)
+            );
+
+            exec($cmd, $output, $exitCode);
+
+            // Check if PDF was generated
+            if ($exitCode !== 0 || !file_exists($pdfFile)) {
+                throw new \RuntimeException(
+                    "PDF generation failed:\nCommand: $cmd\nOutput:\n" . implode("\n", $output)
+                );
+            }
+
+            // Remove HTML file immediately
+            @unlink($htmlFile);
+
+            // Send headers
+            header("Content-Type: application/pdf");
+            header("Cache-Control: private");
+            header("Content-Disposition: attachment; filename=\"{$baseName}.pdf\"");
+            header("Content-Description: Generated PDF");
+            header("Content-Length: " . filesize($pdfFile));
+
+            // Clean output buffer
+            if (ob_get_length()) {
+                ob_clean();
+            }
+
+            flush();
+
+            // Output file
+            readfile($pdfFile);
+        } catch (\Throwable $e) {
+            // Cleanup on error
+            @unlink($htmlFile);
+            @unlink($pdfFile);
+
+            // Log error (you can replace this with your logger)
+            error_log($e->getMessage());
+
+            // Optional: show message
+            http_response_code(500);
+            echo "PDF generation failed.";
+        }
+
+        // Final cleanup
+        @unlink($pdfFile);
+
         exit;
     }
 }
