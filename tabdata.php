@@ -1,6 +1,4 @@
 <?php
-
-
 //This file contains the commonly used variables 
 
 $tab_info_array=array('Dashboard'=>1,'Potentials'=>2,'Home'=>3,'Contacts'=>4,'Accounts'=>6,'Leads'=>7,'Documents'=>8,'Calendar'=>9,'Emails'=>10,'HelpDesk'=>13,'Products'=>14,'Faq'=>15,'Events'=>16,'Vendors'=>18,'PriceBooks'=>19,'Quotes'=>20,'PurchaseOrder'=>21,'SalesOrder'=>22,'Invoice'=>23,'Rss'=>24,'Reports'=>25,'Campaigns'=>26,'Portal'=>27,'Webmails'=>28,'Users'=>29,'Import'=>30,'MailManager'=>31,'Mobile'=>32,'ModTracker'=>33,'PBXManager'=>34,'ServiceContracts'=>35,'Services'=>36,'WSAPP'=>37,'Assets'=>38,'CustomerPortal'=>39,'EmailTemplates'=>40,'Google'=>41,'ModComments'=>42,'ProjectMilestone'=>43,'ProjectTask'=>44,'Project'=>45,'RecycleBin'=>46,'SMSNotifier'=>47,'Webforms'=>48,'ExtensionStore'=>49,'GPMIntent'=>51,'MASForex'=>52,'GPMCryptoTrx'=>53,'GPMCompany'=>54,'BankAccount'=>55,'MetalPrice'=>56,'HoldingCertificate'=>57,);
