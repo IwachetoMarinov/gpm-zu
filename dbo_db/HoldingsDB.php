@@ -68,36 +68,42 @@ class HoldingsDB
 
         if (!$this->connection) return [];
 
-        $params[] = $customer_id;
+        try {
+            $params[] = $customer_id;
 
-        $sql = "SELECT * FROM $this->database_prefix.[DW_DocHoldings] WHERE [Party_Code] = ?";
+            $sql = "SELECT * FROM $this->database_prefix.[DW_DocHoldings] WHERE [Party_Code] = ?";
 
-        $stmt = sqlsrv_query($this->connection, $sql, $params);
+            $stmt = sqlsrv_query($this->connection, $sql, $params);
 
-        if ($stmt === false) die(print_r(sqlsrv_errors(), true));
+            if ($stmt === false) {
+                throw new \Exception('Holdings data is temporarily unavailable.');
+            }
 
-        $summary = [];
+            $summary = [];
 
-        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            $summary[] = $row;
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $summary[] = $row;
+            }
+
+            sqlsrv_free_stmt($stmt);
+
+            $results = [];
+            foreach ($summary as $item) {
+                $results[] = [
+                    'spot_date' => $item['Spot_Date'] instanceof \DateTime ? $item['Spot_Date']->format('Y-m-d') : $item['Spot_Date'],
+                    'spot_price' => $item['Spot_Price'] ?? '',
+                    'location' => $item['WH_Code'] ?? '',
+                    'description' => $item['Item_Desc'] ?? '',
+                    'quantity' => $item['Qty'] ?? 0,
+                    'serial_no' => $item['Ser_No_List'] ? $this->sanitizeSerials($item['Ser_No_List']) :  '',
+                    'fine_oz' => $item['FineOz'] ?? 0,
+                    'total' => $item['Total'] ?? 0,
+                ];
+            }
+            return $results;
+        } catch (\Throwable $e) {
+            return [];
         }
-
-        sqlsrv_free_stmt($stmt);
-        
-        $results = [];
-        foreach ($summary as $item) {
-            $results[] = [
-                'spot_date' => $item['Spot_Date'] instanceof \DateTime ? $item['Spot_Date']->format('Y-m-d') : $item['Spot_Date'],
-                'spot_price' => $item['Spot_Price'] ?? '',
-                'location' => $item['WH_Code'] ?? '',
-                'description' => $item['Item_Desc'] ?? '',
-                'quantity' => $item['Qty'] ?? 0,
-                'serial_no' => $item['Ser_No_List'] ? $this->sanitizeSerials($item['Ser_No_List']) :  '',
-                'fine_oz' => $item['FineOz'] ?? 0,
-                'total' => $item['Total'] ?? 0,
-            ];
-        }
-        return $results;
     }
 
     public function getWalletBalances($customer_id = null)
@@ -106,22 +112,28 @@ class HoldingsDB
 
         if (!$this->connection) return [];
 
-        $params[] = $customer_id;
+        try {
+            $params[] = $customer_id;
 
-        $sql = "SELECT * FROM $this->database_prefix.[DW_DocWalletBal] WHERE [Party_Code] = ?";
+            $sql = "SELECT * FROM $this->database_prefix.[DW_DocWalletBal] WHERE [Party_Code] = ?";
 
-        $stmt = sqlsrv_query($this->connection, $sql, $params);
+            $stmt = sqlsrv_query($this->connection, $sql, $params);
 
-        if ($stmt === false) die(print_r(sqlsrv_errors(), true));
+            if ($stmt === false) {
+                throw new \Exception('Wallet balances data is temporarily unavailable.');
+            }
 
-        $summary = [];
-        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            $summary[] = $row;
+            $summary = [];
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $summary[] = $row;
+            }
+
+            sqlsrv_free_stmt($stmt);
+
+            return $summary;
+        } catch (\Throwable $e) {
+            return [];
         }
-
-        sqlsrv_free_stmt($stmt);
-
-        return $summary;
     }
 
     public function getHoldingsData($customer_id = null)
@@ -142,7 +154,10 @@ class HoldingsDB
 
         $stmt = sqlsrv_query($this->connection, $sql, $params);
 
-        if ($stmt === false) die(print_r(sqlsrv_errors(), true));
+        if ($stmt === false) {
+            // die(print_r(sqlsrv_errors(), true));
+            throw new \Exception('Holdings data is temporarily unavailable.');
+        }
 
         $summary = [];
         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {

@@ -192,6 +192,23 @@ class ActivitySummary
         }
     }
 
+    public function checkConnection(): ?string
+    {
+        // if ($this->connection) return null;
+
+        $errors = \sqlsrv_errors();
+
+        if (!$errors || !is_array($errors))
+            return 'Database connection is temporarily unavailable.';
+
+        $messages = [];
+        foreach ($errors as $error) {
+            $messages[] = $error['message'] ?? 'Unknown SQL Server error.';
+        }
+
+        return implode(' | ', $messages);
+    }
+
     public function getActivityYears($customer_id = null)
     {
         if (!$customer_id || !$this->connection) return [];
@@ -352,10 +369,7 @@ class ActivitySummary
 
     protected function getSingleTransaction($doc_no, $table_name = "DW_TxHx")
     {
-        if (!$doc_no || !$this->connection) {
-            die(print_r(sqlsrv_errors(), true));
-            return [];
-        }
+        if (!$doc_no || !$this->connection) return [];
 
         $params = [];
         $where  = '';
