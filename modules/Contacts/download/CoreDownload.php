@@ -140,9 +140,9 @@ final class CoreDownload
         $production = getenv('PRODUCTION') === 'live';
 
         if ($production) {
-            $node = '/usr/local/bin/node18';   // or /usr/bin/node if that is Node 18 on LIVE
+            // $node = '/usr/local/bin/node18';   // or /usr/bin/node if that is Node 18 on LIVE
 
-            putenv('PUPPETEER_EXECUTABLE_PATH=/var/www/html/crm_kl/.puppeteer-cache/chrome/linux-146.0.7680.66/chrome-linux64/chrome');
+            putenv('PUPPETEER_EXECUTABLE_PATH=/var/www/html/crm_zu/.puppeteer-cache/chrome/linux-146.0.7680.66/chrome-linux64/chrome');
             putenv('XDG_CONFIG_HOME=/tmp/puppeteer-live/config');
             putenv('XDG_CACHE_HOME=/tmp/puppeteer-live/cache');
             putenv('XDG_RUNTIME_DIR=/tmp/puppeteer-live/runtime');

@@ -100,7 +100,7 @@ class GPMIntent extends Vtiger_CRMEntity
 		}
 	}
 
-	function save_module($module)
+	function save_module_backup($module)
 	{
 		if ($this->mode == 'edit') {
 			if ($_REQUEST['action'] != 'SaveAjax' && $_REQUEST['action'] != 'MassSave') {
@@ -123,6 +123,27 @@ class GPMIntent extends Vtiger_CRMEntity
 		}
 	}
 
+	function save_module($module)
+	{
+		if ($this->mode == 'edit') {
+			if ($_REQUEST['action'] != 'SaveAjax' && $_REQUEST['action'] != 'MassSave') {
+				$this->saveItemLine();
+				$this->addClientIdFromERPNumber();
+				$this->addIntroducer();
+			} else {
+				if ($_REQUEST['action'] == 'MassSave') {
+					// Massediting
+				} else {
+					// Ajax Edit
+				}
+			}
+		} else {
+			$this->saveItemLine();
+			$this->addClientIdFromERPNumber();
+			$this->addIntroducer();
+		}
+	}
+
 	function saveItemLine()
 	{
 		GPMIntent_Line_Model::deleteByIntent($this->id);
@@ -132,7 +153,7 @@ class GPMIntent extends Vtiger_CRMEntity
 		}
 	}
 
-	protected function addClientIdFromERPNumber()
+	protected function addClientIdFromERPNumberBackup()
 	{
 		$db = PearDatabase::getInstance();
 		$erpNumber = $this->column_fields['contact_erp_no'];
@@ -158,12 +179,98 @@ class GPMIntent extends Vtiger_CRMEntity
 		);
 	}
 
+	protected function addClientIdFromERPNumber()
+	{
+		$db = PearDatabase::getInstance();
+		$erpNumber = $this->column_fields['contact_erp_no'];
 
-	protected function addIntroducer()
+		if (empty($erpNumber)) return;
+
+		$result = $db->pquery("
+        SELECT A.contactid
+        FROM vtiger_contactscf A
+        INNER JOIN vtiger_crmentity B ON B.crmid = A.contactid
+        WHERE A.cf_898 = ? AND B.deleted = 0
+        LIMIT 1
+    ", [$erpNumber]);
+
+		if ($db->num_rows($result) === 0) return;
+
+		$contactId = $db->query_result($result, 0, 'contactid');
+
+		$this->column_fields['contact_id'] = $contactId;
+
+		$db->pquery(
+			"UPDATE vtiger_gpmintent SET contact_id = ? WHERE gpmintentid = ?",
+			[$contactId, $this->id]
+		);
+	}
+
+
+	protected function addIntroducerBackup()
 	{
 		$db = PearDatabase::getInstance();
 		$erpNumber = $this->column_fields['contact_erp_no'];
 		if (empty($erpNumber)) return;
 		$db->pquery("update vtiger_gpmintent set introducer_id = (select introducer_id from vtiger_contactdetails where contactid = (select contactid from vtiger_contactscf AS A LEFT JOIN vtiger_crmentity AS B ON (A.contactid = B.crmid)  where A.cf_898 = ? AND B.deleted = 0  limit 1)) where gpmintentid = ? ", array($erpNumber, $this->id));
+	}
+
+	protected function addIntroducer()
+	{
+		$db = PearDatabase::getInstance();
+
+		$contactId = $this->column_fields['contact_id'];
+
+		// If contact_id is not yet present in column_fields, try to load it from DB
+		if (empty($contactId) && !empty($this->id)) {
+			$res = $db->pquery(
+				"SELECT contact_id FROM vtiger_gpmintent WHERE gpmintentid = ?",
+				array($this->id)
+			);
+			if ($db->num_rows($res) > 0) {
+				$contactId = $db->query_result($res, 0, 'contact_id');
+			}
+		}
+
+		if (empty($contactId)) {
+			$db->pquery(
+				"UPDATE vtiger_gpmintent SET introducer_contact_id = NULL WHERE gpmintentid = ?",
+				array($this->id)
+			);
+			return;
+		}
+
+		$res = $db->pquery(
+			"SELECT introducer_id
+         FROM vtiger_contactdetails
+         WHERE contactid = ?",
+			array($contactId)
+		);
+
+		if ($db->num_rows($res) === 0) {
+			$db->pquery(
+				"UPDATE vtiger_gpmintent SET introducer_contact_id = NULL WHERE gpmintentid = ?",
+				array($this->id)
+			);
+			return;
+		}
+
+		$introducerId = $db->query_result($res, 0, 'introducer_id');
+
+		if (!empty($introducerId) && $introducerId != 0) {
+			$db->pquery(
+				"UPDATE vtiger_gpmintent
+             SET introducer_contact_id = ?
+             WHERE gpmintentid = ?",
+				array($introducerId, $this->id)
+			);
+		} else {
+			$db->pquery(
+				"UPDATE vtiger_gpmintent
+             SET introducer_contact_id = NULL
+             WHERE gpmintentid = ?",
+				array($this->id)
+			);
+		}
 	}
 }
