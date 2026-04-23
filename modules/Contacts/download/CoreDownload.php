@@ -159,13 +159,7 @@ final class CoreDownload
         if ($production) {
             putenv('PUPPETEER_CACHE_DIR=' . $chromeBase);
 
-            die("chromePath=" . var_export($chromePath, true) .
-                " / is_executable=" . var_export(is_executable($chromePath), true) .
-                " / perms=" . substr(sprintf('%o', fileperms($chromePath)), -4));
-
-            if ($chromePath && is_executable($chromePath)) {
-                putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
-            }
+            if ($chromePath) putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
 
             putenv('XDG_CONFIG_HOME=/tmp/puppeteer-live/config');
             putenv('XDG_CACHE_HOME=/tmp/puppeteer-live/cache');
