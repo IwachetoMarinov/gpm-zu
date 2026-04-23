@@ -147,19 +147,27 @@ final class CoreDownload
         $chromeBase = $projectRoot . '/.puppeteer-cache';
         $chromePath = null;
 
-        $matches = array_merge(
-            glob($chromeBase . '/chrome/*/chrome-linux64/chrome') ?: [],
-            glob($chromeBase . '/chrome-headless-shell/*/chrome-headless-shell-linux64/chrome-headless-shell') ?: []
-        );
-
-        if (!empty($matches)) {
-            $chromePath = $matches[0];
+        if ($production) {
+            $matches = glob(
+                $chromeBase . '/chrome-headless-shell/*/chrome-headless-shell-linux64/chrome-headless-shell'
+            ) ?: [];
+            rsort($matches);
+            $chromePath = !empty($matches) ? $matches[0] : null;
+        } else {
+            $matches = array_merge(
+                glob($chromeBase . '/chrome-headless-shell/*/chrome-headless-shell-linux64/chrome-headless-shell') ?: [],
+                glob($chromeBase . '/chrome/*/chrome-linux64/chrome') ?: []
+            );
+            rsort($matches);
+            $chromePath = !empty($matches) ? $matches[0] : null;
         }
 
         if ($production) {
             putenv('PUPPETEER_CACHE_DIR=' . $chromeBase);
 
-            if ($chromePath) putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
+            if ($chromePath) {
+                putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
+            }
 
             putenv('XDG_CONFIG_HOME=/tmp/puppeteer-live/config');
             putenv('XDG_CACHE_HOME=/tmp/puppeteer-live/cache');
@@ -183,7 +191,6 @@ final class CoreDownload
             die("Chrome PDF failed (exit=$code):\n" . implode("\n", $out));
         }
     }
-
     public static function runChromePdfOrFailBackup(string $htmlPath, string $pdfPath): void
     {
         $script = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR . 'chrome_pdf.js';
