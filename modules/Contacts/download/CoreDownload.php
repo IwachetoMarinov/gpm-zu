@@ -156,10 +156,12 @@ final class CoreDownload
             $chromePath = $matches[0];
         }
 
-        die("production=" . var_export($production, true) . " / PRODUCTION=" . var_export(getenv('PRODUCTION'), true));
-
         if ($production) {
             putenv('PUPPETEER_CACHE_DIR=' . $chromeBase);
+
+            die("chromePath=" . var_export($chromePath, true) .
+                " / is_executable=" . var_export(is_executable($chromePath), true) .
+                " / perms=" . substr(sprintf('%o', fileperms($chromePath)), -4));
 
             if ($chromePath && is_executable($chromePath)) {
                 putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
