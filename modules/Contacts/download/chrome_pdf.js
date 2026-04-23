@@ -40,6 +40,7 @@ const puppeteer = require("puppeteer");
     }
 
     const browser = await puppeteer.launch(launchOptions);
+    const page = await browser.newPage();
 
     await page.goto("file://" + absHtml, {
       waitUntil: "networkidle0",
