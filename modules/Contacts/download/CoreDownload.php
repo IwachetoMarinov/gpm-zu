@@ -178,6 +178,7 @@ final class CoreDownload
 
         $out = [];
         $code = 0;
+        die("chromePath=" . var_export($chromePath, true));
         exec($cmd, $out, $code);
 
         if ($code !== 0 || !file_exists($pdfPath) || filesize($pdfPath) < 2000) {
