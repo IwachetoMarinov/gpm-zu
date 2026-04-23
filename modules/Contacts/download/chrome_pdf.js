@@ -33,6 +33,8 @@ const puppeteer = require("puppeteer");
       launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
     }
 
+    console.error("EXEC PATH:", process.env.PUPPETEER_EXECUTABLE_PATH);
+
     const browser = await puppeteer.launch(launchOptions);
 
     const page = await browser.newPage();
