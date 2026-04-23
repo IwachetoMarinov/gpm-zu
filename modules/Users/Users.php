@@ -28,8 +28,7 @@
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-ini_set('display_errors','on');
-error_reporting(E_ALL);
+// ini_set('display_errors','on'); error_reporting(E_ALL);
 
 require_once('include/utils/UserInfoUtil.php');
 require_once 'include/utils/CommonUtils.php';
