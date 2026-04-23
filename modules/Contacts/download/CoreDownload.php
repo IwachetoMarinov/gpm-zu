@@ -177,7 +177,7 @@ final class CoreDownload
             putenv('NODE_ENV=production');
         }
 
-        $cmd = escapeshellarg($node) . ' '
+        $cmd = escapeshellarg($node) . ' --jitless '
             . escapeshellarg($script) . ' '
             . escapeshellarg($htmlPath) . ' '
             . escapeshellarg($pdfPath)
