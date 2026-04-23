@@ -151,7 +151,7 @@ final class CoreDownload
             glob($chromeBase . '/chrome-headless-shell/*/chrome-headless-shell-linux64/chrome-headless-shell') ?: [],
             glob($chromeBase . '/chrome/*/chrome-linux64/chrome') ?: []
         );
-
+        rsort($matches);
         $chromePath = !empty($matches) ? $matches[0] : null;
 
         if (!empty($matches)) {
