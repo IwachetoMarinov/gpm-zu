@@ -283,3 +283,8 @@ sudo chmod -R 775 /var/www/html/crm_kl/cache/import`
    `sudo crontab -u www-data -e`
    add: press 1 and add: 
    `0 4 1 * * /usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php`
+
+47. Add introducer field to Intent module
+    -  visit /add_intent_introducer_field.php
+
+   

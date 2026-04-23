@@ -40,12 +40,20 @@ class DBConnection
 
             $conn = sqlsrv_connect($serverName, $connectionOptions);
 
-            if ($conn === false) return null;
+            if ($conn === false) {
+                echo '<pre>';
+                print_r(sqlsrv_errors());
+                echo '</pre>';
+                exit;
+            }
 
             self::$connection = $conn;
             return self::$connection;
         } catch (\Throwable $e) {
-            return null;
+            echo '<pre>';
+            echo $e->getMessage();
+            echo '</pre>';
+            exit;
         }
     }
 

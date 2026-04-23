@@ -9,7 +9,7 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-// ini_set('display_errors', 1); error_reporting(E_ALL);
+// ini_set('display_errors', 1); error_reporting(E_ALL);	
 
 include_once 'dbo_db/ActivitySummary.php';
 include_once 'dbo_db/HoldingsDB.php';
@@ -60,6 +60,11 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$clientID = $recordModel->get('cf_898');
 
 		$activity = new dbo_db\ActivitySummary();
+
+		// Check ERP DB connection before proceeding
+		$erp_connection = $activity->checkConnection();
+
+		// TODO: Fix this hardcoded value
 
 		$years_array  = $activity->getActivityYears($clientID);
 		$years = array_reverse($years_array);

@@ -130,7 +130,10 @@ class MetalsCron
 
         $stmt = sqlsrv_query($this->connection, $sql, $params);
 
-        if ($stmt === false) die(print_r(sqlsrv_errors(), true));
+        if ($stmt === false) {
+            // die(print_r(sqlsrv_errors(), true));
+            throw new \Exception('Metals data is temporarily unavailable.');
+        }
 
         $data = [];
         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
