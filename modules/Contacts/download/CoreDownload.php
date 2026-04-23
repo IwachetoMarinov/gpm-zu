@@ -137,15 +137,8 @@ final class CoreDownload
             die("Cannot resolve project root");
         }
 
-        $node = '/bin/node';
-        if (!is_executable($node)) {
-            $node = 'node';
-        }
-
         $production = getenv('PRODUCTION') === 'live';
-
         $chromeBase = $projectRoot . '/.puppeteer-cache';
-        $chromePath = null;
 
         if ($production) {
             $matches = glob(
@@ -153,30 +146,57 @@ final class CoreDownload
             ) ?: [];
             rsort($matches);
             $chromePath = !empty($matches) ? $matches[0] : null;
-        } else {
-            $matches = array_merge(
-                glob($chromeBase . '/chrome-headless-shell/*/chrome-headless-shell-linux64/chrome-headless-shell') ?: [],
-                glob($chromeBase . '/chrome/*/chrome-linux64/chrome') ?: []
-            );
-            rsort($matches);
-            $chromePath = !empty($matches) ? $matches[0] : null;
-        }
 
-        if ($production) {
-            putenv('PUPPETEER_CACHE_DIR=' . $chromeBase);
-
-            if ($chromePath) {
-                putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
+            if (!$chromePath) {
+                header("HTTP/1.1 500 Internal Server Error");
+                die("No chrome-headless-shell found in: " . $chromeBase);
             }
 
-            putenv('XDG_CONFIG_HOME=/tmp/puppeteer-live/config');
-            putenv('XDG_CACHE_HOME=/tmp/puppeteer-live/cache');
-            putenv('XDG_RUNTIME_DIR=/tmp/puppeteer-live/runtime');
-            putenv('NODE_ENV=production');
+            $absHtml = realpath($htmlPath);
+            if (!$absHtml || !file_exists($absHtml)) {
+                header("HTTP/1.1 500 Internal Server Error");
+                die("HTML file not found: " . $htmlPath);
+            }
+
+            $absPdf = $pdfPath;
+            $tmpProfile = '/tmp/chrome-pdf-live';
+            if (!is_dir($tmpProfile)) {
+                @mkdir($tmpProfile, 0775, true);
+            }
+
+            $fileUrl = 'file://' . str_replace('%2F', '/', rawurlencode($absHtml));
+
+            $cmd = escapeshellarg($chromePath) . ' '
+                . '--headless '
+                . '--no-sandbox '
+                . '--disable-setuid-sandbox '
+                . '--disable-dev-shm-usage '
+                . '--allow-file-access-from-files '
+                . '--no-pdf-header-footer '
+                . '--user-data-dir=' . escapeshellarg($tmpProfile) . ' '
+                . '--print-to-pdf=' . escapeshellarg($absPdf) . ' '
+                . escapeshellarg($fileUrl)
+                . ' 2>&1';
+
+            $out = [];
+            $code = 0;
+            exec($cmd, $out, $code);
+
+            if ($code !== 0 || !file_exists($absPdf) || filesize($absPdf) < 2000) {
+                header("HTTP/1.1 500 Internal Server Error");
+                die("Chrome PDF failed (exit=$code):\n" . implode("\n", $out));
+            }
+
+            return;
+        }
+
+        $node = '/bin/node';
+        if (!is_executable($node)) {
+            $node = 'node';
         }
 
         $cmd = 'cd ' . escapeshellarg($projectRoot) . ' && '
-            . escapeshellarg($node) . ($production ? ' --jitless ' : ' ')
+            . escapeshellarg($node) . ' '
             . escapeshellarg($script) . ' '
             . escapeshellarg($htmlPath) . ' '
             . escapeshellarg($pdfPath)
@@ -191,6 +211,9 @@ final class CoreDownload
             die("Chrome PDF failed (exit=$code):\n" . implode("\n", $out));
         }
     }
+
+
+
     public static function runChromePdfOrFailBackup(string $htmlPath, string $pdfPath): void
     {
         $script = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR . 'chrome_pdf.js';
