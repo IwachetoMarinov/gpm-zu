@@ -42,9 +42,17 @@ const puppeteer = require("puppeteer");
     const browser = await puppeteer.launch(launchOptions);
     const page = await browser.newPage();
 
-    await page.goto("file://" + absHtml, {
-      waitUntil: "networkidle0",
-    });
+    if (
+      process.env.PUPPETEER_EXECUTABLE_PATH &&
+      process.env.PUPPETEER_EXECUTABLE_PATH.includes("chrome-headless-shell")
+    ) {
+      const html = fs.readFileSync(absHtml, "utf8");
+      await page.setContent(html, { waitUntil: "load" });
+    } else {
+      await page.goto("file://" + absHtml, {
+        waitUntil: "networkidle0",
+      });
+    }
 
     await page.pdf({
       path: absPdf,
