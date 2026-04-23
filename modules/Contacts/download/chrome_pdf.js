@@ -20,14 +20,26 @@ const puppeteer = require("puppeteer");
       process.exit(1);
     }
 
-    const browser = await puppeteer.launch({
+    const launchOptions = {
       headless: true,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
+        "--disable-crash-reporter",
+        "--disable-breakpad",
+        "--no-zygote",
+        "--disable-features=Crashpad",
       ],
-    });
+    };
+
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+      launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    }
+
+    console.error("EXEC PATH:", process.env.PUPPETEER_EXECUTABLE_PATH);
+
+    const browser = await puppeteer.launch(launchOptions);
 
     const page = await browser.newPage();
 
@@ -50,7 +62,6 @@ const puppeteer = require("puppeteer");
 
     await browser.close();
     process.exit(0);
-
   } catch (err) {
     console.error(err && err.stack ? err.stack : String(err));
     process.exit(1);

@@ -137,39 +137,29 @@ final class CoreDownload
             die("Cannot resolve project root");
         }
 
-        $production = getenv('PRODUCTION') === 'live';
-
-        // Try to locate node dynamically
-        $node = 'node';
-        $possibleNodes = [
-            '/usr/local/bin/node18',
-            '/usr/bin/node18',
-            '/usr/local/bin/node',
-            '/usr/bin/node',
-        ];
-
-        foreach ($possibleNodes as $candidate) {
-            if (is_executable($candidate)) {
-                $node = $candidate;
-                break;
-            }
+        $node = '/bin/node';
+        if (!is_executable($node)) {
+            $node = 'node';
         }
 
-        // Try to locate Chrome dynamically inside project .puppeteer-cache
-        $chromeBase = $projectRoot . '/.puppeteer-cache/chrome';
+        $production = getenv('PRODUCTION') === 'live';
+
+        $chromeBase = $projectRoot . '/.puppeteer-cache';
         $chromePath = null;
 
-        if (is_dir($chromeBase)) {
-            $matches = glob($chromeBase . '/*/chrome-linux64/chrome');
-            if (!empty($matches)) {
-                $chromePath = $matches[0];
-            }
+        $matches = array_merge(
+            glob($chromeBase . '/chrome/*/chrome-linux64/chrome') ?: [],
+            glob($chromeBase . '/chrome-headless-shell/*/chrome-headless-shell-linux64/chrome-headless-shell') ?: []
+        );
+
+        if (!empty($matches)) {
+            $chromePath = $matches[0];
         }
 
         if ($production) {
-            if ($chromePath && is_executable($chromePath)) {
-                putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
-            }
+            putenv('PUPPETEER_CACHE_DIR=' . $chromeBase);
+
+            if ($chromePath) putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
 
             putenv('XDG_CONFIG_HOME=/tmp/puppeteer-live/config');
             putenv('XDG_CACHE_HOME=/tmp/puppeteer-live/cache');
@@ -177,7 +167,8 @@ final class CoreDownload
             putenv('NODE_ENV=production');
         }
 
-        $cmd = escapeshellarg($node) . ' '
+        $cmd = 'cd ' . escapeshellarg($projectRoot) . ' && '
+            . escapeshellarg($node) . ($production ? ' --jitless ' : ' ')
             . escapeshellarg($script) . ' '
             . escapeshellarg($htmlPath) . ' '
             . escapeshellarg($pdfPath)
