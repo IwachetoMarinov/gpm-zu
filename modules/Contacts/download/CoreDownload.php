@@ -131,6 +131,77 @@ final class CoreDownload
             die("Chrome PDF script not found: " . $script);
         }
 
+        $projectRoot = realpath(__DIR__ . '/../../..');
+        if (!$projectRoot) {
+            header("HTTP/1.1 500 Internal Server Error");
+            die("Cannot resolve project root");
+        }
+
+        $production = getenv('PRODUCTION') === 'live';
+
+        // Try to locate node dynamically
+        $node = 'node';
+        $possibleNodes = [
+            '/usr/local/bin/node18',
+            '/usr/bin/node18',
+            '/usr/local/bin/node',
+            '/usr/bin/node',
+        ];
+
+        foreach ($possibleNodes as $candidate) {
+            if (is_executable($candidate)) {
+                $node = $candidate;
+                break;
+            }
+        }
+
+        // Try to locate Chrome dynamically inside project .puppeteer-cache
+        $chromeBase = $projectRoot . '/.puppeteer-cache/chrome';
+        $chromePath = null;
+
+        if (is_dir($chromeBase)) {
+            $matches = glob($chromeBase . '/*/chrome-linux64/chrome');
+            if (!empty($matches)) {
+                $chromePath = $matches[0];
+            }
+        }
+
+        if ($production) {
+            if ($chromePath && is_executable($chromePath)) {
+                putenv('PUPPETEER_EXECUTABLE_PATH=' . $chromePath);
+            }
+
+            putenv('XDG_CONFIG_HOME=/tmp/puppeteer-live/config');
+            putenv('XDG_CACHE_HOME=/tmp/puppeteer-live/cache');
+            putenv('XDG_RUNTIME_DIR=/tmp/puppeteer-live/runtime');
+            putenv('NODE_ENV=production');
+        }
+
+        $cmd = escapeshellarg($node) . ' '
+            . escapeshellarg($script) . ' '
+            . escapeshellarg($htmlPath) . ' '
+            . escapeshellarg($pdfPath)
+            . ' 2>&1';
+
+        $out = [];
+        $code = 0;
+        exec($cmd, $out, $code);
+
+        if ($code !== 0 || !file_exists($pdfPath) || filesize($pdfPath) < 2000) {
+            header("HTTP/1.1 500 Internal Server Error");
+            die("Chrome PDF failed (exit=$code):\n" . implode("\n", $out));
+        }
+    }
+
+    public static function runChromePdfOrFailBackup(string $htmlPath, string $pdfPath): void
+    {
+        $script = rtrim(__DIR__, '/\\') . DIRECTORY_SEPARATOR . 'chrome_pdf.js';
+
+        if (!file_exists($script)) {
+            header("HTTP/1.1 500 Internal Server Error");
+            die("Chrome PDF script not found: " . $script);
+        }
+
         $cmd = 'node '
             . escapeshellarg($script) . ' '
             . escapeshellarg($htmlPath) . ' '
@@ -140,7 +211,7 @@ final class CoreDownload
         $production = getenv('PRODUCTION') === 'live';
 
         if ($production) {
-            // $node = '/usr/local/bin/node18';   // or /usr/bin/node if that is Node 18 on LIVE
+            $node = '/usr/local/bin/node18';   // or /usr/bin/node if that is Node 18 on LIVE
 
             putenv('PUPPETEER_EXECUTABLE_PATH=/var/www/html/crm_zu/.puppeteer-cache/chrome/linux-146.0.7680.66/chrome-linux64/chrome');
             putenv('XDG_CONFIG_HOME=/tmp/puppeteer-live/config');
