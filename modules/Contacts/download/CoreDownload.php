@@ -175,8 +175,15 @@ final class CoreDownload
             putenv('NODE_ENV=production');
         }
 
+        // $cmd = 'cd ' . escapeshellarg($projectRoot) . ' && '
+        //     . escapeshellarg($node) . ($production ? ' --jitless ' : ' ')
+        //     . escapeshellarg($script) . ' '
+        //     . escapeshellarg($htmlPath) . ' '
+        //     . escapeshellarg($pdfPath)
+        //     . ' 2>&1';
+
         $cmd = 'cd ' . escapeshellarg($projectRoot) . ' && '
-            . escapeshellarg($node) . ($production ? ' --jitless ' : ' ')
+            . escapeshellarg($node) . ' '
             . escapeshellarg($script) . ' '
             . escapeshellarg($htmlPath) . ' '
             . escapeshellarg($pdfPath)
