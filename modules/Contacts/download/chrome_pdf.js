@@ -31,11 +31,15 @@ const puppeteer = require("puppeteer");
 
     if (process.env.PUPPETEER_EXECUTABLE_PATH) {
       launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+
+      if (
+        process.env.PUPPETEER_EXECUTABLE_PATH.includes("chrome-headless-shell")
+      ) {
+        launchOptions.headless = "shell";
+      }
     }
 
     const browser = await puppeteer.launch(launchOptions);
-
-    const page = await browser.newPage();
 
     await page.goto("file://" + absHtml, {
       waitUntil: "networkidle0",
