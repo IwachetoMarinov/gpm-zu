@@ -156,6 +156,8 @@ final class CoreDownload
             $chromePath = $matches[0];
         }
 
+        die("production=" . var_export($production, true) . " / PRODUCTION=" . var_export(getenv('PRODUCTION'), true));
+
         if ($production) {
             putenv('PUPPETEER_CACHE_DIR=' . $chromeBase);
 
@@ -178,7 +180,6 @@ final class CoreDownload
 
         $out = [];
         $code = 0;
-        die("chromePath=" . var_export($chromePath, true));
         exec($cmd, $out, $code);
 
         if ($code !== 0 || !file_exists($pdfPath) || filesize($pdfPath) < 2000) {
