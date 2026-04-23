@@ -26,6 +26,10 @@ const puppeteer = require("puppeteer");
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
+        "--disable-crash-reporter",
+        "--disable-breakpad",
+        "--no-zygote",
+        "--disable-features=Crashpad",
       ],
     };
 
@@ -58,7 +62,6 @@ const puppeteer = require("puppeteer");
 
     await browser.close();
     process.exit(0);
-
   } catch (err) {
     console.error(err && err.stack ? err.stack : String(err));
     process.exit(1);
