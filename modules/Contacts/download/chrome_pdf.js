@@ -36,32 +36,13 @@ const puppeteer = require("puppeteer");
     if (process.env.PUPPETEER_EXECUTABLE_PATH) {
       launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
     }
+
     const browser = await puppeteer.launch(launchOptions);
-
-    // const page = await browser.newPage();
-
-    // await page.goto("file://" + absHtml, {
-    //   waitUntil: "networkidle0",
-    // });
-
-    // await page.pdf({
-    //   path: absPdf,
-    //   format: "A4",
-    //   printBackground: true,
-    //   preferCSSPageSize: true,
-    //   margin: {
-    //     top: "0mm",
-    //     right: "0mm",
-    //     bottom: "0mm",
-    //     left: "0mm",
-    //   },
-    // });
 
     const page = await browser.newPage();
 
-    const html = fs.readFileSync(absHtml, "utf8");
-    await page.setContent(html, {
-      waitUntil: "load",
+    await page.goto("file://" + absHtml, {
+      waitUntil: "networkidle0",
     });
 
     await page.pdf({
