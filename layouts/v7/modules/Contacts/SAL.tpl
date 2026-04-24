@@ -257,6 +257,14 @@
                             <td>GST Reg No.: {$COMPANY->get('company_gst_no')}</td>
                         </tr>
                     {/if}
+
+                    {if isset($COMPANY) && !empty($COMPANY->get('vat_id'))}
+                        <tr>
+                            <td style="text-align: left;font-size: 10pt; font-weight: bold;">
+                                VAT Nr: {$COMPANY->get('vat_id')}
+                            </td>
+                        </tr>
+                    {/if}
                     <tr>
                         <td style="text-align: right;font-size: 9pt">
                             All amounts in {$ERP_DOCUMENT->currency}
@@ -326,7 +334,8 @@
                                             <td style="border-bottom:none;vertical-align: top">
                                                 {$barItem->itemDescription} <br><span
                                                     style="font-size: smaller;font-style: italic;max-width: 250px;display: inline-block;word-break: break-all;white-space: normal;">
-                                                    <pre>{$barItem->serialNumbers}</pre></span>
+                                                    <pre>{$barItem->serialNumbers}</pre>
+                                                </span>
                                             </td>
 
                                             <td style="text-align:right;vertical-align: top">
@@ -389,19 +398,6 @@
                                 {/if}
 
                             </table>
-                            <br>
-                            <br>
-                            {* {assign var="exchangeRateInfo" value=MASForex_Record_Model::getLatestExchangeRateByCurrency($ERP_DOCUMENT->documentDate, $ERP_DOCUMENT->currency)}
-                                {if !empty($exchangeRateInfo) && isset($exchangeRateInfo['rate'])}
-                                    <div>
-                                        {if $ERP_DOCUMENT->currency eq 'SGD'}
-                                            *Remarks: USD/SGD exchange rate at SGD {$exchangeRateInfo['rate']} / USD
-                                        {else}
-                                            *Remarks: {$ERP_DOCUMENT->currency}/SGD exchange rate at SGD
-                                            {$exchangeRateInfo['rate']} / {$ERP_DOCUMENT->currency}
-                                        {/if}
-                                    </div>
-                                {/if} *}
                             <br>
                             <br>
                             {if $SELECTED_BANK}

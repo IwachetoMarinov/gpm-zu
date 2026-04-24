@@ -251,9 +251,18 @@
                     </tr>
                 {/if}
                 <tr>
-                    <td style="text-align: right;font-size: 9pt">
-                        All amounts in {$ERP_DOCUMENT->currency}
-                    </td>
+
+                    {if isset($COMPANY) && !empty($COMPANY->get('vat_id'))}
+                    <tr>
+                        <td style="text-align: left;font-size: 10pt; font-weight: bold;">
+                            VAT Nr: {$COMPANY->get('vat_id')}
+                        </td>
+                    </tr>
+                {/if}
+
+                <td style="text-align: right;font-size: 9pt">
+                    All amounts in {$ERP_DOCUMENT->currency}
+                </td>
                 </tr>
 
                 <tr>
@@ -315,21 +324,6 @@
                                         {number_format($totalStorageFee,2)}</strong></td>
                             </tr>
                         </table>
-
-                        {* <br>
-                        <br> *}
-                        {* {assign var="exchangeRateInfo" value=MASForex_Record_Model::getLatestExchangeRateByCurrency($ERP_DOCUMENT->documentDate, $ERP_DOCUMENT->currency)} *}
-
-                        {* {if !empty($exchangeRateInfo) && isset($exchangeRateInfo['rate'])}
-                            <div>
-                                {if $ERP_DOCUMENT->currency eq 'SGD'}
-                                    *Remarks: USD/SGD exchange rate at SGD {number_format($exchangeRateInfo['rate'],4)} / USD
-                                {else}
-                                    *Remarks: {$ERP_DOCUMENT->currency}/SGD exchange rate at SGD
-                                    {number_format($exchangeRateInfo['rate'],4)} / {$ERP_DOCUMENT->currency}
-                                {/if}
-                            </div>
-                        {/if} *}
                         <br>
                         <br>
                         {if $SELECTED_BANK}
