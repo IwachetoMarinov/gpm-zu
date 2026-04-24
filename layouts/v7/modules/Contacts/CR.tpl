@@ -356,25 +356,25 @@
                 </div>
                 <table style="width:100%; margin-top:4mm; border-collapse:collapse;">
                     <tr>
-                        <td style="width:35%;"></td>
+                        <td style="width:50%;"></td>
                         <td>Date:</td>
                     </tr>
                 </table>
 
                 <table style="width:100%; margin-top:4mm; border-collapse:collapse;">
                     <tr>
-                        <td style="width:35%;">Signed by:</td>
+                        <td style="width:50%;">Signed by:</td>
                         <td>On behalf of:</td>
                     </tr>
                 </table>
 
                 <table style="width:100%; margin-top:3mm; border-collapse:collapse;">
                     <tr>
-                        <td style="width:50%; vertical-align:top;">
+                        <td style="width:48%; vertical-align:top;">
                             <div style="border-bottom:1px solid #000; height:80px; margin-bottom:2mm;"></div>
                             <p>Signature</p>
                         </td>
-                        <td style="width:50%;"></td>
+                        <td style="width:52%;"></td>
                     </tr>
                 </table>
 

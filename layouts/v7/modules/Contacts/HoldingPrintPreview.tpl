@@ -308,7 +308,7 @@
                             {/foreach}
                             <tr>
                                 <th colspan="3">TOTAL MARKET VALUE</th>
-                                <td style='text-align:right'><strong>US$
+                                <td style='text-align:right'><strong>USD
                                         {CurrencyField::convertToUserFormat($TOTAL)}</strong></td>
                             </tr>
                         </table>
