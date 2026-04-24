@@ -314,10 +314,8 @@
                         {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
                             <input type="checkbox" name="id_option">
                         {else}
-                            {if isset($ID_OPTION) && $ID_OPTION eq 1}
-                                <span
-                                    style="font-size: 3.5mm; border:1px solid #000; padding:2px 2px; display:inline-block;height:5mm;width:5mm;line-height:3.5mm;">✔</span>
-                            {/if}
+                            <span
+                                style="font-size: 3.5mm; border:1px solid #000; padding:2px 2px; display:inline-block;height:5mm;width:5mm;line-height:3.5mm;">{if isset($ID_OPTION) && $ID_OPTION eq 1}✔{/if}</span>
                         {/if}
                         <span>I/We will personally collect the Stored Metal at the Storage Facility and will be holding
                             ID/Passport number</span>
@@ -328,10 +326,8 @@
                         {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
                             <input type="checkbox" name="company_option">
                         {else}
-                            {if isset($COMPANY_OPTION) && $COMPANY_OPTION eq 1}
-                                <span
-                                    style="font-size: 3.5mm; border:1px solid #000; padding:2px 2px; display:inline-block;height:5mm;width:5mm;line-height:3.5mm;">✔</span>
-                            {/if}
+                            <span
+                                style="font-size: 3.5mm; border:1px solid #000; padding:2px 2px; display:inline-block;height:5mm;width:5mm;line-height:3.5mm;">{if isset($COMPANY_OPTION) && $COMPANY_OPTION eq 1}✔{/if}</span>
                         {/if}
 
                         <span>I/We hereby authorise Mr/Mrs/Representatives of the company </span>
