@@ -315,7 +315,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style='font-size: 8pt;font-weight: bold;'>
+                    <td style='font-size: 8pt;font-weight: bold; width: 85%; position: absolute; bottom: 14px;'>
                         {if isset($COMPANY)}
                             {$COMPANY->get('company_name')} {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg. No.
                             {$COMPANY->get('company_reg_no')}){/if}<br>
