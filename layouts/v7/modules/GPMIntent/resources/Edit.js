@@ -150,8 +150,6 @@ Vtiger_Edit_Js(
 
           if (selectedMetal === "") return;
 
-          console.log("selectedMetal", selectedMetal, "currency", currency);
-
           thisInstance.setSpotPrice(selectedMetal, currency);
           thisInstance.setupMetalOption(selectedMetal);
           thisInstance.selectedMetal = selectedMetal;
@@ -159,6 +157,7 @@ Vtiger_Edit_Js(
       );
     },
 
+    
     registerChangeDiscountValues: function () {
       var thisInstance = this;
 
@@ -201,13 +200,6 @@ Vtiger_Edit_Js(
 
         // NEW LOGIC: base value + usd premium
         var itemUSD = itemTotalOz * currentSpotPrice + premiumUsd;
-
-        console.log("USD EDIT MODE:", {
-          itemTotalOz,
-          currentSpotPrice,
-          premiumUsd,
-          itemUSD,
-        });
 
         line.find(".item_value_usd").val(itemUSD.toFixed(2));
         thisInstance.calculateTotal();
@@ -296,17 +288,6 @@ Vtiger_Edit_Js(
           (line.find(".item_fineoz").val() || "").toString().replace(/,/g, ""),
         ) || 0;
 
-      console.log("RAW VALUES:", {
-        itemTotalOz: line.find(".item_fineoz").val(),
-        indicativeSpotPrice: jQuery(
-          'input[name="indicative_spot_price"], input[name="cf_1136"]',
-        ).val(),
-        exactSpotPrice: jQuery('input[name="spot_price"]').val(),
-        item_pre_disc: line.find(".item_premium").val(),
-        item_pre_disc_usd: line.find(".item_premium_usd").val(),
-        orderType: jQuery('select[name="gpm_order_type"]').val(),
-      });
-
       var exactSpotPriceRaw = jQuery('input[name="spot_price"]').val();
       var indicativeSpotPriceRaw = jQuery(
         'input[name="indicative_spot_price"], input[name="cf_1136"]',
@@ -349,15 +330,6 @@ Vtiger_Edit_Js(
 
       premiumUsdField.val(calculatedPremiumUsd.toFixed(6));
 
-      console.log("CALCULATED:", {
-        itemTotalOz,
-        exactSpotPrice,
-        indicativeSpotPrice,
-        currentSpotPrice,
-        prem_disc,
-        itemUSD,
-      });
-
       line.find(".item_value_usd").val(itemUSD.toFixed(2));
     },
 
@@ -398,10 +370,8 @@ Vtiger_Edit_Js(
         "change.select2",
         function (e) {
           forexDate = JSON.parse(jQuery("#GPMForexValue").val());
-          console.log("forexDate", forexDate);
 
           selectedCurrency = jQuery(e.currentTarget).val();
-          console.log("selectedCurrency", selectedCurrency);
 
           if (selectedCurrency == "USD") {
             jQuery('input[name="indicative_fx_spot"]').val(1);
