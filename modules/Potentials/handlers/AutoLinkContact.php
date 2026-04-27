@@ -15,7 +15,11 @@ class Potentials_AutoLinkContact_Handler extends VTEventHandler
         $data = $entityData->getData();
 
         // Get ERP number from Opportunity
-        $erp = $data['cf_1181'];
+        $potentialErpField = $this->getFieldNameByLabel('Potentials', 'Client ERP Number');
+
+        if (empty($potentialErpField)) return;
+
+        $erp = $data[$potentialErpField] ?? $data['cf_1181'] ?? null;
 
         if (empty($erp)) return;
 
@@ -37,5 +41,27 @@ class Potentials_AutoLinkContact_Handler extends VTEventHandler
             // Set relation automatically
             $entityData->set('contact_id', $contactId);
         }
+    }
+
+    private function getFieldNameByLabel($moduleName, $fieldLabel)
+    {
+        global $adb;
+
+        $result = $adb->pquery(
+            "SELECT vtiger_field.fieldname
+         FROM vtiger_field
+         INNER JOIN vtiger_tab ON vtiger_tab.tabid = vtiger_field.tabid
+         WHERE vtiger_tab.name = ?
+         AND vtiger_field.fieldlabel = ?
+         AND vtiger_field.presence IN (0, 2)
+         LIMIT 1",
+            [$moduleName, $fieldLabel]
+        );
+
+        if ($adb->num_rows($result) === 0) {
+            return null;
+        }
+
+        return $adb->query_result($result, 0, 'fieldname');
     }
 }
