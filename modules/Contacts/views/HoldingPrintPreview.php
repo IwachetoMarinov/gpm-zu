@@ -52,9 +52,9 @@ class Contacts_HoldingPrintPreview_View extends Vtiger_Index_View
 
         $recordModel = $this->record->getRecord();
         $viewer = $this->getViewer($request);
-        
-        $ROOT_DIRECTORY = getenv('ROOT_DIRECTORY') ?: ($ROOT_DIRECTORY ?? null);
-        $viewer->assign('ROOT_DIRECTORY', $ROOT_DIRECTORY);
+
+        // $ROOT_DIRECTORY = getenv('ROOT_DIRECTORY') ?: ($ROOT_DIRECTORY ?? null);
+        // $viewer->assign('ROOT_DIRECTORY', $ROOT_DIRECTORY);
         $viewer->assign('RECORD_MODEL', $recordModel);
         $viewer->assign('LBMA_DATE', $LBMA_DATE);
         $viewer->assign('TOTAL', $total);
