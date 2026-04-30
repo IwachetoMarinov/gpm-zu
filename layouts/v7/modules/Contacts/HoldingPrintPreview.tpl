@@ -196,6 +196,7 @@
             <table class="print-tbl">
                 <tr>
                     <td style="height: 28mm;">
+                    <pre>{var_dump($ROOT_DIRECTORY)}</pre>
 
                         {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
                             <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
