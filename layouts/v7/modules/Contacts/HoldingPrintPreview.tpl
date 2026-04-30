@@ -196,15 +196,9 @@
             <table class="print-tbl">
                 <tr>
                     <td style="height: 28mm;">
-                    <pre>{var_dump($ROOT_DIRECTORY)}</pre>
 
-                        {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
-                            <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
-                                style="max-height: 100%; float:right;width: 154px;">
-                        {else}
-                            <img src="file://{$ROOT_DIRECTORY}/layouts/v7/modules/Contacts/resources/gpm-new-logo.png"
-                                style="max-height: 100%; float:right;width: 154px;">
-                        {/if}
+                        <img src="file://{$ROOT_DIRECTORY}/layouts/v7/modules/Contacts/resources/gpm-new-logo.png"
+                            style="max-height: 100%; float:right;width: 154px;">
                         <div style="font-size:11pt;margin-top: 14px;margin-bottom: 32px">
                             {$RECORD_MODEL->get('cf_898')}<br>
                             {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
