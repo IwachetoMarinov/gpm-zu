@@ -13,10 +13,18 @@ class YTDReportService
         }
 
         $activityService = new Contacts_ActivitySummaryService();
-        $activityService->generateAndStoreForClient($client_id, $date_range);
+        try {
+            $activityService->generateAndStoreForClient($client_id, $date_range);
+        } catch (Exception $e) {
+            echo "Error processing activity summary for client $client_id: " . $e->getMessage() . "\n";
+        }
 
         $holdingsService = new Contacts_StatementOfHoldingsService();
-        $holdingsService->processClient($client_id, $date_range);
+        try {
+            $holdingsService->processClient($client_id, $date_range);
+        } catch (Exception $e) {
+            echo "Error processing statement of holdings for client $client_id: " . $e->getMessage() . "\n";
+        }
 
         return true;
     }
