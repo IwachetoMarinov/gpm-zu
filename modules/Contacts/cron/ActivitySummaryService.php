@@ -24,6 +24,8 @@ class Contacts_ActivitySummaryService
         // 3. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date);
 
+        echo "Client ID: $client_id - Found " . count($activities) . " transactions from $start_date to $end_date\n";
+
         if (!is_array($activities) || count($activities) === 0) return;
 
         // 4. Get Contact record model (used for template rendering)

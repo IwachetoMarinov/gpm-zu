@@ -16,7 +16,7 @@ class YTDReports_Monthly_Cron
 
         foreach ($client_ids as $client_id) {
             echo "Processing YTD report for client ID: $client_id\n";
-            // YTDReportService::generateForClient($client_id, $date_range);
+            YTDReportService::generateForClient($client_id, $date_range);
         }
 
         return true;
