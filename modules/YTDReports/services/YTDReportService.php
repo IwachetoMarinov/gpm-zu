@@ -15,14 +15,14 @@ class YTDReportService
         $activityService = new Contacts_ActivitySummaryService();
         try {
             $activityService->generateAndStoreForClient($client_id, $date_range);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             echo "Error processing activity summary for client $client_id: " . $e->getMessage() . "\n";
         }
 
         $holdingsService = new Contacts_StatementOfHoldingsService();
         try {
             $holdingsService->processClient($client_id, $date_range);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             echo "Error processing statement of holdings for client $client_id: " . $e->getMessage() . "\n";
         }
 

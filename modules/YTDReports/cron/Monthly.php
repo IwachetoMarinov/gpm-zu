@@ -11,16 +11,12 @@ class YTDReports_Monthly_Cron
 
         $client_ids = Contacts_CronHelpers::fetchClientIds();
 
-        echo "Starting YTD Reports Cron for date range: " . $date_range['start'] . " to " . $date_range['end'] . "\n";
+        echo "Starting YTD Reports Cron for date range: " . $date_range[0] . " to " . $date_range[1] . "\n";
         echo "Found " . count($client_ids) . " clients to process\n";
 
         foreach ($client_ids as $client_id) {
-            try {
-                echo "Processing YTD report for client ID: $client_id\n";
-                YTDReportService::generateForClient($client_id, $date_range);
-            } catch (Exception $e) {
-                echo "Error processing YTD report for client ID $client_id: " . $e->getMessage() . "\n";
-            }
+            echo "Processing YTD report for client ID: $client_id\n";
+            YTDReportService::generateForClient($client_id, $date_range);
         }
 
         return true;
