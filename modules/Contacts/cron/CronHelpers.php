@@ -4,9 +4,6 @@
 
 class Contacts_CronHelpers
 {
-
-    // Comments here
-
     public static function buildMonthlyDateRange()
     {
         $year = date('Y');
