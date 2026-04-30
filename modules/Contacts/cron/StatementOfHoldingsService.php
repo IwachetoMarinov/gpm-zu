@@ -19,6 +19,8 @@ class Contacts_StatementOfHoldingsService
         // 2. Fetch Statement of Holdings data for the client and date range
         $holdings = $this->fetchHoldings($client_id, $date_range, $holding);
 
+        echo "Fetched " . count($holdings) . " holdings for client ID $client_id\n";
+
         if (!is_array($holdings) || count($holdings) === 0) return;
 
         // 3. Get metals for every holding in the date range
