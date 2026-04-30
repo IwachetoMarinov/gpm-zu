@@ -85,8 +85,8 @@ class Contacts_ActivitySummaryService
         if (!file_exists($pdfPath)) return;
 
         // 17. Store generated PDF in vTiger Documents module
-        $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
-        // Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency, 'Monthly Activity Summary - %s - %s%s');
+        // $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+        Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency, 'Monthly Activity Summary - %s - %s%s');
 
 
         // 18. Insert into monthly transactions table for record-keeping
