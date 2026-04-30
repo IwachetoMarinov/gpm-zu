@@ -24,6 +24,64 @@ class HoldingsDB
         $this->metal_settings = DBSettings::MetalsOrderSettings();
     }
 
+    public function getHoldingsMetalsByDateRange(string $customer_id, string $start_date, string $end_date)
+    {
+        if (!$customer_id || !$start_date || !$end_date) return [];
+
+        if (!$this->connection) return [];
+
+        $where = '';
+        $params = [];
+
+        if ($customer_id) {
+            $where .= "WHERE Party_Code = ?";
+            $params[] = $customer_id;
+        }
+
+        if ($start_date) {
+            $where .= empty($where) ? "WHERE" : " AND";
+            $where .= " Spot_Date >= ?";
+            $params[] = $start_date;
+        }
+
+        if ($end_date) {
+            $where .= empty($where) ? "WHERE" : " AND";
+            $where .= " Spot_Date <= ?";
+            $params[] = $end_date;
+        }
+
+        try {
+            $sql = "SELECT DISTINCT MT_Name, Spot_Price FROM $this->database_prefix.[DW_DocHoldings] $where";
+
+            $stmt = sqlsrv_query($this->connection, $sql, $params);
+
+            if ($stmt === false) return [];
+
+            $summary = [];
+
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $summary[] = $row;
+            }
+
+            // reorder metals based on settings
+            usort($summary, function ($a, $b) {
+                $metalA = $a['MT_Name'] ?? '';
+                $metalB = $b['MT_Name'] ?? '';
+
+                $orderA = $this->metal_settings[$metalA] ?? PHP_INT_MAX;
+                $orderB = $this->metal_settings[$metalB] ?? PHP_INT_MAX;
+
+                return $orderA <=> $orderB;
+            });
+
+            sqlsrv_free_stmt($stmt);
+
+            return $summary;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
     public function getHoldingsMetals($customer_id = null)
     {
         if (!$customer_id || !$this->connection) return [];
@@ -87,20 +145,57 @@ class HoldingsDB
 
             sqlsrv_free_stmt($stmt);
 
-            $results = [];
-            foreach ($summary as $item) {
-                $results[] = [
-                    'spot_date' => $item['Spot_Date'] instanceof \DateTime ? $item['Spot_Date']->format('Y-m-d') : $item['Spot_Date'],
-                    'spot_price' => $item['Spot_Price'] ?? '',
-                    'location' => $item['WH_Code'] ?? '',
-                    'description' => $item['Item_Desc'] ?? '',
-                    'quantity' => $item['Qty'] ?? 0,
-                    'serial_no' => $item['Ser_No_List'] ? $this->sanitizeSerials($item['Ser_No_List']) :  '',
-                    'fine_oz' => $item['FineOz'] ?? 0,
-                    'total' => $item['Total'] ?? 0,
-                ];
+            return $this->formatHoldingsData($summary);
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    public function getHoldingsByDateRange(string $customer_id, string $start_date, string $end_date)
+    {
+        if (!$customer_id || !$start_date || !$end_date) return [];
+
+        var_dump($customer_id, $start_date, $end_date, "getHoldingsByDateRange");
+
+        if (!$this->connection) return [];
+
+        $where = '';
+        $params = [];
+
+        if ($customer_id) {
+            $where .= "WHERE [Party_Code] = ?";
+            $params[] = $customer_id;
+        }
+
+        if ($start_date) {
+            $where .= empty($where) ? "WHERE" : " AND";
+            $where .= " [Spot_Date] >= ?";
+            $params[] = $start_date;
+        }
+
+        if ($end_date) {
+            $where .= empty($where) ? "WHERE" : " AND";
+            $where .= " [Spot_Date] <= ?";
+            $params[] = $end_date;
+        }
+
+        try {
+            $sql = "SELECT * FROM $this->database_prefix.[DW_DocHoldings] $where";
+
+            $stmt = sqlsrv_query($this->connection, $sql, $params);
+
+            if ($stmt === false) {
+                throw new \Exception('Holdings data is temporarily unavailable.');
             }
-            return $results;
+
+            $summary = [];
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $summary[] = $row;
+            }
+
+            sqlsrv_free_stmt($stmt);
+
+            return $this->formatHoldingsData($summary);
         } catch (\Throwable $e) {
             return [];
         }
@@ -184,6 +279,24 @@ class HoldingsDB
                 'brand' => $item['Brand'] ?? '',
                 'mt_code' => $item['MT_Code'] ?? '',
                 "metal" => $this->getMetalName($item['MT_Code'] ?? ''),
+            ];
+        }
+        return $results;
+    }
+
+    private function formatHoldingsData($data)
+    {
+        $results = [];
+        foreach ($data as $item) {
+            $results[] = [
+                'spot_date' => $item['Spot_Date'] instanceof \DateTime ? $item['Spot_Date']->format('Y-m-d') : $item['Spot_Date'],
+                'spot_price' => $item['Spot_Price'] ?? '',
+                'location' => $item['WH_Code'] ?? '',
+                'description' => $item['Item_Desc'] ?? '',
+                'quantity' => $item['Qty'] ?? 0,
+                'serial_no' => $item['Ser_No_List'] ? $this->sanitizeSerials($item['Ser_No_List']) :  '',
+                'fine_oz' => $item['FineOz'] ?? 0,
+                'total' => $item['Total'] ?? 0,
             ];
         }
         return $results;
