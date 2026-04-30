@@ -155,8 +155,6 @@ class HoldingsDB
     {
         if (!$customer_id || !$start_date || !$end_date) return [];
 
-        var_dump($customer_id, $start_date, $end_date, "getHoldingsByDateRange");
-
         if (!$this->connection) return [];
 
         $where = '';

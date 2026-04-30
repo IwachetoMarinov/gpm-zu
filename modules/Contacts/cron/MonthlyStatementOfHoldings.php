@@ -5,7 +5,7 @@ include_once 'CronHelpers.php';
 include_once 'StatementOfHoldingsService.php';
 
 // TEST cron job 
-// /usr/bin/php /var/www/html/gpm-zu/monthly_ash.php
+// /usr/bin/php /var/www/html/gpm-zu/monthly_sh.php
 // /usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php
 
 class Contacts_MonthlyStatementOfHoldings
@@ -26,7 +26,6 @@ class Contacts_MonthlyStatementOfHoldings
         $service = new Contacts_StatementOfHoldingsService();
 
         foreach ($clint_ids as $client_id) {
-            // echo "Processing client ID: $client_id for date range: " . implode(' to ', $date_range) . "\n";
             $service->processClient($client_id, $date_range);
         }
     }
