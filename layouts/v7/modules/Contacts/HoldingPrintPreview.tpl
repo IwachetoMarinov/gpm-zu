@@ -197,8 +197,14 @@
                 <tr>
                     <td style="height: 28mm;">
 
-                        <img src="file://{$ROOT_DIRECTORY}/layouts/v7/modules/Contacts/resources/gpm-new-logo.png"
-                            style="max-height: 100%; float:right;width: 154px;">
+                        {if !isset($ROOT_DIRECTORY)}
+                            <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
+                                style="max-height: 100%; float:right;width: 154px;">
+                        {else}
+                            <img src="file://{$ROOT_DIRECTORY}/layouts/v7/modules/Contacts/resources/gpm-new-logo.png"
+                                style="max-height: 100%; float:right;width: 154px;">
+                        {/if}
+
                         <div style="font-size:11pt;margin-top: 14px;margin-bottom: 32px">
                             {$RECORD_MODEL->get('cf_898')}<br>
                             {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
