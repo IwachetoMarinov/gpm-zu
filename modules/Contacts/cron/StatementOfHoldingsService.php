@@ -70,7 +70,7 @@ class Contacts_StatementOfHoldingsService
         // echo $html;
 
         // 13. Generate PDF from HTML and store it in Documents module
-        $pdfPath = Contacts_CronHelpers::generatePdf($html, $client_id, $date_range, '%s-StatementOfHoldings-%s-to-%s');
+        $pdfPath = Contacts_CronHelpers::generatePdf($html, $client_id, $date_range, 'Monthly Statement of Holdings - %s - %s%s');
 
         // 16. If PDF generation failed → stop here
         if (!file_exists($pdfPath)) return;

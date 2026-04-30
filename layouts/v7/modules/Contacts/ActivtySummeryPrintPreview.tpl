@@ -219,7 +219,7 @@
                 <table class="print-tbl">
                     <tr>
                         <td style="height: 144px;vertical-align: top;">
-                            {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                            {if !isset($ROOT_DIRECTORY)}
                                 <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
                                     style="height: 103px; margin-top: -14px;float:right;width: 154px;">
                             {else}
