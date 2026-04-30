@@ -25,9 +25,6 @@ class Contacts_ActivitySummaryService
 
         if (!is_array($activities) || count($activities) === 0) return;
 
-        // TEMP: prove insert works first
-        // $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, 'TEST');
-
         // 4. Get Contact record model (used for template rendering)
         $contactRecord = $this->getContactRecordByClientId($client_id);
 
