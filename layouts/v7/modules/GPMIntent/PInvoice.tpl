@@ -68,6 +68,15 @@
                     </tr>
                 {/if}
 
+
+                {if isset($COMPANY) && !empty($COMPANY->get('vat_id'))}
+                    <tr>
+                        <td style="text-align: left;font-size: 10pt; font-weight: bold;">
+                            VAT Nr: {$COMPANY->get('vat_id')}
+                        </td>
+                    </tr>
+                {/if}
+
                 <!-- Invoice meta -->
                 <tr>
                     <td style="text-align:right;font-size:9pt">
@@ -168,7 +177,7 @@
                         {if isset($COMPANY)}
                             {$COMPANY->get('company_name')}
                             {if $COMPANY->get('company_reg_no')}(Co. Reg. No. {$COMPANY->get('company_reg_no')}){/if}<br>
-                             {$COMPANY_FULL_ADDRESS}
+                            {$COMPANY_FULL_ADDRESS}
                             <br>
                             T: {$COMPANY->get('company_phone')}
                             {if $COMPANY->get('company_fax')} | Fax: {$COMPANY->get('company_fax')}{/if}

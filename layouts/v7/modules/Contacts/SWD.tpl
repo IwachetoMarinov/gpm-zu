@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-         @font-face {
+        @font-face {
             font-family: 'Open Sans';
             font-style: normal;
             font-weight: 400;
@@ -248,6 +248,14 @@
                         <td>GST Reg No.: {$COMPANY->get('company_gst_no')}</td>
                     </tr>
                 {/if}
+
+                {if isset($COMPANY) && !empty($COMPANY->get('vat_id'))}
+                    <tr>
+                        <td style="text-align: left;font-size: 10pt; font-weight: bold;">
+                            VAT Nr: {$COMPANY->get('vat_id')}
+                        </td>
+                    </tr>
+                {/if}
                 <tr>
                     <td style="text-align: right;font-size: 9pt">
                         All amounts in {$ERP_DOCUMENT->currency}
@@ -313,7 +321,8 @@
                                         <td style="border-bottom:none;vertical-align: top">
                                             {$barItem->itemDescription} <br><span
                                                 style="font-size: smaller;font-style: italic;max-width: 250px;display: inline-block;word-break: break-all;white-space: normal;">
-                                                <pre>{$barItem->serialNumbers}</pre></span>
+                                                <pre>{$barItem->serialNumbers}</pre>
+                                            </span>
                                         </td>
                                         {if $barItem->metal eq 'mBTC'}
                                             <td style="text-align:right;vertical-align: top">
@@ -322,7 +331,8 @@
                                             <td style="text-align:right;vertical-align: top">
                                                 {number_format($total/$barItem->quantity,2)}</td>
                                         {/if}
-                                        <td style="text-align:right;vertical-align: top">{number_format($barItem->totalFineOz,4)}
+                                        <td style="text-align:right;vertical-align: top">
+                                            {number_format($barItem->totalFineOz,4)}
                                         </td>
                                         <td style="text-align:right;vertical-align: top">{number_format($total,2)}</td>
                                     </tr>
@@ -370,23 +380,7 @@
                             {/if}
 
                         </table>
-                        <br>
-                        <br>
-                        {* {if isset($COMPANY) && !empty($COMPANY->get('company_gst_no'))} *}
 
-                            {assign var="exchangeRateInfo" value=MASForex_Record_Model::getLatestExchangeRateByCurrency($ERP_DOCUMENT->documentDate, $ERP_DOCUMENT->currency)}
-
-                            {if !empty($exchangeRateInfo) && isset($exchangeRateInfo['rate'])}
-                                <div>
-                                    {if $ERP_DOCUMENT->currency eq 'SGD'}
-                                        *Remarks: USD/SGD exchange rate at SGD {number_format($exchangeRateInfo['rate'],4)} / USD
-                                    {else}
-                                        *Remarks: {$ERP_DOCUMENT->currency}/SGD exchange rate at SGD
-                                        {number_format($exchangeRateInfo['rate'],4)} / {$ERP_DOCUMENT->currency}
-                                    {/if}
-                                </div>
-                            {/if}
-                        {* {/if} *}
                         <br>
                         <br>
                         <div>
@@ -420,7 +414,7 @@
                         {if isset($COMPANY)}
                             {$COMPANY->get('company_name')} {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg. No.
                             {$COMPANY->get('company_reg_no')}){/if}<br>
-                             {$COMPANY_FULL_ADDRESS}
+                            {$COMPANY_FULL_ADDRESS}
                             <br>
                             T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax:
                             {$COMPANY->get('company_fax')} {/if} | {$COMPANY->get('email')}<br>

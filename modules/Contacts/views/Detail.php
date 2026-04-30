@@ -62,7 +62,7 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$activity = new dbo_db\ActivitySummary();
 
 		// Check ERP DB connection before proceeding
-		$erp_connection = $activity->checkConnection();
+		// $erp_connection = $activity->checkConnection();
 
 		// TODO: Fix this hardcoded value
 

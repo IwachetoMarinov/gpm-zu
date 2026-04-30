@@ -1,6 +1,7 @@
 <?php
 
 /* modules/Contacts/cron/MonthlyTransactionCron.php */
+include_once 'CronHelpers.php';
 include_once 'ActivitySummaryService.php';
 
 class Contacts_MonthlyTransactionCron
@@ -14,34 +15,21 @@ class Contacts_MonthlyTransactionCron
 
     public function process()
     {
-        // 0. Check if not first day of the month, if yes then exit (to avoid running on the first day of the month)
-        if (date('d') !== '01') return;
+        // 0. Check if not last day of the month, if yes then exit (to avoid running on the last day of the month)
+        if (date('d') !== date('t')) return;
 
         // 1. Build date range for the current month
-        $date_range = $this->buildMonthlyDateRange();
+        $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
 
         $service = new Contacts_ActivitySummaryService();
 
         // 2 Get all Party codes (client IDs) to process monthly transactions for each client
-        $clint_ids =  $this->fetchClientIds();
+        $clint_ids =  Contacts_CronHelpers::fetchClientIds();
 
         // Loop through each client and process their transactions for the month
         foreach ($clint_ids as $client_id) {
             $service->generateAndStoreForClient($client_id, $date_range);
-
-            // break after first iteration for testing, remove this in production
-            // break;
         }
-    }
-
-    protected function buildMonthlyDateRange()
-    {
-        // Get curent month and year        $month = date('m');
-        $year = date('Y');
-        $month = date('m');
-        $startDate = date('Y-m-d', strtotime("$year-$month-01"));
-        $endDate = date('Y-m-t', strtotime($startDate));
-        return [$startDate, $endDate];
     }
 
     protected function checkCreateMonthlyTransactionTable()
@@ -64,25 +52,5 @@ class Contacts_MonthlyTransactionCron
             )";
             $db->pquery($createQuery, []);
         }
-    }
-
-    protected function fetchClientIds()
-    {
-        $db = PearDatabase::getInstance();
-
-        $query = "
-        SELECT DISTINCT cf_898 AS client_id
-        FROM vtiger_contactscf
-        WHERE cf_898 IS NOT NULL AND cf_898 != ''
-    ";
-
-        $result = $db->pquery($query, []);
-
-        $clientIds = [];
-        while ($row = $db->fetch_array($result)) {
-            $clientIds[] = $row['client_id'];
-        }
-
-        return $clientIds;
     }
 }

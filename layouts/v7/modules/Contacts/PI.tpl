@@ -250,6 +250,13 @@
                         </td>
                     </tr>
 
+                    {if isset($COMPANY) && !empty($COMPANY->get('vat_id'))}
+                        <tr>
+                            <td style="text-align: left;font-size: 10pt; font-weight: bold;">
+                                VAT Nr: {$COMPANY->get('vat_id')}
+                            </td>
+                        </tr>
+                    {/if}
 
                     <tr>
                         <td style="text-align: right;font-size: 9pt">

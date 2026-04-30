@@ -14,7 +14,7 @@ require_once 'include/database/PearDatabase.php';
 require_once 'modules/Users/CreateUserPrivilegeFile.php';
 require_once 'modules/Users/Users.php';
 
-global $adb, $current_user;
+global $adb, $current_user, $root_directory;
 
 // Run as admin so vtiger has full context
 $current_user = Users::getActiveAdminUser();
