@@ -25,10 +25,8 @@ class Contacts_MonthlyStatementOfHoldings
         $service = new Contacts_StatementOfHoldingsService();
 
         foreach ($clint_ids as $client_id) {
+            // echo "Processing client ID: $client_id for date range: " . implode(' to ', $date_range) . "\n";
             $service->processClient($client_id, $date_range);
-
-            // break after first iteration for testing, remove this in production
-            // break;
         }
     }
 }

@@ -52,6 +52,8 @@ class Contacts_StatementOfHoldingsService
         });
 
         // 11. Assign all variables required by the template
+        $ROOT_DIRECTORY = getenv('ROOT_DIRECTORY') ?: ($ROOT_DIRECTORY ?? null);
+        $smarty->assign('ROOT_DIRECTORY', $ROOT_DIRECTORY);
         $smarty->assign('RECORD_MODEL', $contactRecord);
         $smarty->assign('LBMA_DATE', $LBMA_DATE);
         $smarty->assign('TOTAL', $total);
