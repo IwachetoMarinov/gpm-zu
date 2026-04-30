@@ -80,21 +80,12 @@ class Contacts_ActivitySummaryService
         // $pdfPath = $this->generatePdf($html, $client_id, $date_range);
         $pdfPath = Contacts_CronHelpers::generatePdf($html, $client_id, $date_range, 'Monthly Activity Summary - %s - %s%s');
 
-        echo "Generated PDF path: " . $pdfPath . "\n";
-
         // 16. If PDF generation failed → stop here
         if (!file_exists($pdfPath)) return;
 
         // 17. Store generated PDF in vTiger Documents module
-        // $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+        $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
         // Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency, 'Monthly Activity Summary - %s - %s%s');
-        Contacts_CronHelpers::storePdfInDocuments(
-            $pdfPath,
-            $client_id,
-            $selected_year,
-            $selected_currency
-        );
-
 
         // 18. Insert into monthly transactions table for record-keeping
         try {
