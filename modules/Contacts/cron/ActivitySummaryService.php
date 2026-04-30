@@ -1,10 +1,11 @@
 <?php
 /* modules/Contacts/cron/ActivitySummaryService.php */
 
+include_once 'CronHelpers.php';
 include_once 'dbo_db/Helper.php';
+require_once 'data/CRMEntity.php';
 include_once 'dbo_db/ActivitySummary.php';
 require_once 'modules/Documents/Documents.php';
-require_once 'data/CRMEntity.php';
 
 class Contacts_ActivitySummaryService
 {
@@ -86,13 +87,21 @@ class Contacts_ActivitySummaryService
 
         // 17. Store generated PDF in vTiger Documents module
         // $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
-        Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency, 'Monthly Activity Summary - %s - %s%s');
+        // Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency, 'Monthly Activity Summary - %s - %s%s');
+        Contacts_CronHelpers::storePdfInDocuments(
+            $pdfPath,
+            $client_id,
+            $selected_year,
+            $selected_currency
+        );
 
 
         // 18. Insert into monthly transactions table for record-keeping
-        $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
-
-        echo "Monthly activity summary generated and stored for client_id: $client_id, period: $start_date to $end_date, currency: $selected_currency\n";
+        try {
+            $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
+        } catch (Exception $e) {
+            echo "Error inserting into monthly transactions: " . $e->getMessage() . "\n";
+        }
 
         // 19. Cleanup generated PDF file
         if (file_exists($pdfPath)) unlink($pdfPath);
@@ -177,39 +186,6 @@ class Contacts_ActivitySummaryService
         }
 
         return $totalPage;
-    }
-
-    protected function generatePdf($html, $client_id, $date_range)
-    {
-        $startDate = date('d-M-Y', strtotime($date_range[0]));
-        $endDate = date('d-M-Y', strtotime($date_range[1]));
-
-        $fileName = sprintf('%s-AS-%s-%s', $client_id, $startDate, $endDate);
-
-        // Temporary HTML + final PDF paths
-        $basePath = realpath(dirname(__DIR__, 3));
-        $tmpDir = sys_get_temp_dir();
-
-        if (!$basePath) throw new Exception('Cannot resolve base path');
-
-        $htmlPath = $tmpDir . '/' . $fileName . '.html';
-        $pdfPath  = $tmpDir . '/' . $fileName . '.pdf';
-
-        file_put_contents($htmlPath, $html);
-
-        $inputFile = 'file://' . $htmlPath;
-
-        $command = '/usr/bin/wkhtmltopdf --enable-local-file-access -L 0 -R 0 -B 0 -T 0 '
-            . escapeshellarg($inputFile) . ' '
-            . escapeshellarg($pdfPath) . ' 2>&1';
-
-        $output = [];
-        $returnVar = 0;
-        exec($command, $output, $returnVar);
-
-        if (file_exists($htmlPath)) unlink($htmlPath);
-
-        return $pdfPath;
     }
 
     protected function storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency)
