@@ -58,7 +58,10 @@ class Contacts_ActivitySummaryService
             return $templateRoot . '/' . $moduleName . '/' . $templateName;
         });
 
+
         // 13. Assign all variables required by the template
+        $ROOT_DIRECTORY = getenv('ROOT_DIRECTORY') ?: ($ROOT_DIRECTORY ?? null);
+        $smarty->assign('ROOT_DIRECTORY', $ROOT_DIRECTORY);
         $smarty->assign('RECORD_MODEL', $contactRecord);
         $smarty->assign('TRANSACTIONS', $activities);
         $smarty->assign('COMPANY', $company_record);
