@@ -146,9 +146,7 @@ class Contacts_CronHelpers
         $attachmentId = $adb->getUniqueID('vtiger_crmentity');
 
         // Determine upload directory (vTiger storage)
-        // $uploadDir = decideFilePath();
         $basePath = realpath(dirname(__DIR__, 3));
-        // $uploadDir = $basePath . '/' . decideFilePath();
         $uploadDir = $basePath . '/storage/';
 
         if (!is_dir($uploadDir)) {
@@ -170,8 +168,8 @@ class Contacts_CronHelpers
         VALUES (?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)",
             [
                 $attachmentId,
-                $current_user->id,   // Technical creator (admin)
-                $contactOwnerId,     // Business owner (client owner)
+                $current_user->id,
+                $contactOwnerId,
                 'Documents Attachment',
                 $documentTitle,
                 1,

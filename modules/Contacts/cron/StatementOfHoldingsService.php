@@ -113,7 +113,7 @@ class Contacts_StatementOfHoldingsService
         return $holdings_data;
     }
 
-    protected function calculateSpotTotal($holdings_data)
+    protected function calculateSpotTotal(array $holdings_data)
     {
         $total = 0.00;
         foreach ($holdings_data as $item) {

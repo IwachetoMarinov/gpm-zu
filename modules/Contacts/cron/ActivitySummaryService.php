@@ -77,7 +77,6 @@ class Contacts_ActivitySummaryService
         $html = $smarty->fetch('file:' . $templatePath);
 
         // 15. Generate PDF from HTML using wkhtmltopdf
-        // $pdfPath = $this->generatePdf($html, $client_id, $date_range);
         $pdfPath = Contacts_CronHelpers::generatePdf($html, $client_id, $date_range, 'Monthly Activity Summary - %s - %s%s');
 
         // 16. If PDF generation failed → stop here
@@ -85,7 +84,6 @@ class Contacts_ActivitySummaryService
 
         // 17. Store generated PDF in vTiger Documents module
         $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
-        // Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency, 'Monthly Activity Summary - %s - %s%s');
 
         // 18. Insert into monthly transactions table for record-keeping
         try {
