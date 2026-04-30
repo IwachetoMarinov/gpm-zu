@@ -13,14 +13,14 @@ class YTDReports_Monthly_Cron
 
         echo "Starting YTD Reports Cron for date range: " . $date_range['start'] . " to " . $date_range['end'] . "\n";
         echo "Found " . count($client_ids) . " clients to process\n";
-        echo "Processing clients...\n";
-        echo "<pre>";
-        var_dump($client_ids);
-        echo "</pre>";
 
         foreach ($client_ids as $client_id) {
-            echo "Processing YTD report for client ID: $client_id\n";
-            // YTDReportService::generateForClient($client_id, $date_range);
+            try {
+                echo "Processing YTD report for client ID: $client_id\n";
+                YTDReportService::generateForClient($client_id, $date_range);
+            } catch (Exception $e) {
+                echo "Error processing YTD report for client ID $client_id: " . $e->getMessage() . "\n";
+            }
         }
 
         return true;
