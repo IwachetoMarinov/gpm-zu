@@ -58,7 +58,6 @@ class Contacts_ActivitySummaryService
             return $templateRoot . '/' . $moduleName . '/' . $templateName;
         });
 
-
         // 13. Assign all variables required by the template
         $ROOT_DIRECTORY = getenv('ROOT_DIRECTORY') ?: ($ROOT_DIRECTORY ?? null);
         $smarty->assign('ROOT_DIRECTORY', $ROOT_DIRECTORY);
@@ -77,13 +76,17 @@ class Contacts_ActivitySummaryService
         $html = $smarty->fetch('file:' . $templatePath);
 
         // 15. Generate PDF from HTML using wkhtmltopdf
-        $pdfPath = $this->generatePdf($html, $client_id, $date_range);
+        // $pdfPath = $this->generatePdf($html, $client_id, $date_range);
+        $pdfPath = Contacts_CronHelpers::generatePdf($html, $client_id, $date_range, 'Monthly Activity Summary - %s - %s%s');
 
         // 16. If PDF generation failed → stop here
         if (!file_exists($pdfPath)) return;
 
         // 17. Store generated PDF in vTiger Documents module
-        $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+        // $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+
+        Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency, 'Monthly Activity Summary - %s - %s%s');
+
 
         // 18. Insert into monthly transactions table for record-keeping
         $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
@@ -92,7 +95,7 @@ class Contacts_ActivitySummaryService
         if (file_exists($pdfPath)) unlink($pdfPath);
     }
 
-    protected function insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $currency)
+    protected function insertIntoMonthlyTransactions(string $client_id, string $start_date, string $end_date, string $currency)
     {
         $db = PearDatabase::getInstance();
         $result = $db->pquery(
