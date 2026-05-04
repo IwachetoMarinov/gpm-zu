@@ -15,6 +15,8 @@ class Contacts_StatementOfHoldingsService
     {
         // Init HoldingsDB
         $holding = new dbo_db\HoldingsDB();
+        $start_date = !empty($date_range) ? $date_range[0] : date('Y-m-01');
+        $end_date = !empty($date_range) ? $date_range[1] : date('Y-m-t');
 
         // 2. Fetch Statement of Holdings data for the client and date range
         $holdings = $this->fetchHoldings($client_id, $date_range, $holding);
@@ -79,10 +81,15 @@ class Contacts_StatementOfHoldingsService
 
         // 17. Store generated PDF in vTiger Documents module
         $selected_year = date('Y', strtotime($date_range[0]));
-        Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, "USD", 'Statement of Holdings - %s - %s to %s');
+        $holdingsDocId = Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, "USD", 'Statement of Holdings - %s - %s to %s');
 
-        // 18. Insert into monthly transactions table for record-keeping
-        // $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
+        // 18. Log the generated report in vtiger_ytdreports_log table
+        Contacts_CronHelpers::logYTDReportHoldings(
+            $client_id,
+            $start_date,
+            $end_date,
+            $holdingsDocId
+        );
 
         // 19. Cleanup generated PDF file
         if (file_exists($pdfPath)) unlink($pdfPath);
