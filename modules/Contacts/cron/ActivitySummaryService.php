@@ -15,12 +15,21 @@ class Contacts_ActivitySummaryService
     {
         // 1. Init ActivitySummary to fetch transactions for the date range
         $activity = new dbo_db\ActivitySummary();
-        // echo "Generating activity summary for client ID: $client_id\n and date range: " . ($date_range[0] ?? 'N/A') . " to " . ($date_range[1] ?? 'N/A') . "\n";
 
         // 2. Init date variables (fallback to current month if not provided)
         $selected_year = !empty($date_range) ? date('Y', strtotime($date_range[0])) : date('Y');
         $start_date = !empty($date_range) ? $date_range[0] : date('Y-m-01');
         $end_date = !empty($date_range) ? $date_range[1] : date('Y-m-t');
+
+        if (Contacts_CronHelpers::ytdReportExists(
+            $client_id,
+            $start_date,
+            $end_date,
+            'Activity Summary'
+        )) {
+            echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
+            return 0;
+        }
 
         // 3. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date);

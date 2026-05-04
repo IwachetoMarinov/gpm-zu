@@ -197,6 +197,35 @@ class Contacts_CronHelpers
         return $reportId;
     }
 
+    public static function ytdReportExists(
+        string $client_id,
+        string $start_date,
+        string $end_date,
+        string $reportType
+    ): bool {
+        $db = PearDatabase::getInstance();
+
+        $name = sprintf(
+            '%s - %s - %s to %s',
+            $reportType,
+            $client_id,
+            $start_date,
+            $end_date
+        );
+
+        $result = $db->pquery(
+            "SELECT ce.crmid
+         FROM vtiger_crmentity ce
+         INNER JOIN vtiger_ytdreports y ON y.ytdreportsid = ce.crmid
+         WHERE ce.deleted = 0
+         AND y.ytdreportsname = ?
+         LIMIT 1",
+            [$name]
+        );
+
+        return $db->num_rows($result) > 0;
+    }
+
     public static function storePdfInDocuments(string $pdfPath, string $client_id, string $selected_year, string $selected_currency, string $titlePrefix = 'Monthly Activity Summary - %s - %s%s')
     {
         global $adb, $current_user;
