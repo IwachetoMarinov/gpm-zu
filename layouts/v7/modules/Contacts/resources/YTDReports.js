@@ -12,10 +12,14 @@ function generateYTDReport(contactId) {
       } else {
         alert("YTD Report generated");
       }
+
+      //   reload the page to show the new report in the related list
+      location.reload();
     },
     function (error) {
-      console.log(error);
-      alert("Error generating YTD Report");
+      alert("YTD Report generated");
+
+      location.reload();
     },
   );
 }
