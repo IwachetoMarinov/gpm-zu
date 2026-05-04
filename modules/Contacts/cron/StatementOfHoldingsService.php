@@ -24,14 +24,11 @@ class Contacts_StatementOfHoldingsService
             $end_date,
             'Statement of Holdings'
         )) {
-            echo "Statement of Holdings already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
             return 0;
         }
 
         // 2. Fetch Statement of Holdings data for the client and date range
         $holdings = $this->fetchHoldings($client_id, $date_range, $holding);
-
-        echo "Fetched ->>>>>>>>>>>" . count($holdings) . " holdings for client ID $client_id\n";
 
         if (!is_array($holdings) || count($holdings) === 0) return;
 
