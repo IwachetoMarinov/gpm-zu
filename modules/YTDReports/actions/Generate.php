@@ -1,5 +1,9 @@
 <?php
 
+include_once 'modules/Contacts/cron/CronHelpers.php';
+include_once 'modules/Contacts/cron/ActivitySummaryService.php';
+include_once 'modules/Contacts/cron/StatementOfHoldingsService.php';
+
 class YTDReports_Generate_Action extends Vtiger_Action_Controller
 {
     public function checkPermission(Vtiger_Request $request)
