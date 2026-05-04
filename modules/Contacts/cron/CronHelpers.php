@@ -173,6 +173,13 @@ class Contacts_CronHelpers
 
         $reportId = $report->id;
 
+        // Link YTDReports record to generated Document
+        $adb->pquery(
+            "INSERT INTO vtiger_crmentityrel (crmid, module, relcrmid, relmodule)
+     VALUES (?, ?, ?, ?)",
+            [$reportId, 'YTDReports', $documentId, 'Documents']
+        );
+
         // Link report to Contact
         $adb->pquery(
             "INSERT INTO vtiger_crmentityrel (crmid, module, relcrmid, relmodule)
