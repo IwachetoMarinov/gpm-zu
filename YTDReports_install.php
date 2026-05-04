@@ -135,6 +135,29 @@ if ($contactsModule) {
     echo "Contacts module not found\n";
 }
 
+$documentsModule = Vtiger_Module::getInstance('Documents');
+
+if ($documentsModule) {
+    $relationExists = $adb->pquery(
+        "SELECT 1 FROM vtiger_relatedlists 
+         WHERE tabid = ? AND related_tabid = ?",
+        [$module->id, $documentsModule->id]
+    );
+
+    if ($adb->num_rows($relationExists) == 0) {
+        $module->setRelatedList(
+            $documentsModule,
+            'Documents',
+            ['ADD', 'SELECT'],
+            'get_related_list'
+        );
+
+        echo "Documents related list added to YTDReports\n";
+    } else {
+        echo "Documents related list already exists\n";
+    }
+}
+
 /**
  * Register scheduler
  */
