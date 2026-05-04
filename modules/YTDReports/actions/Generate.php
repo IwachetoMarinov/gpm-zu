@@ -18,16 +18,12 @@ class YTDReports_Generate_Action extends Vtiger_Action_Controller
         try {
             $contactId = $request->get('contact_id');
 
-            if (!$contactId) {
-                throw new Exception('Missing contact_id');
-            }
+            if (!$contactId) throw new Exception('Missing contact_id');
 
             $contactRecord = Vtiger_Record_Model::getInstanceById($contactId, 'Contacts');
             $client_id = $contactRecord->get('cf_898');
 
-            if (!$client_id) {
-                throw new Exception('Client ID not found');
-            }
+            if (!$client_id)  throw new Exception('Client ID not found');
 
             $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
 
