@@ -90,6 +90,13 @@ class Contacts_ActivitySummaryService
 
         // 18. Log the generated report in vtiger_ytdreports_log table
         Contacts_CronHelpers::logYTDReport($client_id, $start_date, $end_date, $activityDocId);
+        Contacts_CronHelpers::createYTDReportRecord(
+            $client_id,
+            $start_date,
+            $end_date,
+            $activityDocId,
+            'Activity Summary'
+        );
 
         // 19. Insert into monthly transactions table for record-keeping
         try {

@@ -11,15 +11,7 @@ class YTDReportService
     public static function generateForClient(string $client_id, array $date_range = [])
     {
         if (empty($date_range)) $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
-
-        $ytdReportId = Contacts_CronHelpers::createYTDReportRecord(
-            $client_id,
-            $date_range[0],
-            $date_range[1]
-        );
-
-        echo "Created YTDReports record ID: {$ytdReportId}\n";
-
+        
         try {
             $activityService = new Contacts_ActivitySummaryService();
             $activityService->generateAndStoreForClient($client_id, $date_range);

@@ -82,6 +82,13 @@ class Contacts_StatementOfHoldingsService
         // 17. Store generated PDF in vTiger Documents module
         $selected_year = date('Y', strtotime($date_range[0]));
         $holdingsDocId = Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, "USD", 'Statement of Holdings - %s - %s to %s');
+        Contacts_CronHelpers::createYTDReportRecord(
+            $client_id,
+            $start_date,
+            $end_date,
+            $holdingsDocId,
+            'Statement of Holdings'
+        );
 
         // 18. Log the generated report in vtiger_ytdreports_log table
         Contacts_CronHelpers::logYTDReportHoldings(

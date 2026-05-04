@@ -140,8 +140,13 @@ class Contacts_CronHelpers
         );
     }
 
-    public static function createYTDReportRecord(string $client_id, string $start_date, string $end_date)
-    {
+    public static function createYTDReportRecord(
+        string $client_id,
+        string $start_date,
+        string $end_date,
+        int $documentId,
+        string $reportType
+    ) {
         global $adb, $current_user;
 
         self::initExecutionUser();
@@ -155,7 +160,8 @@ class Contacts_CronHelpers
 
         $report = CRMEntity::getInstance('YTDReports');
         $report->column_fields['ytdreportsname'] = sprintf(
-            'YTD Reports - %s - %s to %s',
+            '%s - %s - %s to %s',
+            $reportType,
             $client_id,
             $start_date,
             $end_date
@@ -167,10 +173,18 @@ class Contacts_CronHelpers
 
         $reportId = $report->id;
 
+        // Link report to Contact
         $adb->pquery(
             "INSERT INTO vtiger_crmentityrel (crmid, module, relcrmid, relmodule)
          VALUES (?, ?, ?, ?)",
             [$contactId, 'Contacts', $reportId, 'YTDReports']
+        );
+
+        // Link report to generated Document
+        $adb->pquery(
+            "INSERT INTO vtiger_crmentityrel (crmid, module, relcrmid, relmodule)
+         VALUES (?, ?, ?, ?)",
+            [$reportId, 'YTDReports', $documentId, 'Documents']
         );
 
         return $reportId;
