@@ -11,7 +11,7 @@ class Contacts_ActivitySummaryService
 {
     public function __construct() {}
 
-    public function generateAndStoreForClient($client_id, $date_range = [])
+    public function generateAndStoreForClient(string $client_id, array $date_range = [])
     {
         // 1. Init ActivitySummary to fetch transactions for the date range
         $activity = new dbo_db\ActivitySummary();
@@ -20,6 +20,15 @@ class Contacts_ActivitySummaryService
         $selected_year = !empty($date_range) ? date('Y', strtotime($date_range[0])) : date('Y');
         $start_date = !empty($date_range) ? $date_range[0] : date('Y-m-01');
         $end_date = !empty($date_range) ? $date_range[1] : date('Y-m-t');
+
+        if (Contacts_CronHelpers::ytdReportExists(
+            $client_id,
+            $start_date,
+            $end_date,
+            'Activity Summary'
+        )) {
+            return 0;
+        }
 
         // 3. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date);
@@ -83,16 +92,26 @@ class Contacts_ActivitySummaryService
         if (!file_exists($pdfPath)) return;
 
         // 17. Store generated PDF in vTiger Documents module
-        $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
+        $activityDocId =  $this->storePdfInDocuments($pdfPath, $client_id, $selected_year, $selected_currency);
 
-        // 18. Insert into monthly transactions table for record-keeping
+        // 18. Log the generated report in vtiger_ytdreports_log table
+        Contacts_CronHelpers::logYTDReport($client_id, $start_date, $end_date, $activityDocId);
+        Contacts_CronHelpers::createYTDReportRecord(
+            $client_id,
+            $start_date,
+            $end_date,
+            $activityDocId,
+            'Activity Summary'
+        );
+
+        // 19. Insert into monthly transactions table for record-keeping
         try {
             $this->insertIntoMonthlyTransactions($client_id, $start_date, $end_date, $selected_currency);
         } catch (Exception $e) {
             echo "Error inserting into monthly transactions: " . $e->getMessage() . "\n";
         }
 
-        // 19. Cleanup generated PDF file
+        // 20. Cleanup generated PDF file
         if (file_exists($pdfPath)) unlink($pdfPath);
     }
 
@@ -289,6 +308,8 @@ class Contacts_ActivitySummaryService
          VALUES (?, ?)",
             [$contactId, $documentId]
         );
+
+        return $documentId;
     }
 
     protected function getContactInfoByClientId($client_id)

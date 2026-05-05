@@ -5,7 +5,7 @@ include_once 'CronHelpers.php';
 include_once 'StatementOfHoldingsService.php';
 
 // TEST cron job 
-// /usr/bin/php /var/www/html/gpm-zu/monthly_ash.php
+// /usr/bin/php /var/www/html/gpm-zu/monthly_sh.php
 // /usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php
 
 class Contacts_MonthlyStatementOfHoldings
