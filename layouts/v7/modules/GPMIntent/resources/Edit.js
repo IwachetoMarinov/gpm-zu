@@ -36,8 +36,6 @@ Vtiger_Edit_Js(
     setSpotPrice: function (selectedMetal, currency = "USD") {
       var thisInstance = this;
 
-      console.log(selectedMetal, currency);
-
       //if (jQuery('input[name="indicative_spot_price"]').val() == '') {
       thisInstance
         .getCurruntMetalSpotPrice(selectedMetal, currency)
@@ -157,51 +155,134 @@ Vtiger_Edit_Js(
       );
     },
 
-    
     registerChangeDiscountValues: function () {
       var thisInstance = this;
 
-      jQuery("body").on("change", ".item_premium_usd", function (e) {
-        var line = jQuery(e.currentTarget).closest(
-          "div.item_infromation_input",
-        );
+      function cleanNumber(value) {
+        return parseFloat((value || "").toString().replace(/,/g, "").trim());
+      }
 
-        var itemTotalOz =
-          parseFloat(
-            (line.find(".item_fineoz").val() || "")
-              .toString()
-              .replace(/,/g, ""),
-          ) || 0;
+      function almostSame(a, b) {
+        if (isNaN(a) && isNaN(b)) return true;
+        if (isNaN(a) || isNaN(b)) return false;
+
+        // Ignore tiny browser/number-input rounding differences
+        return Math.abs(a - b) < 0.000001;
+      }
+
+      // Capture value BEFORE browser/input/select2/save changes anything
+      jQuery("body").on(
+        "mousedown focusin keydown",
+        ".item_premium_usd",
+        function (e) {
+          var $field = jQuery(this);
+
+          if (!$field.data("premium-usd-start-set")) {
+            $field.data("premium-usd-start-value", $field.val());
+            $field.data("premium-usd-start-number", cleanNumber($field.val()));
+            $field.data("premium-usd-start-set", true);
+          }
+        },
+      );
+
+      jQuery("body").on("change", ".item_premium_usd", function (e) {
+        var $field = jQuery(e.currentTarget);
+
+        var originalRaw = $field.data("premium-usd-start-value");
+        var originalNumber = $field.data("premium-usd-start-number");
+
+        var currentRaw = $field.val();
+        var currentNumber = cleanNumber(currentRaw);
+
+        // If user only clicked/focused/blured/save triggered change, do nothing
+        if (almostSame(originalNumber, currentNumber)) {
+          $field.data("premium-usd-start-set", false);
+          return;
+        }
+
+        var line = $field.closest("div.item_infromation_input");
+
+        var itemTotalOz = cleanNumber(line.find(".item_fineoz").val()) || 0;
 
         var exactSpotPriceRaw = jQuery('input[name="spot_price"]').val();
+
         var indicativeSpotPriceRaw = jQuery(
           'input[name="indicative_spot_price"], input[name="cf_1136"]',
         ).val();
 
-        var exactSpotPrice = parseFloat(
-          (exactSpotPriceRaw || "").toString().replace(/,/g, ""),
-        );
-
-        var indicativeSpotPrice = parseFloat(
-          (indicativeSpotPriceRaw || "").toString().replace(/,/g, ""),
-        );
+        var exactSpotPrice = cleanNumber(exactSpotPriceRaw);
+        var indicativeSpotPrice = cleanNumber(indicativeSpotPriceRaw);
 
         var currentSpotPrice =
           !isNaN(exactSpotPrice) && exactSpotPrice > 0
             ? exactSpotPrice
             : indicativeSpotPrice || 0;
 
-        var premiumUsd =
-          parseFloat(
-            (line.find(".item_premium_usd").val() || "")
-              .toString()
-              .replace(/,/g, ""),
-          ) || 0;
+        var premiumUsd = currentNumber || 0;
 
-        // NEW LOGIC: base value + usd premium
         var itemUSD = itemTotalOz * currentSpotPrice + premiumUsd;
 
         line.find(".item_value_usd").val(itemUSD.toFixed(2));
+
+        thisInstance.calculateTotal();
+        thisInstance.calculateForeignValue();
+
+        // Reset capture after real change
+        $field.data("premium-usd-start-value", currentRaw);
+        $field.data("premium-usd-start-number", currentNumber);
+        $field.data("premium-usd-start-set", false);
+      });
+    },
+
+    registerSubmitPremiumUsdRecalculate: function () {
+      var thisInstance = this;
+
+      jQuery("form").on("submit", function () {
+        jQuery("#item_container > div.item_infromation_input").each(
+          function (index) {
+            var line = jQuery(this);
+
+            var itemTotalOz =
+              parseFloat(
+                (line.find(".item_fineoz").val() || "")
+                  .toString()
+                  .replace(/,/g, ""),
+              ) || 0;
+
+            var exactSpotPrice = parseFloat(
+              (jQuery('input[name="spot_price"]').val() || "")
+                .toString()
+                .replace(/,/g, ""),
+            );
+
+            var indicativeSpotPrice = parseFloat(
+              (
+                jQuery(
+                  'input[name="indicative_spot_price"], input[name="cf_1136"]',
+                ).val() || ""
+              )
+                .toString()
+                .replace(/,/g, ""),
+            );
+
+            var currentSpotPrice =
+              !isNaN(exactSpotPrice) && exactSpotPrice > 0
+                ? exactSpotPrice
+                : indicativeSpotPrice || 0;
+
+            var premiumUsd =
+              parseFloat(
+                (line.find(".item_premium_usd").val() || "")
+                  .toString()
+                  .replace(/,/g, ""),
+              ) || 0;
+
+            var itemUSD = itemTotalOz * currentSpotPrice + premiumUsd;
+
+            line.find(".item_value_usd").val(itemUSD.toFixed(2));
+          },
+        );
+
         thisInstance.calculateTotal();
         thisInstance.calculateForeignValue();
       });
@@ -355,8 +436,6 @@ Vtiger_Edit_Js(
         // ".item_metal, .item_qty, .item_premium, .item_premium_usd",
         function (e) {
           line = jQuery(e.currentTarget).closest("div.item_infromation_input");
-
-          console.log("line", line);
 
           thisInstance.calculateTheCurrentLineItem(line);
           thisInstance.calculateTotal();
@@ -554,6 +633,7 @@ Vtiger_Edit_Js(
       this.setFineOzForNoneStrdBars();
       // New function to change USD value on premium change without changing the premium USD value
       this.registerChangeDiscountValues();
+      this.registerSubmitPremiumUsdRecalculate();
     },
   },
 );
