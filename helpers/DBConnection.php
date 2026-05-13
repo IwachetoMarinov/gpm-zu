@@ -21,11 +21,6 @@ class DBConnection
             $server_name = $_ENV['DB_SERVER_NAME'] ?? getenv('DB_SERVER_NAME') ?: '';
             $db_name = $_ENV['DB_EXTERNAL_NAME'] ?? getenv('DB_EXTERNAL_NAME') ?: '';
 
-            // echo "<pre>";
-            // echo "Credentials:\n";
-            // var_dump($db_username, $db_password, $server_name, $db_name);
-            // echo "</pre>";
-
             if (!$db_username || !$db_password || !$server_name || !$db_name) return null;
 
             $serverName = $server_name;
@@ -40,12 +35,14 @@ class DBConnection
 
             $conn = sqlsrv_connect($serverName, $connectionOptions);
 
-            if ($conn === false) {
-                echo '<pre>';
-                print_r(sqlsrv_errors());
-                echo '</pre>';
-                exit;
-            }
+            if ($conn === false) return null;
+
+            // if ($conn === false) {
+            //     echo '<pre>';
+            //     print_r(sqlsrv_errors());
+            //     echo '</pre>';
+            //     exit;
+            // }
 
             self::$connection = $conn;
             return self::$connection;
