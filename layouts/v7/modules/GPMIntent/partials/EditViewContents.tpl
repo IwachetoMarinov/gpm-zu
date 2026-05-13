@@ -23,9 +23,9 @@
 		{/if}
 		{foreach key=BLOCK_LABEL item=BLOCK_FIELDS from=$RECORD_STRUCTURE name=blockIterator}
 			{if $BLOCK_LABEL eq 'ITEM_INFO'}{continue}{/if}
-			{if $RECORD_ID eq '' && $BLOCK_LABEL eq 'Trade Information'  }{continue}{/if}
-			{if $RECORD_ID eq '' && $BLOCK_LABEL eq 'Delivery Information'  }{continue}{/if}
-			{* {if $BLOCK_LABEL eq 'Trade Information' && in_array($RECORD->get('intent_status'),[
+			{* {if $RECORD_ID eq '' && $BLOCK_LABEL eq 'Trade Information'}{continue}{/if} *}
+			{* {if $RECORD_ID eq '' && $BLOCK_LABEL eq 'Delivery Information'}{continue}{/if} *}
+		{* {if $BLOCK_LABEL eq 'Trade Information' && in_array($RECORD->get('intent_status'),[
 								'BD - Awaiting further instruction',
 								'CS - Awaiting further instruction',
 								'BD - Arrange delivery',
@@ -35,7 +35,7 @@
 								'CS - Trade completed'
 						])}{continue}{/if} *}
 
-		{* {if $BLOCK_LABEL eq 'Delivery Information' && in_array($RECORD->get('intent_status'),[
+	{* {if $BLOCK_LABEL eq 'Delivery Information' && in_array($RECORD->get('intent_status'),[
 							'BD - Awaiting further instruction',
 							'CS - Awaiting further instruction',
 							'BD - Execute trade',
