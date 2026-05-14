@@ -166,11 +166,6 @@ class ActivitySummary
 
         $messages = [];
 
-        echo '<pre>';
-        echo "Checking DB Connection. Errors:\n";
-        var_dump($errors);
-        echo '</pre>';
-
         foreach ($errors as $error) {
             $message = $error['message'] ?? 'Unknown database error.';
 
