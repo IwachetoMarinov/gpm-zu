@@ -35,29 +35,15 @@ class MetalsAPI
         return null;
     }
 
-    public function getMetalTypes()
+    public function checkDB()
     {
         if (!$this->connection) return [];
 
-        if (!$this->connection) return [];
-
-        // $params = [];
-        // $where  = '';
-
-        // if ($date) {
-        //     $where = "WHERE [Date] = ?";
-        //     $params[] = $date;
-        // }
-
-        $sql = "SELECT * FROM $this->database_prefix.[DW_Items]";
-        // $sql = "SELECT * FROM $this->database_prefix.[DW_MetalType]";
+        $sql = "SELECT [Curr_Code],[Curr_Name],[Country] FROM $this->database_prefix.[DW_Currency]";
 
         $stmt = sqlsrv_query($this->connection, $sql, $params);
 
-        if ($stmt === false) {
-            // die(print_r(sqlsrv_errors(), true));
-            throw new \Exception('Metal types data is temporarily unavailable.');
-        }
+        if ($stmt === false) throw new \Exception('Metal types data is temporarily unavailable.');
 
         $data = [];
         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
@@ -66,11 +52,25 @@ class MetalsAPI
 
         sqlsrv_free_stmt($stmt);
 
+        return $data;
+    }
 
-        echo "<pre>";
-        echo "Metals Type data: \n";
-        print_r($data);
-        echo "</pre>";
+    public function getMetalTypes()
+    {
+        if (!$this->connection) return [];
+
+        $sql = "SELECT * FROM $this->database_prefix.[DW_Items]";
+
+        $stmt = sqlsrv_query($this->connection, $sql, $params);
+
+        if ($stmt === false) throw new \Exception('Metal types data is temporarily unavailable.');
+
+        $data = [];
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+
+        sqlsrv_free_stmt($stmt);
 
         return $data;
     }

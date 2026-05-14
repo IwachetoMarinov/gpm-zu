@@ -130,9 +130,7 @@ class HoldingsDB
 
             $stmt = sqlsrv_query($this->connection, $sql, $params);
 
-            if ($stmt === false) {
-                throw new \Exception('Holdings data is temporarily unavailable.');
-            }
+            if ($stmt === false) throw new \Exception('Holdings data is temporarily unavailable.');
 
             $summary = [];
 

@@ -162,7 +162,7 @@ class ActivitySummary
     {
         $errors = \sqlsrv_errors();
 
-        if (!$errors || !is_array($errors)) return null;
+        if (!$errors || !is_array($errors))return null;
 
         $messages = [];
 

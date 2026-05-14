@@ -52,8 +52,14 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$order_by_params = $request->get('orderBy');
 
 		// Test for Metal Prices 
-		// $metalsAPI = new MetalsAPI();
+		$metalsAPI = new MetalsAPI();
 		// $metals = $metalsAPI->getMetalTypes();
+		$db_test = $metalsAPI->checkDB();
+
+		echo '<pre>';
+		echo "Metals API DB Connection Test: \n";
+		print_r($db_test);
+		echo '</pre>';
 
 		// REAL CUSTOMER ID FROM RECORD
 		$recordModel = $this->record->getRecord();
