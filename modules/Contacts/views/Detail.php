@@ -62,9 +62,7 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$activity = new dbo_db\ActivitySummary();
 
 		// Check ERP DB connection before proceeding
-		// $erp_connection = $activity->checkConnection();
-
-		// TODO: Fix this hardcoded value
+		$erp_connection = $activity->checkConnection();
 
 		$years_array  = $activity->getActivityYears($clientID);
 		$years = array_reverse($years_array);
@@ -90,6 +88,10 @@ class Contacts_Detail_View extends Accounts_Detail_View
 
 		// Get PI activity data and merge with old activity data only for DEV server
 		$activity_data = $activity->getPIActivitySummary($clientID);
+
+		echo '<pre>';
+		print_r($activity_data);
+		echo '</pre>';
 
 		$holdings = new dbo_db\HoldingsDB();
 
@@ -174,6 +176,7 @@ class Contacts_Detail_View extends Accounts_Detail_View
 
 		// Assign safely to TPL
 		$viewer->assign('CLIENT_CURRENCY', $currency_list);
+		$viewer->assign('ERP_CONNECTION_ERROR', $erp_connection);
 		$viewer->assign('ACTIVITY_SUMMERY_CURRENCY', $selected_currency);
 		$viewer->assign('OROSOFT_TRANSACTION', $activity_data);
 		$viewer->assign('CERTIFICATE_HOLDING', $certificate_id);

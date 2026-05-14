@@ -42,27 +42,6 @@ class ActivitySummary
 
         $results  = [];
         foreach ($summary as $item) {
-            // $description = $item['Description'] ? $item['Description'] : $item['Tx_Desc'] ?? '';
-
-            // $results[] = [
-            //     'voucher_no' => $item['Tx_No'] ?? '',
-            //     'voucher_type' => $item['Tx_Type'] ?? '',
-            //     'description' => $description,
-            //     'scr_description' => $item['SCR_Desc'] ?? '',
-            //     'table_name' => $item['Tx1_TblName'] ?? '',
-            //     'transaction_2' => $item['Tx2'] ?? '',
-            //     'table_name_2' => $item['Tx2_TblName'] ?? '',
-            //     'transaction_3' => $item['Tx3'] ?? '',
-            //     'table_name_3' => $item['Tx3_TblName'] ?? '',
-            //     'usd_val' => $item['Matched_Amt'] ? floatval($item['Matched_Amt']) : 0.00,
-            //     'doctype' => $item['Description'] ?? '',
-            //     'currency' => $item['Curr_Code'] ?? '',
-            //     'document_date' => $item['Tx_Date'] instanceof \DateTime ? $item['Tx_Date']->format('Y-m-d') : $item['Tx_Date'],
-            //     'posting_date' => $item['Appr_Date'] instanceof \DateTime ? $item['Appr_Date']->format('Y-m-d') : $item['Appr_Date'],
-            //     'мatched_аmt' => isset($item['Matched_Amt']) ? floatval($item['Matched_Amt']) : 0.00,
-            //     'amount_in_account_currency' =>
-            //     isset($item['TxAmt']) ? (float) $item['TxAmt'] : (isset($item['Tx_Amt']) ? (float) $item['Tx_Amt'] : 0.00),
-            // ];
             $results[] = ActivitySummaryMapper::mapTransactionRow($item);
         }
 
@@ -183,15 +162,40 @@ class ActivitySummary
     {
         $errors = \sqlsrv_errors();
 
-        if (!$errors || !is_array($errors))
-            return 'Database connection is temporarily unavailable.';
+        if (!$errors || !is_array($errors)) return null;
 
         $messages = [];
+
+        echo '<pre>';
+        echo "Checking DB Connection. Errors:\n";
+        var_dump($errors);
+        echo '</pre>';
+
         foreach ($errors as $error) {
-            $messages[] = $error['message'] ?? 'Unknown SQL Server error.';
+            $message = $error['message'] ?? 'Unknown database error.';
+
+            // Remove Microsoft / driver prefixes
+            $message = preg_replace('/(\[.*?\])+/', '', $message);
+
+            // Cleanup spaces
+            $message = trim($message);
+
+            // Human-readable replacements
+            if (stripos($message, 'Login failed for user') !== false) {
+                $message = 'Authentication with the ERP database failed.';
+            }
+
+            if (stripos($message, 'Cannot open database') !== false) {
+                $message = 'The ERP database is currently unavailable.';
+            }
+
+            $messages[] = $message;
         }
 
-        return implode(' | ', $messages);
+        // Remove duplicates
+        $messages = array_unique($messages);
+
+        return implode(' ', $messages);
     }
 
     public function getActivityYears($customer_id = null)
