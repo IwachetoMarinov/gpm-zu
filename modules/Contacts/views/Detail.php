@@ -56,11 +56,6 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		// $metals = $metalsAPI->getMetalTypes();
 		$db_test = $metalsAPI->checkDB();
 
-		echo '<pre>';
-		echo "Metals API DB Connection Test: \n";
-		print_r($db_test);
-		echo '</pre>';
-
 		// REAL CUSTOMER ID FROM RECORD
 		$recordModel = $this->record->getRecord();
 		$clientID = $recordModel->get('cf_898');

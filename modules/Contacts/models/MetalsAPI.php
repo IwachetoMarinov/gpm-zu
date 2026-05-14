@@ -46,7 +46,7 @@ class MetalsAPI
         var_dump($sql);
         echo '</pre>';
 
-        $stmt = sqlsrv_query($this->connection, $sql, $params);
+        $stmt = sqlsrv_query($this->connection, $sql);
 
         if ($stmt === false) throw new \Exception('Metal types data is temporarily unavailable.');
 
@@ -57,6 +57,12 @@ class MetalsAPI
 
         sqlsrv_free_stmt($stmt);
 
+
+        echo '<pre>';
+        echo "DB Connection and Data Fetching Result: \n";
+        var_dump($data);
+        echo '</pre>';
+
         return $data;
     }
 
@@ -66,7 +72,7 @@ class MetalsAPI
 
         $sql = "SELECT * FROM $this->database_prefix.[DW_Items]";
 
-        $stmt = sqlsrv_query($this->connection, $sql, $params);
+        $stmt = sqlsrv_query($this->connection, $sql);
 
         if ($stmt === false) throw new \Exception('Metal types data is temporarily unavailable.');
 
