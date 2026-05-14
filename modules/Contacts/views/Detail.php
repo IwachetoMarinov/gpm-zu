@@ -14,7 +14,7 @@
 include_once 'dbo_db/ActivitySummary.php';
 include_once 'dbo_db/HoldingsDB.php';
 
-// include_once 'modules/Contacts/models/MetalsAPI.php';
+include_once 'modules/Contacts/models/MetalsAPI.php';
 
 class Contacts_Detail_View extends Accounts_Detail_View
 {
@@ -64,6 +64,10 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		// Check ERP DB connection before proceeding
 		$erp_connection = $activity->checkConnection();
 
+		echo '<pre>';
+		print_r($erp_connection);
+		echo '</pre>';
+
 		$years_array  = $activity->getActivityYears($clientID);
 		$years = array_reverse($years_array);
 
@@ -89,13 +93,17 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		// Get PI activity data and merge with old activity data only for DEV server
 		$activity_data = $activity->getPIActivitySummary($clientID);
 
-		echo '<pre>';
-		print_r($activity_data);
-		echo '</pre>';
+		// echo '<pre>';
+		// print_r($activity_data);
+		// echo '</pre>';
 
 		$holdings = new dbo_db\HoldingsDB();
 
 		$holdings_data = $holdings->getHoldings($clientID);
+
+		// echo '<pre>';
+		// print_r($holdings_data);
+		// echo '</pre>';
 
 		$wallets = $holdings->getWalletBalances($clientID);
 
