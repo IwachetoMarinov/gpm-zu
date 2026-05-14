@@ -41,6 +41,11 @@ class MetalsAPI
 
         $sql = "SELECT [Curr_Code],[Curr_Name],[Country] FROM $this->database_prefix.[DW_Currency]";
 
+        echo '<pre>';
+        echo "Checking Metals API DB Connection and Data Fetching: \n";
+        var_dump($sql);
+        echo '</pre>';
+
         $stmt = sqlsrv_query($this->connection, $sql, $params);
 
         if ($stmt === false) throw new \Exception('Metal types data is temporarily unavailable.');
