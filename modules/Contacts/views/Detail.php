@@ -64,10 +64,6 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		// Check ERP DB connection before proceeding
 		$erp_connection = $activity->checkConnection();
 
-		echo '<pre>';
-		print_r($erp_connection);
-		echo '</pre>';
-
 		$years_array  = $activity->getActivityYears($clientID);
 		$years = array_reverse($years_array);
 

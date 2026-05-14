@@ -167,15 +167,23 @@ class ActivitySummary
         $messages = [];
 
         foreach ($errors as $error) {
-            $message = $error['message'] ?? 'Unknown database error.';
+            $message = $error['message'] ?? '';
+            $sqlState = $error['SQLSTATE'] ?? '';
+            $code = $error['code'] ?? null;
+
+            // Ignore informational SQL Server messages
+            if (
+                $sqlState === '01000' &&
+                in_array($code, [5701, 5703])
+            ) {
+                continue;
+            }
 
             // Remove Microsoft / driver prefixes
             $message = preg_replace('/(\[.*?\])+/', '', $message);
-
-            // Cleanup spaces
             $message = trim($message);
 
-            // Human-readable replacements
+            // Human readable replacements
             if (stripos($message, 'Login failed for user') !== false) {
                 $message = 'Authentication with the ERP database failed.';
             }
@@ -184,15 +192,19 @@ class ActivitySummary
                 $message = 'The ERP database is currently unavailable.';
             }
 
-            $messages[] = $message;
+            if (!empty($message)) {
+                $messages[] = $message;
+            }
         }
 
         // Remove duplicates
         $messages = array_unique($messages);
 
+        // If nothing meaningful remains
+        if (empty($messages)) return null;
+
         return implode(' ', $messages);
     }
-
     public function getActivityYears($customer_id = null)
     {
         if (!$customer_id || !$this->connection) return [];
