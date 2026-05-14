@@ -207,15 +207,15 @@
                         </button>
                     {/if}
 
-                    {* Later we will add missing fields button here *}
+                    {assign var="piWarningExcludes" value=['transaction_2', 'table_name_2', 'transaction_3', 'table_name_3', 'matched_amt', 'posting_date', 'currency']}
 
                     {include file='ERPWarningsButton.tpl'|vtemplate_path:'Contacts'
-                        ERP_WARNING_DATA=$OROSOFT_TRANSACTION
-                        ERP_WARNING_TITLE='Orosoft Transaction Warnings'
-                        ERP_WARNING_BUTTON_LABEL='Transaction Warnings'
-                        ERP_WARNING_CLASS='erp-fields-warning'
-                        ERP_WARNING_EXCLUDES=$piWarningExcludes
-                    }
+                            ERP_WARNING_DATA=$OROSOFT_TRANSACTION
+                            ERP_WARNING_TITLE='Orosoft Transaction Warnings'
+                            ERP_WARNING_BUTTON_LABEL='Transaction Warnings'
+                            ERP_WARNING_CLASS='erp-fields-warning'
+                            ERP_WARNING_EXCLUDES=$piWarningExcludes
+                        }
                 </span>
 
                 <div id="erp-warning-modal-overlay" class="erp-warning-modal-overlay">

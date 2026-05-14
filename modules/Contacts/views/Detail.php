@@ -52,9 +52,9 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$order_by_params = $request->get('orderBy');
 
 		// Test for Metal Prices 
-		$metalsAPI = new MetalsAPI();
+		// $metalsAPI = new MetalsAPI();
+		// $db_test = $metalsAPI->checkDB();
 		// $metals = $metalsAPI->getMetalTypes();
-		$db_test = $metalsAPI->checkDB();
 
 		// REAL CUSTOMER ID FROM RECORD
 		$recordModel = $this->record->getRecord();
@@ -90,17 +90,8 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		// Get PI activity data and merge with old activity data only for DEV server
 		$activity_data = $activity->getPIActivitySummary($clientID);
 
-		// echo '<pre>';
-		// print_r($activity_data);
-		// echo '</pre>';
-
 		$holdings = new dbo_db\HoldingsDB();
-
 		$holdings_data = $holdings->getHoldings($clientID);
-
-		// echo '<pre>';
-		// print_r($holdings_data);
-		// echo '</pre>';
 
 		$wallets = $holdings->getWalletBalances($clientID);
 
