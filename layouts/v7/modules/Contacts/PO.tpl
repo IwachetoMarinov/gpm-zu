@@ -62,7 +62,6 @@
         /* Header */
         .header-table {
             width: 100%;
-            /* margin-bottom: 1mm; */
             border-collapse: collapse;
         }
 

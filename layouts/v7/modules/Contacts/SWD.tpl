@@ -93,10 +93,6 @@
             font-size: 20pt;
         }
 
-        .hidden {
-            /*display: none;*/
-        }
-
         table.content-table th {
             border: 1px dotted #666666;
             font-size: 10pt;
@@ -194,9 +190,39 @@
             text-align: center;
             padding: 14px;cursor: pointer;">Settings</span>
             </li>
+
+            {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
+            {assign var="barItemWarningExcludes" value=[
+                'metal_code',
+                "metal_name",
+                "metal_type_code",
+                'warehouse',
+                'tx_amount',
+                'avg_spot_price',
+                'posting_date',
+                'item_code',
+                'fine_oz',
+                'gross_oz',
+                'purity',
+                'total_item_dc_amount',
+                'weight',
+                'remarks',
+                'other_charge',
+                'narration',
+                'long_desc',
+                'bar_number'
+            ]}
+
+            {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
+                ERP_DOCUMENT=$ERP_DOCUMENT
+                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+            }
         </ul>
+
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
         {include file='printConf.tpl'|vtemplate_path:'Contacts'}
+
     {/if}
     <div class="printAreaContainer">
         <div class="full-width">
@@ -298,7 +324,6 @@
                                 {else}
                                     {assign var="serials" value=$serials|cat:$barItem->serials|cat:', '}
                                 {/if}
-                                {* (metalPrice x pureOz) + othercharge *}
                                 {assign var="total" value=$barItem->totalItemAmount}
                                 {assign var="calcTotal" value=$calcTotal+round($total,2)}
                                 {assign var="SUB_TOTAL" value=$SUB_TOTAL+round($total,2)}

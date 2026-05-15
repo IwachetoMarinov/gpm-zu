@@ -93,10 +93,6 @@
             font-size: 20pt;
         }
 
-        .hidden {
-            /*display: none;*/
-        }
-
         table.content-table th {
             border: 1px dotted #666666;
             font-size: 10pt;
@@ -184,6 +180,33 @@
                 background-color: #bea364;"
                     href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&hideCustomerInfo={$smarty.request.hideCustomerInfo}">Download</a>
             </li>
+
+             {assign var="transactionWarningExcludes" value=['description', 'grand_total']}
+            {assign var="barItemWarningExcludes" value=[
+                "metal_name",
+                "metal_type_code",
+                "warehouse",
+                "tx_amount",
+                "avg_spot_price",
+                "posting_date",
+                "item_code",
+                "fine_oz",
+                "gross_oz",
+                "purity",
+                "total_item_dc_amount",
+                "weight",
+                "remarks",
+                "other_charge",
+                "narration",
+                "bar_number",
+                "field"
+            ]}
+
+            {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
+                ERP_DOCUMENT=$ERP_DOCUMENT
+                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+            }
         </ul>
     {/if}
     <div class="printAreaContainer">
@@ -269,7 +292,7 @@
                                 {else}
                                     {assign var="serials" value=$serials|cat:$barItem->serials|cat:', '}
                                 {/if}
-                                {* (metalPrice x pureOz) + othercharge *}
+                               
                                 {assign var="total" value=((($barItem->price)*($barItem->pureOz))+$barItem->otherCharge)}
                                 <tr>
                                     <td style="vertical-align: top">{$barItem->quantity}</td>
