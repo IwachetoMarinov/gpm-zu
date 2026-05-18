@@ -397,13 +397,36 @@ class ActivitySummary
                 $params[] = $end_date;
             }
 
-            $sql = "SELECT * FROM $this->database_prefix.[DW_TxHx] $where order by [Tx_Date] DESC";
+            $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxv2] $where order by [Tx_Date] DESC";
+            // $sql = "SELECT * FROM $this->database_prefix.[DW_TxHx] $where order by [Tx_Date] DESC";
 
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
-            return array_map(function ($item) {
-                return ActivitySummaryMapper::mapActivitySummaryRow($item);
-            }, $summary);
+            $results  = [];
+            foreach ($summary as $item) {
+                $description = $item['Description'] ? $item['Description'] : $item['Tx_Desc'] ?? '';
+
+                $results[] = [
+                    'voucher_no' => $item['Tx_No'] ?? '',
+                    'voucher_type' => $item['Tx_Type'] ?? '',
+                    'description' => $description,
+                    'table_name' => $item['Tx1_TblName'] ?? '',
+                    'usd_val' => $item['Matched_Amt'] ? floatval($item['Matched_Amt']) : 0.00,
+                    'doctype' => $item['Description'] ?? '',
+                    'currency' => $item['Curr_Code'] ?? '',
+                    'document_date' => $item['Tx_Date'] instanceof \DateTime ? $item['Tx_Date']->format('Y-m-d') : $item['Tx_Date'],
+                    'posting_date' => $item['Appr_Date'] instanceof \DateTime ? $item['Appr_Date']->format('Y-m-d') : $item['Appr_Date'],
+                    'мatched_аmt' => isset($item['Matched_Amt']) ? floatval($item['Matched_Amt']) : 0.00,
+                    'amount_in_account_currency' =>
+                    isset($item['TxAmt']) ? (float) $item['TxAmt'] : (isset($item['Tx_Amt']) ? (float) $item['Tx_Amt'] : 0.00),
+                ];
+            }
+
+            return $results;
+
+            // return array_map(function ($item) {
+            //     return ActivitySummaryMapper::mapActivitySummaryRow($item);
+            // }, $summary);
         } catch (\Exception $e) {
             return [];
         }
