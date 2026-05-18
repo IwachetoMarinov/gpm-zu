@@ -408,9 +408,24 @@ class ActivitySummary
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
             echo "<pre>";
+            var_dump($params);
+            echo "</pre>";
+
+            echo "<pre>";
             echo "Executed SQL: $sql\n";
             var_dump($summary);
             echo "</pre>";
+
+
+            if (!is_array($summary) || count($summary) === 0) return [];
+
+            $results  = [];
+            foreach ($summary as $item) {
+                $results[] = ActivitySummaryMapper::mapTransactionRow($item);
+            }
+
+            return $results;
+
 
             // $results  = [];
             // foreach ($summary as $item) {
