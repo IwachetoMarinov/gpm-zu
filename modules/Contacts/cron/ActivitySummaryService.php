@@ -35,6 +35,8 @@ class Contacts_ActivitySummaryService
 
         echo "Client ID: $client_id - Found " . count($activities) . " transactions from $start_date to $end_date\n";
 
+        return; // TEMPORARY EXIT - to avoid running the full process while testing data fetching
+
         if (!is_array($activities) || count($activities) === 0) return;
 
         // 4. Get Contact record model (used for template rendering)

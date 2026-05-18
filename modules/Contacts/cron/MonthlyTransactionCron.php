@@ -37,7 +37,7 @@ class Contacts_MonthlyTransactionCron
         // Loop through each client and process their transactions for the month
         foreach ($clint_ids as $client_id) {
             // proceed only for this zustomer M001
-            if ($client_id !== 'M001') continue;
+            if ($client_id != 'M001') continue;
             $service->generateAndStoreForClient($client_id, $date_range);
         }
     }

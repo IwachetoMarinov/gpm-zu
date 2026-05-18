@@ -379,25 +379,18 @@ class ActivitySummary
 
     public function getMonthlyTransactions($client_id, $start_date, $end_date)
     {
-        echo "[getMonthlyTransactions] START\n";
-        echo "[getMonthlyTransactions] client_id: {$client_id}\n";
-        echo "[getMonthlyTransactions] start_date: {$start_date}\n";
-        echo "[getMonthlyTransactions] end_date: {$end_date}\n";
 
-        if (!$client_id || !$this->connection || !$start_date || !$end_date) {
-            echo "[getMonthlyTransactions] Missing required params or DB connection\n";
-            return [];
-        }
+        if (!$client_id || !$this->connection || !$start_date || !$end_date) return [];
 
         try {
             $where = "WHERE [Party_Code] = ?";
             $params = [$client_id];
 
-            // $where .= " AND [Tx_Date] >= ?";
-            // $params[] = $start_date;
+            $where .= " AND [Tx_Date] >= ?";
+            $params[] = $start_date;
 
-            // $where .= " AND [Tx_Date] <= ?";
-            // $params[] = $end_date;
+            $where .= " AND [Tx_Date] <= ?";
+            $params[] = $end_date;
 
             $sql = "SELECT * FROM {$this->database_prefix}.[DW_TxHxv2] {$where} ORDER BY [Tx_Date] DESC";
 
@@ -421,14 +414,19 @@ class ActivitySummary
 
                 $mapped = ActivitySummaryMapper::mapTransactionRow($item);
 
-                echo "[getMonthlyTransactions] Mapped row:\n";
-                print_r($mapped);
+                // echo "[getMonthlyTransactions] Mapped row:\n";
+                // print_r($mapped);
 
                 $results[] = $mapped;
             }
 
             echo "[getMonthlyTransactions] Final mapped count: " . count($results) . "\n";
             echo "[getMonthlyTransactions] END\n";
+
+            echo '<pre>';
+            echo "Final Mapped Transactions:\n";
+            print_r($results);
+            echo '</pre>';
 
             return $results;
         } catch (\Exception $e) {
