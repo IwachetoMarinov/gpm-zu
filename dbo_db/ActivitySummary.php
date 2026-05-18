@@ -394,39 +394,18 @@ class ActivitySummary
 
             $sql = "SELECT * FROM {$this->database_prefix}.[DW_TxHxv2] {$where} ORDER BY [Tx_Date] DESC";
 
-            echo "[getMonthlyTransactions] SQL: {$sql}\n";
-            echo "[getMonthlyTransactions] PARAMS:\n";
-            print_r($params);
-
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
-            echo "[getMonthlyTransactions] Raw rows count: " . (is_array($summary) ? count($summary) : 0) . "\n";
-
-            if (!is_array($summary) || count($summary) === 0) {
-                echo "[getMonthlyTransactions] No transactions found\n";
-                return [];
-            }
+            if (!is_array($summary) || count($summary) === 0) return [];
 
             $results = [];
 
             foreach ($summary as $index => $item) {
-                echo "[getMonthlyTransactions] Mapping row index: {$index}\n";
 
                 $mapped = ActivitySummaryMapper::mapTransactionRow($item);
 
-                // echo "[getMonthlyTransactions] Mapped row:\n";
-                // print_r($mapped);
-
                 $results[] = $mapped;
             }
-
-            echo "[getMonthlyTransactions] Final mapped count: " . count($results) . "\n";
-            echo "[getMonthlyTransactions] END\n";
-
-            echo '<pre>';
-            echo "Final Mapped Transactions:\n";
-            print_r($results);
-            echo '</pre>';
 
             return $results;
         } catch (\Exception $e) {

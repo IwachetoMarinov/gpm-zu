@@ -21,6 +21,7 @@ class Contacts_ActivitySummaryService
         $start_date = !empty($date_range) ? $date_range[0] : date('Y-m-01');
         $end_date = !empty($date_range) ? $date_range[1] : date('Y-m-t');
 
+        // Remove time part if present
         // if (Contacts_CronHelpers::ytdReportExists(
         //     $client_id,
         //     $start_date,
