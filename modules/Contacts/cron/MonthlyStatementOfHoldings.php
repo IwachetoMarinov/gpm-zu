@@ -17,7 +17,7 @@ class Contacts_MonthlyStatementOfHoldings
         $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
 
         // TEST RANGE
-        $date_range = ['2024-05-01', '2024-05-31'];
+        $date_range = ['2026-05-01', '2026-05-31'];
 
         // 3 Get all Party codes (client IDs) to process monthly transactions for each client
         $clint_ids =  Contacts_CronHelpers::fetchClientIds();
