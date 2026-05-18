@@ -35,29 +35,20 @@ class MetalsAPI
         return null;
     }
 
-    public function getMetalTypes()
+    public function checkDB()
     {
         if (!$this->connection) return [];
 
-        if (!$this->connection) return [];
+        $sql = "SELECT [Curr_Code],[Curr_Name],[Country] FROM $this->database_prefix.[DW_Currency]";
 
-        // $params = [];
-        // $where  = '';
+        echo '<pre>';
+        echo "Checking Metals API DB Connection and Data Fetching: \n";
+        var_dump($sql);
+        echo '</pre>';
 
-        // if ($date) {
-        //     $where = "WHERE [Date] = ?";
-        //     $params[] = $date;
-        // }
+        $stmt = sqlsrv_query($this->connection, $sql);
 
-        $sql = "SELECT * FROM $this->database_prefix.[DW_Items]";
-        // $sql = "SELECT * FROM $this->database_prefix.[DW_MetalType]";
-
-        $stmt = sqlsrv_query($this->connection, $sql, $params);
-
-        if ($stmt === false) {
-            // die(print_r(sqlsrv_errors(), true));
-            throw new \Exception('Metal types data is temporarily unavailable.');
-        }
+        if ($stmt === false) throw new \Exception('Metal types data is temporarily unavailable.');
 
         $data = [];
         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
@@ -67,10 +58,30 @@ class MetalsAPI
         sqlsrv_free_stmt($stmt);
 
 
-        echo "<pre>";
-        echo "Metals Type data: \n";
-        print_r($data);
-        echo "</pre>";
+        echo '<pre>';
+        echo "DB Connection and Data Fetching Result: \n";
+        var_dump($data);
+        echo '</pre>';
+
+        return $data;
+    }
+
+    public function getMetalTypes()
+    {
+        if (!$this->connection) return [];
+
+        $sql = "SELECT * FROM $this->database_prefix.[DW_Items]";
+
+        $stmt = sqlsrv_query($this->connection, $sql);
+
+        if ($stmt === false) throw new \Exception('Metal types data is temporarily unavailable.');
+
+        $data = [];
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            $data[] = $row;
+        }
+
+        sqlsrv_free_stmt($stmt);
 
         return $data;
     }

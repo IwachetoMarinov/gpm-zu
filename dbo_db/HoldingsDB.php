@@ -7,9 +7,11 @@ include_once 'data/CRMEntity.php';
 include_once 'modules/Users/Users.php';
 include_once 'helpers/DBConnection.php';
 include_once 'helpers/DBSettings.php';
+include_once 'adapters/HoldingsMapper.php';
 
 use helpers\DBConnection;
 use helpers\DBSettings;
+use adapters\HoldingsMapper;
 
 class HoldingsDB
 {
@@ -30,13 +32,8 @@ class HoldingsDB
 
         if (!$this->connection) return [];
 
-        $where = '';
-        $params = [];
-
-        if ($customer_id) {
-            $where .= "WHERE Party_Code = ?";
-            $params[] = $customer_id;
-        }
+        $where = "WHERE Party_Code = ?";
+        $params[] = $customer_id;
 
         if ($start_date) {
             $where .= empty($where) ? "WHERE" : " AND";
@@ -133,9 +130,7 @@ class HoldingsDB
 
             $stmt = sqlsrv_query($this->connection, $sql, $params);
 
-            if ($stmt === false) {
-                throw new \Exception('Holdings data is temporarily unavailable.');
-            }
+            if ($stmt === false) throw new \Exception('Holdings data is temporarily unavailable.');
 
             $summary = [];
 
@@ -145,7 +140,7 @@ class HoldingsDB
 
             sqlsrv_free_stmt($stmt);
 
-            return $this->formatHoldingsData($summary);
+            return HoldingsMapper::mapDocHoldingRows($summary);
         } catch (\Throwable $e) {
             return [];
         }
@@ -193,7 +188,8 @@ class HoldingsDB
 
             sqlsrv_free_stmt($stmt);
 
-            return $this->formatHoldingsData($summary);
+            // return $this->formatHoldingsData($summary);
+            return HoldingsMapper::mapDocHoldingRows($summary);
         } catch (\Throwable $e) {
             return [];
         }
@@ -259,27 +255,29 @@ class HoldingsDB
 
         sqlsrv_free_stmt($stmt);
 
-        $results = [];
-        foreach ($summary as $item) {
-            $quantity = $item['Qty'] ? $item['Qty'] : $item['Quantity'] ?? 1;
-            $serial = $item['Ser_No_List'] ? $item['Ser_No_List'] : $item['Ser_No'] ?? 1;
+        return HoldingsMapper::mapStockHoldingRows($summary);
 
-            $results[] = [
-                'serial_no' => $serial,
-                'gross_oz' => $item['GrossOz'] ?? 0,
-                'fine_oz' => $item['FineOz'] ?? 0,
-                'purity' => $item['Purity'] ?? 0,
-                'acq_tx_no' => $item['Acq_Tx_No'] ?? '',
-                'item_code' => $item['Item_Code'],
-                'description' => $item['Item_Desc'],
-                'quantity' => $quantity,
-                'location' => $item['WH_Code'] ?? '',
-                'brand' => $item['Brand'] ?? '',
-                'mt_code' => $item['MT_Code'] ?? '',
-                "metal" => $this->getMetalName($item['MT_Code'] ?? ''),
-            ];
-        }
-        return $results;
+        // $results = [];
+        // foreach ($summary as $item) {
+        //     $quantity = $item['Qty'] ? $item['Qty'] : $item['Quantity'] ?? 1;
+        //     $serial = $item['Ser_No_List'] ? $item['Ser_No_List'] : $item['Ser_No'] ?? 1;
+
+        //     $results[] = [
+        //         'serial_no' => $serial,
+        //         'gross_oz' => $item['GrossOz'] ?? 0,
+        //         'fine_oz' => $item['FineOz'] ?? 0,
+        //         'purity' => $item['Purity'] ?? 0,
+        //         'acq_tx_no' => $item['Acq_Tx_No'] ?? '',
+        //         'item_code' => $item['Item_Code'],
+        //         'description' => $item['Item_Desc'],
+        //         'quantity' => $quantity,
+        //         'location' => $item['WH_Code'] ?? '',
+        //         'brand' => $item['Brand'] ?? '',
+        //         'mt_code' => $item['MT_Code'] ?? '',
+        //         "metal" => $this->getMetalName($item['MT_Code'] ?? ''),
+        //     ];
+        // }
+        // return $results;
     }
 
     private function formatHoldingsData($data)

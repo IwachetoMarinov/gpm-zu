@@ -190,7 +190,40 @@
                 text-align: center;
                 padding: 14px;cursor: pointer;">Settings</span>
             </li>
+
+            {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
+            {assign var="barItemWarningExcludes" value=[
+                    "metal_code",
+                    "metal_name",
+                    "metal_type_code",
+                    "warehouse",
+                    "tx_amount",
+                    "avg_spot_price",
+                    "posting_date",
+                    "exchange_rate",
+                    "item_code",
+                    "fine_oz",
+                    "gross_oz",
+                    "purity",
+                    "item_price",
+                    "premium_final",
+                    "total_item_dc_amount",
+                    "weight",
+                    "remarks",
+                    "other_charge",
+                    "long_desc",
+                    "narration",
+                    "bar_number"
+            ]}
+
+            {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
+                ERP_DOCUMENT=$ERP_DOCUMENT
+                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+            }
+
         </ul>
+        
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
         {include file='printConf.tpl'|vtemplate_path:'Contacts'}
     {/if}
@@ -309,7 +342,6 @@
                                     {else}
                                         {assign var="serials" value=$serials|cat:$barItem->serials|cat:', '}
                                     {/if}
-                                    {* (metalPrice x pureOz) + othercharge *}
                                     {assign var="total" value=$barItem->totalItemAmount}
                                     {assign var="calcTotal" value=$calcTotal+round($total,2)}
                                     {assign var="SUB_TOTAL" value=$SUB_TOTAL+round($total,2)}

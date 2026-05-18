@@ -14,7 +14,7 @@
 include_once 'dbo_db/ActivitySummary.php';
 include_once 'dbo_db/HoldingsDB.php';
 
-// include_once 'modules/Contacts/models/MetalsAPI.php';
+include_once 'modules/Contacts/models/MetalsAPI.php';
 
 class Contacts_Detail_View extends Accounts_Detail_View
 {
@@ -53,6 +53,7 @@ class Contacts_Detail_View extends Accounts_Detail_View
 
 		// Test for Metal Prices 
 		// $metalsAPI = new MetalsAPI();
+		// $db_test = $metalsAPI->checkDB();
 		// $metals = $metalsAPI->getMetalTypes();
 
 		// REAL CUSTOMER ID FROM RECORD
@@ -62,9 +63,7 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$activity = new dbo_db\ActivitySummary();
 
 		// Check ERP DB connection before proceeding
-		// $erp_connection = $activity->checkConnection();
-
-		// TODO: Fix this hardcoded value
+		$erp_connection = $activity->checkConnection();
 
 		$years_array  = $activity->getActivityYears($clientID);
 		$years = array_reverse($years_array);
@@ -92,7 +91,6 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$activity_data = $activity->getPIActivitySummary($clientID);
 
 		$holdings = new dbo_db\HoldingsDB();
-
 		$holdings_data = $holdings->getHoldings($clientID);
 
 		$wallets = $holdings->getWalletBalances($clientID);
@@ -174,6 +172,7 @@ class Contacts_Detail_View extends Accounts_Detail_View
 
 		// Assign safely to TPL
 		$viewer->assign('CLIENT_CURRENCY', $currency_list);
+		$viewer->assign('ERP_CONNECTION_ERROR', $erp_connection);
 		$viewer->assign('ACTIVITY_SUMMERY_CURRENCY', $selected_currency);
 		$viewer->assign('OROSOFT_TRANSACTION', $activity_data);
 		$viewer->assign('CERTIFICATE_HOLDING', $certificate_id);
