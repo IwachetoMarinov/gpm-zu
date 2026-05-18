@@ -21,21 +21,19 @@ class Contacts_ActivitySummaryService
         $start_date = !empty($date_range) ? $date_range[0] : date('Y-m-01');
         $end_date = !empty($date_range) ? $date_range[1] : date('Y-m-t');
 
-        if (Contacts_CronHelpers::ytdReportExists(
-            $client_id,
-            $start_date,
-            $end_date,
-            'Activity Summary'
-        )) {
-            return 0;
-        }
+        // if (Contacts_CronHelpers::ytdReportExists(
+        //     $client_id,
+        //     $start_date,
+        //     $end_date,
+        //     'Activity Summary'
+        // )) {
+        //     return 0;
+        // }
 
         // 3. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date);
 
         echo "Client ID: $client_id - Found " . count($activities) . " transactions from $start_date to $end_date\n";
-
-        return; // TEMPORARY EXIT - to avoid running the full process while testing data fetching
 
         if (!is_array($activities) || count($activities) === 0) return;
 
