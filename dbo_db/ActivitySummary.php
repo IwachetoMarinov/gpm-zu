@@ -402,6 +402,11 @@ class ActivitySummary
 
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
+            echo "<pre>";
+            echo "Executed SQL: $sql\n";
+            var_dump($summary);
+            echo "</pre>";
+
             // $results  = [];
             // foreach ($summary as $item) {
             //     $description = $item['Description'] ? $item['Description'] : $item['Tx_Desc'] ?? '';
