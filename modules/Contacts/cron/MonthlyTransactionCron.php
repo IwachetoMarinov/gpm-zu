@@ -16,15 +16,21 @@ class Contacts_MonthlyTransactionCron
     public function process()
     {
         // 0. Check if not last day of the month, if yes then exit (to avoid running on the last day of the month)
-        if (date('d') !== date('t')) return;
+        // if (date('d') !== date('t')) return;
 
         // 1. Build date range for the current month
         $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
+
+        // TEST RANGE
+        $date_range = ['2026-05-01', '2026-05-31'];
 
         $service = new Contacts_ActivitySummaryService();
 
         // 2 Get all Party codes (client IDs) to process monthly transactions for each client
         $clint_ids =  Contacts_CronHelpers::fetchClientIds();
+
+        echo "Processing Monthly Transactions for " . count($clint_ids) . " clients...\n";
+        echo "Date Range: " . $date_range[0] . " to " . $date_range[1] . "\n";
 
         // Loop through each client and process their transactions for the month
         foreach ($clint_ids as $client_id) {
