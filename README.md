@@ -287,4 +287,9 @@ sudo chmod -R 775 /var/www/html/crm_kl/cache/import`
 47. Add introducer field to Intent module
     -  visit /add_intent_introducer_field.php
 
+
+48. TEST cron job 
+`/usr/bin/php /var/www/html/gpm-zu/monthly_sh.php`
+`/usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php`  
+
    
