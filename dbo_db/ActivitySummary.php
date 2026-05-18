@@ -382,23 +382,28 @@ class ActivitySummary
         if (!$client_id || !$this->connection || !$start_date || !$end_date) return [];
 
         try {
+            // $where = "WHERE [Party_Code] = ?";
+            // $params[] = $client_id;
+
+            // if ($start_date) {
+            //     $where .= empty($where) ? "WHERE" : " AND";
+            //     $where .= " [Tx_Date] >= ?";
+            //     $params[] = $start_date;
+            // }
+
+            // if ($end_date) {
+            //     $where .= empty($where) ? "WHERE" : " AND";
+            //     $where .= " [Tx_Date] <= ?";
+            //     $params[] = $end_date;
+            // }
+
+            // $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxv2] $where order by [Tx_Date] DESC";
+            // $sql = "SELECT * FROM $this->database_prefix.[DW_TxHx] $where order by [Tx_Date] DESC";
+
             $where = "WHERE [Party_Code] = ?";
             $params[] = $client_id;
 
-            if ($start_date) {
-                $where .= empty($where) ? "WHERE" : " AND";
-                $where .= " [Tx_Date] >= ?";
-                $params[] = $start_date;
-            }
-
-            if ($end_date) {
-                $where .= empty($where) ? "WHERE" : " AND";
-                $where .= " [Tx_Date] <= ?";
-                $params[] = $end_date;
-            }
-
             $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxv2] $where order by [Tx_Date] DESC";
-            // $sql = "SELECT * FROM $this->database_prefix.[DW_TxHx] $where order by [Tx_Date] DESC";
 
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
