@@ -57,7 +57,6 @@ class MetalsAPI
 
         sqlsrv_free_stmt($stmt);
 
-
         echo '<pre>';
         echo "DB Connection and Data Fetching Result: \n";
         var_dump($data);
