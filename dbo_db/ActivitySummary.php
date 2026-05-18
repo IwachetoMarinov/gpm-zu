@@ -379,80 +379,61 @@ class ActivitySummary
 
     public function getMonthlyTransactions($client_id, $start_date, $end_date)
     {
-        if (!$client_id || !$this->connection || !$start_date || !$end_date) return [];
+        echo "[getMonthlyTransactions] START\n";
+        echo "[getMonthlyTransactions] client_id: {$client_id}\n";
+        echo "[getMonthlyTransactions] start_date: {$start_date}\n";
+        echo "[getMonthlyTransactions] end_date: {$end_date}\n";
+
+        if (!$client_id || !$this->connection || !$start_date || !$end_date) {
+            echo "[getMonthlyTransactions] Missing required params or DB connection\n";
+            return [];
+        }
 
         try {
-            // $where = "WHERE [Party_Code] = ?";
-            // $params[] = $client_id;
-
-            // if ($start_date) {
-            //     $where .= empty($where) ? "WHERE" : " AND";
-            //     $where .= " [Tx_Date] >= ?";
-            //     $params[] = $start_date;
-            // }
-
-            // if ($end_date) {
-            //     $where .= empty($where) ? "WHERE" : " AND";
-            //     $where .= " [Tx_Date] <= ?";
-            //     $params[] = $end_date;
-            // }
-
-            // $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxv2] $where order by [Tx_Date] DESC";
-            // $sql = "SELECT * FROM $this->database_prefix.[DW_TxHx] $where order by [Tx_Date] DESC";
-
             $where = "WHERE [Party_Code] = ?";
-            $params[] = $client_id;
+            $params = [$client_id];
 
-            $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxv2] $where order by [Tx_Date] DESC";
+            $where .= " AND [Tx_Date] >= ?";
+            $params[] = $start_date;
+
+            $where .= " AND [Tx_Date] <= ?";
+            $params[] = $end_date;
+
+            $sql = "SELECT * FROM {$this->database_prefix}.[DW_TxHxv2] {$where} ORDER BY [Tx_Date] DESC";
+
+            echo "[getMonthlyTransactions] SQL: {$sql}\n";
+            echo "[getMonthlyTransactions] PARAMS:\n";
+            print_r($params);
 
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
-            echo "<pre>";
-            var_dump($params);
-            echo "</pre>";
+            echo "[getMonthlyTransactions] Raw rows count: " . (is_array($summary) ? count($summary) : 0) . "\n";
 
-            echo "<pre>";
-            echo "Executed SQL: $sql\n";
-            var_dump($summary);
-            echo "</pre>";
-
-
-            if (!is_array($summary) || count($summary) === 0) return [];
-
-            $results  = [];
-            foreach ($summary as $item) {
-                $results[] = ActivitySummaryMapper::mapTransactionRow($item);
+            if (!is_array($summary) || count($summary) === 0) {
+                echo "[getMonthlyTransactions] No transactions found\n";
+                return [];
             }
 
+            $results = [];
+
+            foreach ($summary as $index => $item) {
+                echo "[getMonthlyTransactions] Mapping row index: {$index}\n";
+
+                $mapped = ActivitySummaryMapper::mapTransactionRow($item);
+
+                echo "[getMonthlyTransactions] Mapped row:\n";
+                print_r($mapped);
+
+                $results[] = $mapped;
+            }
+
+            echo "[getMonthlyTransactions] Final mapped count: " . count($results) . "\n";
+            echo "[getMonthlyTransactions] END\n";
+
             return $results;
-
-
-            // $results  = [];
-            // foreach ($summary as $item) {
-            //     $description = $item['Description'] ? $item['Description'] : $item['Tx_Desc'] ?? '';
-
-            //     $results[] = [
-            //         'voucher_no' => $item['Tx_No'] ?? '',
-            //         'voucher_type' => $item['Tx_Type'] ?? '',
-            //         'description' => $description,
-            //         'table_name' => $item['Tx1_TblName'] ?? '',
-            //         'usd_val' => $item['Matched_Amt'] ? floatval($item['Matched_Amt']) : 0.00,
-            //         'doctype' => $item['Description'] ?? '',
-            //         'currency' => $item['Curr_Code'] ?? '',
-            //         'document_date' => $item['Tx_Date'] instanceof \DateTime ? $item['Tx_Date']->format('Y-m-d') : $item['Tx_Date'],
-            //         'posting_date' => $item['Appr_Date'] instanceof \DateTime ? $item['Appr_Date']->format('Y-m-d') : $item['Appr_Date'],
-            //         'мatched_аmt' => isset($item['Matched_Amt']) ? floatval($item['Matched_Amt']) : 0.00,
-            //         'amount_in_account_currency' =>
-            //         isset($item['TxAmt']) ? (float) $item['TxAmt'] : (isset($item['Tx_Amt']) ? (float) $item['Tx_Amt'] : 0.00),
-            //     ];
-            // }
-
-            // return $results;
-
-            return array_map(function ($item) {
-                return ActivitySummaryMapper::mapActivitySummaryRow($item);
-            }, $summary);
         } catch (\Exception $e) {
+            echo "[getMonthlyTransactions] ERROR: " . $e->getMessage() . "\n";
+            echo "[getMonthlyTransactions] TRACE:\n" . $e->getTraceAsString() . "\n";
             return [];
         }
     }
