@@ -29,6 +29,8 @@ class Contacts_MonthlyTransactionCron
         // 2 Get all Party codes (client IDs) to process monthly transactions for each client
         $clint_ids =  Contacts_CronHelpers::fetchClientIds();
 
+        var_dump($clint_ids);
+
         echo "Processing Monthly Transactions for " . count($clint_ids) . " clients...\n";
         echo "Date Range: " . $date_range[0] . " to " . $date_range[1] . "\n";
 
