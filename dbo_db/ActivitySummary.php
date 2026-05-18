@@ -393,11 +393,11 @@ class ActivitySummary
             $where = "WHERE [Party_Code] = ?";
             $params = [$client_id];
 
-            $where .= " AND [Tx_Date] >= ?";
-            $params[] = $start_date;
+            // $where .= " AND [Tx_Date] >= ?";
+            // $params[] = $start_date;
 
-            $where .= " AND [Tx_Date] <= ?";
-            $params[] = $end_date;
+            // $where .= " AND [Tx_Date] <= ?";
+            // $params[] = $end_date;
 
             $sql = "SELECT * FROM {$this->database_prefix}.[DW_TxHxv2] {$where} ORDER BY [Tx_Date] DESC";
 
