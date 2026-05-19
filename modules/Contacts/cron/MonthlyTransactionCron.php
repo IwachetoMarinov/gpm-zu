@@ -1,7 +1,6 @@
 <?php
 
 /* modules/Contacts/cron/MonthlyTransactionCron.php */
-include_once 'CronHelpers.php';
 include_once 'ActivitySummaryService.php';
 
 class Contacts_MonthlyTransactionCron
@@ -19,7 +18,7 @@ class Contacts_MonthlyTransactionCron
         // if (date('d') !== date('t')) return;
 
         // 1. Build date range for the current month
-        $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
+        $date_range = $this->buildMonthlyDateRange();
 
         // TEST RANGE
         $date_range = ['2026-05-01', '2026-05-31'];
@@ -27,17 +26,34 @@ class Contacts_MonthlyTransactionCron
         $service = new Contacts_ActivitySummaryService();
 
         // 2 Get all Party codes (client IDs) to process monthly transactions for each client
-        $clint_ids =  Contacts_CronHelpers::fetchClientIds();
+        $clint_ids =  $this->fetchClientIds();
 
-        var_dump($clint_ids);
-
-        echo "Processing Monthly Transactions for " . count($clint_ids) . " clients...\n";
+        echo "Processing Activity Summaries for " . count($clint_ids) . " clients...\n";
         echo "Date Range: " . $date_range[0] . " to " . $date_range[1] . "\n";
 
         // Loop through each client and process their transactions for the month
         foreach ($clint_ids as $client_id) {
-            $service->generateAndStoreForClient($client_id, $date_range);
+
+            try {
+                echo "\nSTART Processing client ID: $client_id\n";
+                $service->generateAndStoreForClient($client_id, $date_range);
+                echo "END Processing client ID: $client_id\n";
+            } catch (Throwable $e) {
+                echo "\nERROR processing client {$client_id}\n";
+                echo $e->getMessage() . "\n";
+                echo $e->getFile() . ':' . $e->getLine() . "\n";
+                return 0;
+            }
         }
+    }
+
+    protected function buildMonthlyDateRange()
+    {
+        $year = date('Y');
+        $month = date('m');
+        $startDate = date('Y-m-d', strtotime("$year-$month-01"));
+        $endDate = date('Y-m-t', strtotime($startDate));
+        return [$startDate, $endDate];
     }
 
     protected function checkCreateMonthlyTransactionTable()
@@ -60,5 +76,25 @@ class Contacts_MonthlyTransactionCron
             )";
             $db->pquery($createQuery, []);
         }
+    }
+
+    protected function fetchClientIds()
+    {
+        $db = PearDatabase::getInstance();
+
+        $query = "
+        SELECT DISTINCT cf_898 AS client_id
+        FROM vtiger_contactscf
+        WHERE cf_898 IS NOT NULL AND cf_898 != ''
+    ";
+
+        $result = $db->pquery($query, []);
+
+        $clientIds = [];
+        while ($row = $db->fetch_array($result)) {
+            $clientIds[] = $row['client_id'];
+        }
+
+        return $clientIds;
     }
 }

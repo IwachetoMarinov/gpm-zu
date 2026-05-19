@@ -4,12 +4,14 @@
 include_once 'CronHelpers.php';
 include_once 'StatementOfHoldingsService.php';
 
+// TEST cron job 
+// /usr/bin/php /var/www/html/gpm-zu/monthly_sh.php
+// /usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php
+
 class Contacts_MonthlyStatementOfHoldings
 {
     public function process()
     {
-        echo "Starting Monthly Statement of Holdings Cron...\n";
-
         // 1. Check if not first day of the month, if yes then exit (to avoid running on the first day of the month)
         // if (date('d') !== '01') return;
 
@@ -28,7 +30,16 @@ class Contacts_MonthlyStatementOfHoldings
         $service = new Contacts_StatementOfHoldingsService();
 
         foreach ($clint_ids as $client_id) {
-            $service->processClient($client_id, $date_range);
+            try {
+                echo "\nSTART Processing client ID: $client_id\n";
+                $service->processClient($client_id, $date_range);
+                echo "END Processing client ID: $client_id\n";
+            } catch (Throwable $e) {
+                echo "\nERROR processing client {$client_id}\n";
+                echo $e->getMessage() . "\n";
+                echo $e->getFile() . ':' . $e->getLine() . "\n";
+                return 0;
+            }
         }
     }
 }
