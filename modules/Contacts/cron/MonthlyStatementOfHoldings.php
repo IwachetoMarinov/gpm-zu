@@ -13,13 +13,10 @@ class Contacts_MonthlyStatementOfHoldings
     public function process()
     {
         // 1. Check if not first day of the month, if yes then exit (to avoid running on the first day of the month)
-        // if (date('d') !== '01') return;
+        if (date('d') !== '01') return;
 
         // 2. Build date range for the current month
         $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
-
-        // TEST RANGE
-        $date_range = ['2026-05-01', '2026-05-31'];
 
         // 3 Get all Party codes (client IDs) to process monthly transactions for each client
         $clint_ids =  Contacts_CronHelpers::fetchClientIds();
@@ -31,13 +28,10 @@ class Contacts_MonthlyStatementOfHoldings
 
         foreach ($clint_ids as $client_id) {
             try {
-                echo "\nSTART Processing client ID: $client_id\n";
                 $service->processClient($client_id, $date_range);
-                echo "END Processing client ID: $client_id\n";
             } catch (Throwable $e) {
                 echo "\nERROR processing client {$client_id}\n";
                 echo $e->getMessage() . "\n";
-                echo $e->getFile() . ':' . $e->getLine() . "\n";
                 return 0;
             }
         }

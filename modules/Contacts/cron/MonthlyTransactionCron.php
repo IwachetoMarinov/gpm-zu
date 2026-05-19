@@ -15,13 +15,10 @@ class Contacts_MonthlyTransactionCron
     public function process()
     {
         // 0. Check if not last day of the month, if yes then exit (to avoid running on the last day of the month)
-        // if (date('d') !== date('t')) return;
+        if (date('d') !== date('t')) return;
 
         // 1. Build date range for the current month
         $date_range = $this->buildMonthlyDateRange();
-
-        // TEST RANGE
-        $date_range = ['2026-05-01', '2026-05-31'];
 
         $service = new Contacts_ActivitySummaryService();
 
@@ -35,9 +32,7 @@ class Contacts_MonthlyTransactionCron
         foreach ($clint_ids as $client_id) {
 
             try {
-                echo "\nSTART Processing client ID: $client_id\n";
                 $service->generateAndStoreForClient($client_id, $date_range);
-                echo "END Processing client ID: $client_id\n";
             } catch (Throwable $e) {
                 echo "\nERROR processing client {$client_id}\n";
                 echo $e->getMessage() . "\n";
