@@ -191,7 +191,7 @@
                 padding: 14px;cursor: pointer;">Settings</span>
             </li>
 
-            {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
+            {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt', 'posting_date']}
             {assign var="barItemWarningExcludes" value=[
                 'metal_code',
                 "metal_name",
@@ -208,8 +208,12 @@
                 'weight',
                 'remarks',
                 'other_charge',
+                'item_price',
                 'narration',
                 'long_desc',
+                'premium_final',
+                'exchange_rate',
+                'serial_numbers',
                 'bar_number'
             ]}
 

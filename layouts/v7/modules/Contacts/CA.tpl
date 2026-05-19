@@ -155,6 +155,7 @@
                 "transaction_type",
                 "currency",
                 "metal_code",
+                "item_code",
                 "metal_name",
                 "metal_type_code",
                 "tx_amount",
