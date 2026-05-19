@@ -93,8 +93,8 @@ class Contacts_CronHelpers
         $returnVar = 0;
         exec($command, $output, $returnVar);
 
-        echo "RETURN VAR: {$returnVar}\n";
-        print_r($output);
+        // echo "RETURN VAR: {$returnVar}\n";
+        // print_r($output);
 
         if (file_exists($htmlPath)) unlink($htmlPath);
 
