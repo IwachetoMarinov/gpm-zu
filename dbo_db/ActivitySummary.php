@@ -183,7 +183,6 @@ class ActivitySummary
         // Remove duplicates
         $messages = array_unique($messages);
 
-        // If nothing meaningful remains
         if (empty($messages)) return null;
 
         return implode(' ', $messages);
