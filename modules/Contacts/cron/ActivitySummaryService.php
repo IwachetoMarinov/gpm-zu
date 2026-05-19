@@ -91,10 +91,6 @@ class Contacts_ActivitySummaryService
         // 15. Generate PDF from HTML using wkhtmltopdf
         $pdfPath = Contacts_CronHelpers::generatePdf($html, $client_id, $date_range, 'Monthly Activity Summary - %s - %s%s');
 
-        echo "PDF EXISTS: " . (file_exists($pdfPath) ? 'YES' : 'NO') . "\n";
-        echo "PDF SIZE: " . (file_exists($pdfPath) ? filesize($pdfPath) : 0) . "\n";
-        echo "PDF MIME: " . (file_exists($pdfPath) ? mime_content_type($pdfPath) : 'missing') . "\n";
-
         // 16. If PDF generation failed → stop here
         if (!file_exists($pdfPath)) return;
 
