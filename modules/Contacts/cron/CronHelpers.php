@@ -246,8 +246,49 @@ class Contacts_CronHelpers
         return $db->num_rows($result) > 0;
     }
 
-    public static function storePdfInDocuments(string $pdfPath, string $client_id, string $selected_year, string $selected_currency, string $titlePrefix = 'Monthly Activity Summary - %s - %s%s')
+    /**
+     * Human-readable document title + attachment name for monthly Activity Summary (AS).
+     * Example: D2002 - AS as of 31 Jan 2026 — uses period **end** date (month-end "as of").
+     */
+    public static function getMonthlyActivitySummaryDocumentTitle(string $clientId, string $periodEndDateYmd): string
     {
+        $ts = strtotime($periodEndDateYmd);
+        if ($ts === false) {
+            $ts = time();
+        }
+        return sprintf('%s - AS as of %s', $clientId, date('j M Y', $ts));
+    }
+
+    /**
+     * Human-readable document title + attachment name for monthly Statement of Holdings (SH&V).
+     * Example: D2002 - SH&V (Jan 2026) — month/year from the holdings period start.
+     */
+    public static function getStatementOfHoldingsDocumentTitle(string $clientId, string $periodStartDateYmd): string
+    {
+        $ts = strtotime($periodStartDateYmd);
+        if ($ts === false) {
+            $ts = time();
+        }
+        return sprintf('%s - SH&V (%s)', $clientId, date('M Y', $ts));
+    }
+
+    /**
+     * Strip characters that are unsafe in attachment filenames across OS / vtiger.
+     */
+    public static function sanitizeDocumentFileName(string $name): string
+    {
+        $name = trim($name);
+        return str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $name);
+    }
+
+    public static function storePdfInDocuments(
+        string $pdfPath,
+        string $client_id,
+        string $selected_year,
+        string $selected_currency,
+        string $titlePrefix = 'Monthly Activity Summary - %s - %s%s',
+        ?string $documentDisplayName = null
+    ) {
         global $adb, $current_user;
 
         self::initExecutionUser();
@@ -265,16 +306,24 @@ class Contacts_CronHelpers
         $contactId = $contactInfo['contact_id'];
         $contactOwnerId = $contactInfo['owner_id'];
 
-        $fileName = basename($pdfPath);
+        if ($documentDisplayName !== null && $documentDisplayName !== '') {
+            $documentTitle = $documentDisplayName;
+            $fileBase = self::sanitizeDocumentFileName($documentDisplayName);
+            $fileName = (strtolower(substr($fileBase, -4)) === '.pdf')
+                ? $fileBase
+                : $fileBase . '.pdf';
+        } else {
+            $fileName = basename($pdfPath);
+            $documentTitle = sprintf(
+                $titlePrefix,
+                $client_id,
+                $selected_year,
+                $selected_currency ? ' - ' . $selected_currency : ''
+            );
+        }
+
         $fileSize = filesize($pdfPath);
         $mimeType = 'application/pdf';
-
-        $documentTitle = sprintf(
-            $titlePrefix,
-            $client_id,
-            $selected_year,
-            $selected_currency ? ' - ' . $selected_currency : ''
-        );
 
         $notes = CRMEntity::getInstance('Documents');
         $notes->column_fields['notes_title'] = $documentTitle;
