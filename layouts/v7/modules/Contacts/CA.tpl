@@ -254,7 +254,6 @@
                     </tr>
                 </table>
 
-
                 {assign var="location" value=$ERP_DOCUMENT.barItems[0]->warehouse}
 
                 <div style="margin-top: 5mm;">I/We hereby confirm that I/we have duly collected the Stored Metal detailed
