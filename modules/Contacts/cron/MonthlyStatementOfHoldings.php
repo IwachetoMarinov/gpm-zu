@@ -4,19 +4,20 @@
 include_once 'CronHelpers.php';
 include_once 'StatementOfHoldingsService.php';
 
+// TEST cron job 
+// /usr/bin/php /var/www/html/gpm-zu/monthly_sh.php
+// /usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php
+
 class Contacts_MonthlyStatementOfHoldings
 {
     public function process()
     {
-        echo "Starting Monthly Statement of Holdings Cron...\n";
-
         // 1. Check if not first day of the month, if yes then exit (to avoid running on the first day of the month)
         // if (date('d') !== '01') return;
 
         // 2. Build date range for the current month
         $date_range = Contacts_CronHelpers::buildMonthlyDateRange();
 
-        // TEST RANGE
         $date_range = ['2026-05-01', '2026-05-31'];
 
         // 3 Get all Party codes (client IDs) to process monthly transactions for each client
@@ -28,7 +29,13 @@ class Contacts_MonthlyStatementOfHoldings
         $service = new Contacts_StatementOfHoldingsService();
 
         foreach ($clint_ids as $client_id) {
-            $service->processClient($client_id, $date_range);
+            try {
+                $service->processClient($client_id, $date_range);
+            } catch (Throwable $e) {
+                echo "\nERROR processing client {$client_id}\n";
+                echo $e->getMessage() . "\n";
+                return 0;
+            }
         }
     }
 }

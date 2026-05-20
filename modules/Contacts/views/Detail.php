@@ -48,7 +48,7 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$selected_year = $request->get('ActivtySummeryDate');
 		$start_date = $request->get('start_date');
 		$end_date = $request->get('end_date');
-		$order_by = "desc";
+		$order_by = $request->get('orderBy') ?? "desc";
 		$order_by_params = $request->get('orderBy');
 
 		// Test for Metal Prices 

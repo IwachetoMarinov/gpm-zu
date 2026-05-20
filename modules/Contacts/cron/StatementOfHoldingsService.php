@@ -24,13 +24,14 @@ class Contacts_StatementOfHoldingsService
         //     $end_date,
         //     'Statement of Holdings'
         // )) {
+        //     echo "Statement of Holdings already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
         //     return 0;
         // }
 
         // 2. Fetch Statement of Holdings data for the client and date range
         $holdings = $this->fetchHoldings($client_id, $date_range, $holding);
 
-        echo "Processing client ID: $client_id | Holdings count: " . count($holdings) . "\n";
+        echo "Fetched ->>>>>>>>>>>" . count($holdings) . " holdings for client ID $client_id\n";
 
         if (!is_array($holdings) || count($holdings) === 0) return;
 
@@ -83,14 +84,29 @@ class Contacts_StatementOfHoldingsService
         // echo $html;
 
         // 13. Generate PDF from HTML and store it in Documents module
-        $pdfPath = Contacts_CronHelpers::generatePdf($html, $client_id, $date_range, 'Monthly Statement of Holdings - %s - %s%s');
+        $pdfPath = Contacts_CronHelpers::generatePdf(
+            $html,
+            $client_id,
+            $date_range,
+            'Monthly_Statement_of_Holdings_%s_%s_to_%s'
+        );
 
         // 16. If PDF generation failed → stop here
         if (!file_exists($pdfPath)) return;
 
         // 17. Store generated PDF in vTiger Documents module
         $selected_year = date('Y', strtotime($date_range[0]));
-        $holdingsDocId = Contacts_CronHelpers::storePdfInDocuments($pdfPath, $client_id, $selected_year, "USD", 'Statement of Holdings - %s - %s to %s');
+
+        $docDisplayName = Contacts_CronHelpers::getStatementOfHoldingsDocumentTitle($client_id, $start_date);
+        $holdingsDocId = Contacts_CronHelpers::storePdfInDocuments(
+            $pdfPath,
+            $client_id,
+            $selected_year,
+            "USD",
+            'Statement of Holdings - %s - %s%s',
+            $docDisplayName
+        );
+
         Contacts_CronHelpers::createYTDReportRecord(
             $client_id,
             $start_date,
@@ -106,9 +122,6 @@ class Contacts_StatementOfHoldingsService
             $end_date,
             $holdingsDocId
         );
-
-        // 19. Cleanup generated PDF file
-        if (file_exists($pdfPath)) unlink($pdfPath);
     }
 
     private function groupHoldingsByLocation(array $holdings): array

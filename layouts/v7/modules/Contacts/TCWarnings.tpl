@@ -3,7 +3,7 @@
 
 {assign var="transactionWarningsCount" value=0}
 {assign var="barItemWarningsCount" value=0}
-{assign var="missingBarItemsCount" value=0}
+{assign var="missingBarItemsWarning" value=false}
 
 {assign var="erpWarnings" value=[]}
 {assign var="barItems" value=[]}
@@ -11,20 +11,30 @@
 {assign var="barItemWarnings" value=[]}
 {assign var="barItemDescription" value=''}
 
-{* Read ERP document warnings and bar items *}
+{* Read ERP warnings and bar items *}
 {if isset($ERP_DOCUMENT)}
     {if is_object($ERP_DOCUMENT)}
-        {assign var="erpWarnings" value=$ERP_DOCUMENT->_warnings|default:[]}
-        {assign var="barItems" value=$ERP_DOCUMENT->barItems|default:[]}
+        {if isset($ERP_DOCUMENT->_warnings)}
+            {assign var="erpWarnings" value=$ERP_DOCUMENT->_warnings}
+        {/if}
+
+        {if isset($ERP_DOCUMENT->barItems)}
+            {assign var="barItems" value=$ERP_DOCUMENT->barItems}
+        {/if}
     {elseif is_array($ERP_DOCUMENT)}
-        {assign var="erpWarnings" value=$ERP_DOCUMENT._warnings|default:[]}
-        {assign var="barItems" value=$ERP_DOCUMENT.barItems|default:[]}
+        {if isset($ERP_DOCUMENT['_warnings'])}
+            {assign var="erpWarnings" value=$ERP_DOCUMENT['_warnings']}
+        {/if}
+
+        {if isset($ERP_DOCUMENT['barItems'])}
+            {assign var="barItems" value=$ERP_DOCUMENT['barItems']}
+        {/if}
     {/if}
 {/if}
 
 {* Missing bar items warning *}
-{if !is_array($barItems) || $barItems|@count eq 0}
-    {assign var="missingBarItemsCount" value=1}
+{if is_array($barItems) && $barItems|@count eq 0}
+    {assign var="missingBarItemsWarning" value=true}
 {/if}
 
 {* First bar item *}
@@ -35,11 +45,21 @@
 {* First bar item warnings and description *}
 {if $firstBarItem}
     {if is_object($firstBarItem)}
-        {assign var="barItemWarnings" value=$firstBarItem->_warnings|default:[]}
-        {assign var="barItemDescription" value=$firstBarItem->description|default:''}
+        {if isset($firstBarItem->_warnings)}
+            {assign var="barItemWarnings" value=$firstBarItem->_warnings}
+        {/if}
+
+        {if isset($firstBarItem->description)}
+            {assign var="barItemDescription" value=$firstBarItem->description}
+        {/if}
     {elseif is_array($firstBarItem)}
-        {assign var="barItemWarnings" value=$firstBarItem._warnings|default:[]}
-        {assign var="barItemDescription" value=$firstBarItem.description|default:''}
+        {if isset($firstBarItem['_warnings'])}
+            {assign var="barItemWarnings" value=$firstBarItem['_warnings']}
+        {/if}
+
+        {if isset($firstBarItem['description'])}
+            {assign var="barItemDescription" value=$firstBarItem['description']}
+        {/if}
     {/if}
 {/if}
 
@@ -60,7 +80,7 @@
     {/foreach}
 {/if}
 
-{* Count bar item field warnings *}
+{* Count bar item warnings *}
 {if is_array($barItemWarnings)}
     {foreach from=$barItemWarnings item=warning}
         {assign var="warningField" value=''}
@@ -77,7 +97,11 @@
     {/foreach}
 {/if}
 
-{assign var="totalWarnings" value=$transactionWarningsCount+$barItemWarningsCount+$missingBarItemsCount}
+{assign var="totalWarnings" value=$transactionWarningsCount+$barItemWarningsCount}
+
+{if $missingBarItemsWarning}
+    {assign var="totalWarnings" value=$totalWarnings+1}
+{/if}
 
 {if $totalWarnings gt 0}
 
@@ -137,10 +161,26 @@
                 </div>
             {/if}
 
-            {if $missingBarItemsCount gt 0 || $barItemWarningsCount gt 0}
+            {if $missingBarItemsWarning}
+                <div style="margin-bottom:25px;">
+                    <h4 style="margin-top:0;color:#b94a48;">
+                        Bar Item Warnings (1)
+                    </h4>
+
+                    <div style="border:1px solid #ddd;padding:12px;margin-bottom:15px;border-radius:4px;">
+                        <ul style="margin:0;padding-left:20px;">
+                            <li style="margin-bottom:5px;">
+                                Missing bar item mapping. No bar items were found for this transaction.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {/if}
+
+            {if $barItemWarningsCount gt 0 && $firstBarItem}
                 <div>
                     <h4 style="margin-top:0;color:#b94a48;">
-                        Bar Item Warnings ({$missingBarItemsCount+$barItemWarningsCount})
+                        Bar Item Warnings ({$barItemWarningsCount})
                     </h4>
 
                     <div style="border:1px solid #ddd;padding:12px;margin-bottom:15px;border-radius:4px;">
@@ -153,34 +193,26 @@
                         </div>
 
                         <ul style="margin:0;padding-left:20px;">
-                            {if $missingBarItemsCount gt 0}
-                                <li style="margin-bottom:5px;">
-                                    Missing bar items.
-                                </li>
-                            {/if}
+                            {foreach from=$barItemWarnings item=warning}
+                                {assign var="warningField" value=''}
+                                {assign var="warningMessage" value=''}
 
-                            {if $barItemWarningsCount gt 0}
-                                {foreach from=$barItemWarnings item=warning}
-                                    {assign var="warningField" value=''}
-                                    {assign var="warningMessage" value=''}
+                                {if is_object($warning)}
+                                    {assign var="warningField" value=$warning->field|default:''}
+                                    {assign var="warningMessage" value=$warning->message|default:$warning}
+                                {elseif is_array($warning)}
+                                    {assign var="warningField" value=$warning.field|default:''}
+                                    {assign var="warningMessage" value=$warning.message|default:$warning}
+                                {else}
+                                    {assign var="warningMessage" value=$warning}
+                                {/if}
 
-                                    {if is_object($warning)}
-                                        {assign var="warningField" value=$warning->field|default:''}
-                                        {assign var="warningMessage" value=$warning->message|default:$warning}
-                                    {elseif is_array($warning)}
-                                        {assign var="warningField" value=$warning.field|default:''}
-                                        {assign var="warningMessage" value=$warning.message|default:$warning}
-                                    {else}
-                                        {assign var="warningMessage" value=$warning}
-                                    {/if}
-
-                                    {if !$warningField || !in_array($warningField, $barItemWarningExcludes)}
-                                        <li style="margin-bottom:5px;">
-                                            {$warningMessage|escape:'html'}
-                                        </li>
-                                    {/if}
-                                {/foreach}
-                            {/if}
+                                {if !$warningField || !in_array($warningField, $barItemWarningExcludes)}
+                                    <li style="margin-bottom:5px;">
+                                        {$warningMessage|escape:'html'}
+                                    </li>
+                                {/if}
+                            {/foreach}
                         </ul>
                     </div>
                 </div>

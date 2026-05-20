@@ -1,8 +1,6 @@
 <?php
 /* dbo_db/ProformaInvoice.php */
 
-// ini_set('display_errors', 1); error_reporting(E_ALL);
-
 namespace dbo_db;
 
 include_once 'data/CRMEntity.php';
@@ -38,14 +36,7 @@ class ProformaInvoice
 
             $sql = "SELECT * FROM $this->database_prefix.[$table_name] $where";
 
-            // var_dump("Executing SQL: " . $sql);
-            // var_dump("With params: " . implode(", ", $params));
-
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
-
-            // echo "<pre>";
-            // var_dump($summary);
-            // echo "</pre>";
 
             return $summary;
         } catch (\Exception $e) {

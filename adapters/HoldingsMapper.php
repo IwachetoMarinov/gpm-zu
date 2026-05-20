@@ -25,7 +25,7 @@ class HoldingsMapper
             ),
             'fine_oz' => AdapterHelper::firstValue($item, ['FineOz'], 0, $warnings, 'fine_oz'),
             'total' => AdapterHelper::firstValue($item, ['Total'], 0, $warnings, 'total'),
-            'amount' => AdapterHelper::firstValue($item, ['Amount'], 0, $warnings, 'amount'),
+            // 'amount' => AdapterHelper::firstValue($item, ['Amount'], 0, $warnings, 'amount'),
             '_warnings' => $warnings,
         ];
     }
