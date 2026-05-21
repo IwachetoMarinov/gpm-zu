@@ -165,7 +165,8 @@ class Contacts_CronHelpers
         string $start_date,
         string $end_date,
         int $documentId,
-        string $reportType
+        string $reportType,
+        ?string $currency = null
     ) {
         global $adb, $current_user;
 
@@ -179,13 +180,15 @@ class Contacts_CronHelpers
         require_once 'modules/YTDReports/YTDReports.php';
 
         $report = CRMEntity::getInstance('YTDReports');
-        $report->column_fields['ytdreportsname'] = sprintf(
-            '%s - %s - %s to %s',
+
+        $report->column_fields['ytdreportsname'] = self::buildYtdReportName(
             $reportType,
             $client_id,
             $start_date,
-            $end_date
+            $end_date,
+            $currency
         );
+
         $report->column_fields['client_id'] = $client_id;
         $report->column_fields['assigned_user_id'] = $current_user->id;
 
@@ -221,17 +224,12 @@ class Contacts_CronHelpers
         string $client_id,
         string $start_date,
         string $end_date,
-        string $reportType
+        string $reportType,
+        ?string $currency = null
     ): bool {
         $db = PearDatabase::getInstance();
 
-        $name = sprintf(
-            '%s - %s - %s to %s',
-            $reportType,
-            $client_id,
-            $start_date,
-            $end_date
-        );
+        $name = self::buildYtdReportName($reportType, $client_id, $start_date, $end_date, $currency);
 
         $result = $db->pquery(
             "SELECT ce.crmid
@@ -246,17 +244,26 @@ class Contacts_CronHelpers
         return $db->num_rows($result) > 0;
     }
 
+    // Add comments here: Builds the date range for the current year and month
+    // The date range is from the first day of the year to the last day of the previous month
+    public static function buildYearMonthDateRange()
+    {
+        $startDate = date('Y-01-01');
+        $endDate = date('Y-m-t', strtotime('last month'));
+        return [$startDate, $endDate];
+    }
+
     /**
      * Human-readable document title + attachment name for monthly Activity Summary (AS).
      * Example: D2002 - AS as of 31 Jan 2026 — uses period **end** date (month-end "as of").
      */
-    public static function getMonthlyActivitySummaryDocumentTitle(string $clientId, string $periodEndDateYmd): string
+    public static function getMonthlyActivitySummaryDocumentTitle(string $clientId, string $periodEndDateYmd, ?string $currency = null): string
     {
         $ts = strtotime($periodEndDateYmd);
         if ($ts === false) {
             $ts = time();
         }
-        return sprintf('%s - AS as of %s', $clientId, date('j M Y', $ts));
+        return sprintf('%s - AS as of %s %s', $clientId, date('j M Y', $ts), $currency ? ' - ' . $currency : '');
     }
 
     /**
@@ -340,31 +347,23 @@ class Contacts_CronHelpers
 
         $documentId = $notes->id;
 
-        if (!$documentId) {
-            throw new Exception('Failed to create Documents record.');
-        }
+        if (!$documentId) throw new Exception('Failed to create Documents record.');
 
         $attachmentId = $adb->getUniqueID('vtiger_crmentity');
 
         $basePath = realpath(dirname(__DIR__, 3));
 
-        if (!$basePath) {
-            throw new Exception('Cannot resolve base path');
-        }
+        if (!$basePath) throw new Exception('Cannot resolve base path');
 
         // Match existing working vtiger behavior in your DEV/LIVE DB rows
         $uploadDir = $basePath . '/storage/';
 
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0775, true);
-        }
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0775, true);
 
         $storedFileName = $attachmentId . '_' . $fileName;
         $destination = $uploadDir . $storedFileName;
 
-        if (!copy($pdfPath, $destination)) {
-            throw new Exception('Failed to copy PDF to storage: ' . $destination);
-        }
+        if (!copy($pdfPath, $destination)) throw new Exception('Failed to copy PDF to storage: ' . $destination);
 
         @unlink($pdfPath);
 
@@ -424,6 +423,20 @@ class Contacts_CronHelpers
         );
 
         return $documentId;
+    }
+
+    public static function buildYtdReportName(
+        string $reportType,
+        string $client_id,
+        string $start_date,
+        string $end_date,
+        ?string $currency = null
+    ): string {
+        $name = sprintf('%s - %s - %s to %s', $reportType, $client_id, $start_date, $end_date);
+        if ($currency !== null && $currency !== '') {
+            $name .= ' - ' . $currency;
+        }
+        return $name;
     }
 
     protected static function initExecutionUser()
