@@ -37,15 +37,16 @@ class Contacts_ActivitySummaryService
     {
 
         //   1. Check if the activity summary already exists for the client and period
-        // if (Contacts_CronHelpers::ytdReportExists(
-        //     $client_id,
-        //     $start_date,
-        //     $end_date,
-        //     'Activity Summary'
-        // )) {
-        //     echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
-        //     return 0;
-        // }
+        if (Contacts_CronHelpers::ytdReportExists(
+            $client_id,
+            $start_date,
+            $end_date,
+            'Activity Summary',
+            $currency  
+        )) {
+            echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
+            return 0;
+        }
 
         // 2. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date, $currency);
@@ -85,7 +86,7 @@ class Contacts_ActivitySummaryService
         $ROOT_DIRECTORY = getenv('ROOT_DIRECTORY') ?: ($ROOT_DIRECTORY ?? null);
         $smarty->assign('ROOT_DIRECTORY', $ROOT_DIRECTORY);
         $smarty->assign('RECORD_MODEL', $contactRecord);
-        $smarty->assign('CURRENCY', $currency);
+        $smarty->assign('CURRENCY', $currency ?? 'All');
         $smarty->assign('TRANSACTIONS', $activities);
         $smarty->assign('COMPANY', $company_record);
         $smarty->assign('PAGES', $pages);
@@ -130,7 +131,8 @@ class Contacts_ActivitySummaryService
             $start_date,
             $end_date,
             $activityDocId,
-            'Activity Summary'
+            'Activity Summary',
+            $currency
         );
 
         // 16. Insert into monthly transactions table for record-keeping
@@ -141,7 +143,7 @@ class Contacts_ActivitySummaryService
         }
     }
 
-    protected function insertIntoMonthlyTransactions(string $client_id, string $start_date, string $end_date, string $currency)
+    protected function insertIntoMonthlyTransactions(string $client_id, string $start_date, string $end_date, ?string $currency = null)
     {
         $db = PearDatabase::getInstance();
         $result = $db->pquery(
@@ -150,8 +152,7 @@ class Contacts_ActivitySummaryService
             [$client_id, $start_date, $end_date]
         );
 
-        $description = sprintf('Monthly activity summary for client_id %s, period: %s to %s, currency: %s', $client_id, $start_date, $end_date, $currency);
-
+        $description = sprintf('Monthly activity summary for client_id %s, period: %s to %s, currency: %s', $client_id, $start_date, $end_date, $currency ?? 'All');
 
         if ($db->num_rows($result) == 0) {
             $db->pquery(

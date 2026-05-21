@@ -292,7 +292,7 @@ class Contacts_CronHelpers
         string $pdfPath,
         string $client_id,
         string $selected_year,
-        string $selected_currency,
+        ?string $selected_currency = null,
         string $titlePrefix = 'Monthly Activity Summary - %s - %s%s',
         ?string $documentDisplayName = null
     ) {
