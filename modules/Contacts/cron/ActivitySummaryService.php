@@ -38,16 +38,16 @@ class Contacts_ActivitySummaryService
     protected function processClient(string $client_id, $currency = null, string $selected_year, string $start_date, string $end_date, dbo_db\ActivitySummary $activity)
     {
         //   1. Check if the activity summary already exists for the client and period
-        // if (Contacts_CronHelpers::ytdReportExists(
-        //     $client_id,
-        //     $start_date,
-        //     $end_date,
-        //     'Activity Summary',
-        //     $currency  
-        // )) {
-        //     echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
-        //     return 0;
-        // }
+        if (Contacts_CronHelpers::ytdReportExists(
+            $client_id,
+            $start_date,
+            $end_date,
+            'Activity Summary',
+            $currency
+        )) {
+            echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
+            return;
+        }
 
         // 2. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date, $currency);
@@ -269,17 +269,13 @@ class Contacts_ActivitySummaryService
 
         $documentId = $notes->id;
 
-        if (!$documentId) {
-            throw new Exception('Failed to create Documents record.');
-        }
+        if (!$documentId) throw new Exception('Failed to create Documents record.');
 
         $attachmentId = $adb->getUniqueID('vtiger_crmentity');
 
         $basePath = realpath(dirname(__DIR__, 3));
 
-        if (!$basePath) {
-            throw new Exception('Cannot resolve base path.');
-        }
+        if (!$basePath) throw new Exception('Cannot resolve base path.');
 
         /*
      * IMPORTANT:
