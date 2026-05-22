@@ -24,8 +24,7 @@ class Contacts_ActivitySummaryService
         // 3. Get curreny list for the client
         $currency_list = $activity->getTransactionCurrencies($client_id);
 
-        echo "Currency List: " . json_encode($currency_list) . " for client {$client_id}\n";  
-        return;  
+        echo "Currency List: " . json_encode($currency_list) . " for client {$client_id}\n";
 
         //   4. Loop through each currency and process the activity summary
         foreach ($currency_list as $currency) {
