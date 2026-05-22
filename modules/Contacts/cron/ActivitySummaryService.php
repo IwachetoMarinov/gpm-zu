@@ -30,23 +30,22 @@ class Contacts_ActivitySummaryService
         }
 
         // 5. Create a new record for all currencies
-        // $this->processClient($client_id, null, $selected_year, $start_date, $end_date, $activity);
+        $this->processClient($client_id, null, $selected_year, $start_date, $end_date, $activity);
     }
 
     protected function processClient(string $client_id, $currency = null, string $selected_year, string $start_date, string $end_date, dbo_db\ActivitySummary $activity)
     {
-
         //   1. Check if the activity summary already exists for the client and period
-        if (Contacts_CronHelpers::ytdReportExists(
-            $client_id,
-            $start_date,
-            $end_date,
-            'Activity Summary',
-            $currency  
-        )) {
-            echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
-            return 0;
-        }
+        // if (Contacts_CronHelpers::ytdReportExists(
+        //     $client_id,
+        //     $start_date,
+        //     $end_date,
+        //     'Activity Summary',
+        //     $currency  
+        // )) {
+        //     echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
+        //     return 0;
+        // }
 
         // 2. Fetch all transactions for this client in the given date range
         $activities = $activity->getMonthlyTransactions($client_id, $start_date, $end_date, $currency);
