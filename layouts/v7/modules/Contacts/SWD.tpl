@@ -210,6 +210,9 @@
                 'other_charge',
                 'narration',
                 'long_desc',
+                'exchange_rate',
+                'item_price',
+                'premium_final',
                 'bar_number'
             ]}
 
