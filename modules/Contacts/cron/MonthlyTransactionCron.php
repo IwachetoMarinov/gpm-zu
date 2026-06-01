@@ -38,7 +38,7 @@ class Contacts_MonthlyTransactionCron
                 echo "\nERROR processing client {$client_id}\n";
                 echo $e->getMessage() . "\n";
                 echo $e->getFile() . ':' . $e->getLine() . "\n";
-                return 0;
+                continue;
             }
         }
     }

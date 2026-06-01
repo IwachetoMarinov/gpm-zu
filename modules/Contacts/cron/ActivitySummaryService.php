@@ -24,28 +24,29 @@ class Contacts_ActivitySummaryService
         // 3. Get curreny list for the client
         $currency_list = $activity->getTransactionCurrencies($client_id);
 
+        echo "Currency List: " . json_encode($currency_list) . " for client {$client_id}\n";
+
         //   4. Loop through each currency and process the activity summary
         foreach ($currency_list as $currency) {
             $this->processClient($client_id, $currency, $selected_year, $start_date, $end_date, $activity);
         }
 
         // 5. Create a new record for all currencies
-        // $this->processClient($client_id, null, $selected_year, $start_date, $end_date, $activity);
+        $this->processClient($client_id, null, $selected_year, $start_date, $end_date, $activity);
     }
 
     protected function processClient(string $client_id, $currency = null, string $selected_year, string $start_date, string $end_date, dbo_db\ActivitySummary $activity)
     {
-
         //   1. Check if the activity summary already exists for the client and period
         if (Contacts_CronHelpers::ytdReportExists(
             $client_id,
             $start_date,
             $end_date,
             'Activity Summary',
-            $currency  
+            $currency
         )) {
             echo "Activity Summary already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
-            return 0;
+            return;
         }
 
         // 2. Fetch all transactions for this client in the given date range
@@ -268,17 +269,13 @@ class Contacts_ActivitySummaryService
 
         $documentId = $notes->id;
 
-        if (!$documentId) {
-            throw new Exception('Failed to create Documents record.');
-        }
+        if (!$documentId) throw new Exception('Failed to create Documents record.');
 
         $attachmentId = $adb->getUniqueID('vtiger_crmentity');
 
         $basePath = realpath(dirname(__DIR__, 3));
 
-        if (!$basePath) {
-            throw new Exception('Cannot resolve base path.');
-        }
+        if (!$basePath) throw new Exception('Cannot resolve base path.');
 
         /*
      * IMPORTANT:
