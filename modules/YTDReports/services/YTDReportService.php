@@ -12,7 +12,8 @@ class YTDReportService
 
         try {
             $activityService = new Contacts_ActivitySummaryService();
-            $activityService->generateAndStoreForClient($client_id, $date_range);
+            $activity_date_range = Contacts_CronHelpers::buildYearMonthDateRange();
+            $activityService->generateAndStoreForClient($client_id, $activity_date_range);
         } catch (Throwable $e) {
             echo "Error processing activity summary for client $client_id: " . $e->getMessage() . "\n";
         }

@@ -376,7 +376,7 @@ class ActivitySummary
         return $items;
     }
 
-    public function getMonthlyTransactions($client_id, $start_date, $end_date)
+    public function getMonthlyTransactions($client_id, $start_date, $end_date, $currency = null)
     {
 
         if (!$client_id || !$this->connection || !$start_date || !$end_date) return [];
@@ -390,6 +390,11 @@ class ActivitySummary
 
             $where .= " AND [Tx_Date] <= ?";
             $params[] = $end_date;
+
+            if ($currency) {
+                $where .= " AND [Curr_Code] = ?";
+                $params[] = $currency;
+            }
 
             $sql = "SELECT * FROM {$this->database_prefix}.[DW_TxHxv2] {$where} ORDER BY [Tx_Date] DESC";
 
