@@ -167,14 +167,19 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
         $clientID = $recordModel->get('cf_898');
         $docType = substr($request->get('docNo'), 0, 3);
 
-        if ($docType == 'PWD' || $docType == 'PUR') $docType = 'PI';
+        if ($docType == 'PWD') $docType = 'PI';
 
         $year = date('Y');
         // Get last part of docNo after last '/'
         $docNoParts = explode('/', $request->get('docNo'));
         $docNoLastPart = end($docNoParts);
 
-        $fileName = $clientID . '-' . $docType . '-' . $year . '-' . $docNoLastPart . '-' . $docType;
+        $last_doctype = $docType;
+
+        if ($docType == 'PUR') $last_doctype = 'RCPT';
+
+        $fileName = $clientID . '-' . $docType . '-' . $year . '-' . $docNoLastPart . '-' . $last_doctype;
+        
         $handle = fopen($root_directory . $fileName . '.html', 'a') or die('Cannot open file:  ');
         fwrite($handle, $html);
         fclose($handle);
