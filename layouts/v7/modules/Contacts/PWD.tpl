@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>PURCHASE INVOICE</title>
+    <title>RECEIPT</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -181,32 +181,32 @@
                     href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&hideCustomerInfo={$smarty.request.hideCustomerInfo}">Download</a>
             </li>
 
-             {assign var="transactionWarningExcludes" value=['description', 'grand_total']}
+            {assign var="transactionWarningExcludes" value=['description', 'grand_total']}
             {assign var="barItemWarningExcludes" value=[
-                "metal_name",
-                "metal_type_code",
-                "warehouse",
-                "tx_amount",
-                "avg_spot_price",
-                "posting_date",
-                "item_code",
-                "fine_oz",
-                "gross_oz",
-                "purity",
-                "total_item_dc_amount",
-                "weight",
-                "remarks",
-                "other_charge",
-                "narration",
-                "bar_number",
-                "field"
-            ]}
+                            "metal_name",
+                            "metal_type_code",
+                            "warehouse",
+                            "tx_amount",
+                            "avg_spot_price",
+                            "posting_date",
+                            "item_code",
+                            "fine_oz",
+                            "gross_oz",
+                            "purity",
+                            "total_item_dc_amount",
+                            "weight",
+                            "remarks",
+                            "other_charge",
+                            "narration",
+                            "bar_number",
+                            "field"
+                        ]}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                ERP_DOCUMENT=$ERP_DOCUMENT
-                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-            }
+                            ERP_DOCUMENT=$ERP_DOCUMENT
+                            TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                            BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+                        }
         </ul>
     {/if}
     <div class="printAreaContainer">
@@ -249,14 +249,25 @@
                 </tr>
                 <tr>
                     <td style="height: 10mm; text-decoration: underline;text-align: center">
-                        <strong>PURCHASE INVOICE</strong>
+                        <strong>RECEIPT</strong>
                     </td>
                 </tr>
+
                 <tr>
-                    <td style="text-align: right;font-size: 9pt">
-                        All amounts in {$ERP_DOCUMENT->currency}
+                    <td>
+                        <table style="width:100%; border-collapse:collapse;">
+                            <tr>
+                                <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
+                                    YOUR SALE:
+                                </td>
+                                <td style="font-size:9pt; text-align:right;">
+                                    All amounts in {$ERP_DOCUMENT->currency}
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
+
                 <tr>
                     <td style="font-size: 9pt; height: 168mm; vertical-align: top;">
                         <table class="activity-tbl" style="margin-bottom:5mm">
@@ -292,13 +303,15 @@
                                 {else}
                                     {assign var="serials" value=$serials|cat:$barItem->serials|cat:', '}
                                 {/if}
-                               
+
                                 {assign var="total" value=((($barItem->price)*($barItem->pureOz))+$barItem->otherCharge)}
                                 <tr>
                                     <td style="vertical-align: top">{$barItem->quantity}</td>
                                     <td style="border-bottom:none;vertical-align: top">
                                         {$barItem->longDesc} <br><span
-                                            style="font-size: smaller;font-style: italic;max-width: 250px;display: inline-block;word-break: break-all;white-space: normal;"><pre>{$barItem->serialNumbers}</pre></span>
+                                            style="font-size: smaller;font-style: italic;max-width: 250px;display: inline-block;word-break: break-all;white-space: normal;">
+                                            <pre>{$barItem->serialNumbers}</pre>
+                                        </span>
                                     </td>
                                     {if $barItem->metal eq 'mBTC'}
                                         <td style="text-align:right;vertical-align: top">
@@ -331,6 +344,26 @@
                                 </tr>
                             {/if}
                         </table>
+
+                        <br>
+
+                        <div style="font-size:9pt;">
+                            <strong>PAYMENT MADE BY:</strong><br>
+
+                            {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                                <select id="paymentMethod" style="margin-top: 1mm;">
+                                    <option value="">-- Select --</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="BankTransfer">Bank Transfer</option>
+                                </select>
+                            {else}
+                                {if $smarty.request.paymentMethod eq 'Cash'}
+                                    Cash
+                                {elseif $smarty.request.paymentMethod eq 'BankTransfer'}
+                                    Bank Transfer
+                                {/if}
+                            {/if}
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -348,6 +381,31 @@
             </table>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var downloadBtn = document.getElementById('downloadPdfBtn');
+            var paymentSelect = document.getElementById('paymentMethod');
+
+            if (!downloadBtn || !paymentSelect) {
+                return;
+            }
+
+            downloadBtn.addEventListener('click', function() {
+                var url = new URL(downloadBtn.href, window.location.origin);
+                var paymentMethod = paymentSelect.value;
+
+                if (paymentMethod) {
+                    url.searchParams.set('paymentMethod', paymentMethod);
+                } else {
+                    url.searchParams.delete('paymentMethod');
+                }
+
+                downloadBtn.href = url.toString();
+            });
+        });
+    </script>
+
 </body>
 
 </html>
