@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>SALES INVOICE</title>
+    <title>INVOICE</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -193,34 +193,34 @@
 
             {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
             {assign var="barItemWarningExcludes" value=[
-                'metal_code',
-                "metal_name",
-                "metal_type_code",
-                'warehouse',
-                'tx_amount',
-                'avg_spot_price',
-                'posting_date',
-                'item_code',
-                'fine_oz',
-                'gross_oz',
-                'purity',
-                'total_item_dc_amount',
-                'weight',
-                'remarks',
-                'other_charge',
-                'narration',
-                'long_desc',
-                'exchange_rate',
-                'item_price',
-                'premium_final',
-                'bar_number'
-            ]}
+                    'metal_code',
+                    "metal_name",
+                    "metal_type_code",
+                    'warehouse',
+                    'tx_amount',
+                    'avg_spot_price',
+                    'posting_date',
+                    'item_code',
+                    'fine_oz',
+                    'gross_oz',
+                    'purity',
+                    'total_item_dc_amount',
+                    'weight',
+                    'remarks',
+                    'other_charge',
+                    'narration',
+                    'long_desc',
+                    'exchange_rate',
+                    'item_price',
+                    'premium_final',
+                    'bar_number'
+                ]}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                ERP_DOCUMENT=$ERP_DOCUMENT
-                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-            }
+                    ERP_DOCUMENT=$ERP_DOCUMENT
+                    TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                    BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+                }
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
@@ -269,7 +269,7 @@
                 </tr>
                 <tr>
                     <td style="height: 10mm; text-decoration: underline;text-align: center">
-                        <strong>{if !empty($COMPANY->get('company_gst_no'))}TAX INVOICE{else}SALES INVOICE{/if}</strong>
+                        <strong>INVOICE</strong>
                     </td>
                 </tr>
                 {if !empty($COMPANY->get('company_gst_no'))}
@@ -285,11 +285,22 @@
                         </td>
                     </tr>
                 {/if}
+
                 <tr>
-                    <td style="text-align: right;font-size: 9pt">
-                        All amounts in {$ERP_DOCUMENT->currency}
+                    <td>
+                        <table style="width:100%; border-collapse:collapse;">
+                            <tr>
+                                <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
+                                    YOUR PURCHASE:
+                                </td>
+                                <td style="font-size:9pt; text-align:right;">
+                                    All amounts in {$ERP_DOCUMENT->currency}
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
+                
                 <tr>
                     <td style="font-size: 9pt; height: 168mm; vertical-align: top;">
                         <table class="activity-tbl" style="margin-bottom:5mm">

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>SALES INVOICE</title>
+    <title>INVOICE</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -281,8 +281,7 @@
                         <td style="height: 10mm; text-decoration: underline;text-align: center">
 
                             <strong>{if isset($COMPANY) && !empty($COMPANY->get('company_gst_no'))}TAX INVOICE
-                                {else}SALES
-                                INVOICE{/if}</strong>
+                                {else}INVOICE{/if}</strong>
                         </td>
                     </tr>
                     {if isset($COMPANY) && !empty($COMPANY->get('company_gst_no'))}
@@ -298,11 +297,22 @@
                             </td>
                         </tr>
                     {/if}
-                    <tr>
-                        <td style="text-align: right;font-size: 9pt">
-                            All amounts in {$ERP_DOCUMENT->currency}
+
+                     <tr>
+                        <td>
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
+                                        YOUR PURCHASE:
+                                    </td>
+                                    <td style="font-size:9pt; text-align:right;">
+                                        All amounts in {$ERP_DOCUMENT->currency}
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
+
                     <tr>
                         <td style="font-size: 9pt; height: 168mm; vertical-align: top;">
                             <table class="activity-tbl" style="margin-bottom:5mm">

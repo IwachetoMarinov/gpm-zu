@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>PURCHASE INVOICE</title>
+    <title>RECEIPT</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -199,31 +199,31 @@
 
             {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
             {assign var="barItemWarningExcludes" value=[
-                                                            "metal_code",
-                                                            "metal_name",
-                                                            "metal_type_code",
-                                                            "warehouse",
-                                                            "tx_amount",
-                                                            "avg_spot_price",
-                                                            "posting_date",
-                                                            "item_code",
-                                                            "fine_oz",
-                                                            "gross_oz",
-                                                            "purity",
-                                                            "total_item_dc_amount",
-                                                            "weight",
-                                                            "remarks",
-                                                            "other_charge",
-                                                            "narration",
-                                                            "long_desc",
-                                                            "bar_number"
-                                                    ]}
+                                                                "metal_code",
+                                                                "metal_name",
+                                                                "metal_type_code",
+                                                                "warehouse",
+                                                                "tx_amount",
+                                                                "avg_spot_price",
+                                                                "posting_date",
+                                                                "item_code",
+                                                                "fine_oz",
+                                                                "gross_oz",
+                                                                "purity",
+                                                                "total_item_dc_amount",
+                                                                "weight",
+                                                                "remarks",
+                                                                "other_charge",
+                                                                "narration",
+                                                                "long_desc",
+                                                                "bar_number"
+                                                        ]}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                                                        ERP_DOCUMENT=$ERP_DOCUMENT
-                                                        TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                                                        BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-                                                    }
+                                                            ERP_DOCUMENT=$ERP_DOCUMENT
+                                                            TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                                                            BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+                                                        }
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
@@ -280,13 +280,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="height: 5.5mm; text-decoration: underline;text-align: center">
+                        <td style="height: 10mm; text-decoration: underline;text-align: center">
                             <strong>RECEIPT</strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height: 5.5mm; text-decoration: underline;text-align: center">
-                            <strong>PURCHASE INVOICE</strong>
                         </td>
                     </tr>
 
@@ -393,13 +388,13 @@
                                 {/if}
                             </table>
 
-                            <br><br>
+                            <br>
 
                             <div style="font-size:9pt;">
                                 <strong>PAYMENT MADE BY:</strong><br>
 
                                 {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
-                                    <select id="paymentMethod">
+                                    <select id="paymentMethod"  style="margin-top: 1mm;">
                                         <option value="">-- Select --</option>
                                         <option value="Cash">Cash</option>
                                         <option value="BankTransfer">Bank Transfer</option>
@@ -464,4 +459,5 @@
     </script>
 
 </body>
+
 </html>
