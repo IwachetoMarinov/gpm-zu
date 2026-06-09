@@ -181,7 +181,8 @@
 
         <ul style="list-style-type:none;margin:0;padding:0;overflow:hidden;background-color:#333;">
             <li style="float:right">
-                <a style="display:block;color:white;text-align:center;padding:14px 16px;text-decoration:none;background-color:#bea364;"
+                <a id="downloadPdfBtn"
+                    style="display:block;color:white;text-align:center;padding:14px 16px;text-decoration:none;background-color:#bea364;"
                     href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true
                 {$FROM_INTENT}
                 {$HCI}">
@@ -198,31 +199,31 @@
 
             {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
             {assign var="barItemWarningExcludes" value=[
-                    "metal_code",
-                    "metal_name",
-                    "metal_type_code",
-                    "warehouse",
-                    "tx_amount",
-                    "avg_spot_price",
-                    "posting_date",
-                    "item_code",
-                    "fine_oz",
-                    "gross_oz",
-                    "purity",
-                    "total_item_dc_amount",
-                    "weight",
-                    "remarks",
-                    "other_charge",
-                    "narration",
-                    "long_desc",
-                    "bar_number"
-            ]}
+                                                            "metal_code",
+                                                            "metal_name",
+                                                            "metal_type_code",
+                                                            "warehouse",
+                                                            "tx_amount",
+                                                            "avg_spot_price",
+                                                            "posting_date",
+                                                            "item_code",
+                                                            "fine_oz",
+                                                            "gross_oz",
+                                                            "purity",
+                                                            "total_item_dc_amount",
+                                                            "weight",
+                                                            "remarks",
+                                                            "other_charge",
+                                                            "narration",
+                                                            "long_desc",
+                                                            "bar_number"
+                                                    ]}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                ERP_DOCUMENT=$ERP_DOCUMENT
-                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-            }
+                                                        ERP_DOCUMENT=$ERP_DOCUMENT
+                                                        TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                                                        BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+                                                    }
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
@@ -279,14 +280,28 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="height: 10mm; text-decoration: underline;text-align: center">
+                        <td style="height: 5.5mm; text-decoration: underline;text-align: center">
+                            <strong>RECEIPT</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 5.5mm; text-decoration: underline;text-align: center">
                             <strong>PURCHASE INVOICE</strong>
                         </td>
                     </tr>
 
                     <tr>
-                        <td style="text-align: right;font-size: 9pt">
-                            All amounts in {$ERP_DOCUMENT->currency}
+                        <td>
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
+                                        YOUR SALE:
+                                    </td>
+                                    <td style="font-size:9pt; text-align:right;">
+                                        All amounts in {$ERP_DOCUMENT->currency}
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                     <tr>
@@ -328,7 +343,7 @@
                                     {else}
                                         {assign var="serials" value=$serials|cat:$barItem->serials|cat:', '}
                                     {/if}
-                                  
+
                                     {assign var="total" value=((($barItem->price)*($barItem->pureOz))+$barItem->otherCharge)}
                                     {assign var="calcTotal" value=($calcTotal)+($barItem->totalItemAmount)}
 
@@ -340,7 +355,8 @@
                                         <td style="border-bottom:none;vertical-align: top">
                                             {$barItem->description} <br><span
                                                 style="font-size: smaller;font-style: italic;max-width: 250px;display: inline-block;word-break: break-all;white-space: normal;">
-                                                <pre>{$barItem->serialNumbers}</pre></span>
+                                                <pre>{$barItem->serialNumbers}</pre>
+                                            </span>
                                         </td>
 
                                         <td style="text-align:right;vertical-align: top">
@@ -376,14 +392,31 @@
                                     {/if}
                                 {/if}
                             </table>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
-                            <br>
+
+                            <br><br>
+
+                            <div style="font-size:9pt;">
+                                <strong>PAYMENT MADE BY:</strong><br>
+
+                                {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+                                    <select id="paymentMethod">
+                                        <option value="">-- Select --</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="BankTransfer">Bank Transfer</option>
+                                    </select>
+                                {else}
+                                    {if $smarty.request.paymentMethod eq 'Cash'}
+                                        Cash
+                                    {elseif $smarty.request.paymentMethod eq 'BankTransfer'}
+                                        Bank Transfer
+                                    {/if}
+                                {/if}
+                            </div>
+
                         </td>
                     </tr>
+
+
                     <tr>
                         <td style='font-size: 8pt;font-weight: bold;position: absolute;bottom: 14px;width: 85%'>
                             <div>
@@ -405,6 +438,30 @@
             </div>
         </div>
     {/for}
-</body>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var downloadBtn = document.getElementById('downloadPdfBtn');
+            var paymentSelect = document.getElementById('paymentMethod');
+
+            if (!downloadBtn || !paymentSelect) {
+                return;
+            }
+
+            downloadBtn.addEventListener('click', function() {
+                var url = new URL(downloadBtn.href, window.location.origin);
+                var paymentMethod = paymentSelect.value;
+
+                if (paymentMethod) {
+                    url.searchParams.set('paymentMethod', paymentMethod);
+                } else {
+                    url.searchParams.delete('paymentMethod');
+                }
+
+                downloadBtn.href = url.toString();
+            });
+        });
+    </script>
+
+</body>
 </html>
