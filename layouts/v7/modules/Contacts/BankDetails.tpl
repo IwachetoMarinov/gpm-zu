@@ -27,7 +27,7 @@
             Routing No: {$selected_bank->get('bank_routing_no')}<br>
         {/if}
 
-        <br><br>
+        <br>
 
         {if !empty($selected_bank->get('intermediary_bank'))}
             Intermediary Bank: {$selected_bank->get('intermediary_bank')}<br>

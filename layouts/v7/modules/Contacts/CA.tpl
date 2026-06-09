@@ -310,8 +310,7 @@
                 </table>
 
                 <div style="margin-top: 6mm;">This Collection Acknowledgement is subject to and governed by the terms and
-                    conditions of the Customer
-                    Metal Agreement. The liability of GPM in respect to the Stored Metal to be collected from the Storage
+                    conditions of From A. The liability of GPM in respect to the Stored Metal to be collected from the Storage
                     Facility
                     shall cease when the Customer or its authorised representative has acknowledged receipt of the goods by
                     signing this Collection Acknowledgement receipt.</div>

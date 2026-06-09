@@ -471,16 +471,16 @@
                 authorisation is only valid for the collection of the Stored Metal specified above and shall not
                 be
                 extended
-                to any other services covered under the Customer Metal Agreement
+                to any other services covered under From A.
             </span>
 
 
             <p style="margin-top: 2.5mm;font-style: italic;font-weight: bold;">I/We hereby enclose a photocopy of the
                 passport of the person(s) who will collect the Stored Metal. The
-                original passport(s) will need to be presented prior to Collection at the Storage Facility</p>
+                original passport(s) will need to be presented prior to Collection at the Storage Facility.</p>
 
-            <div style="margin-top: 2.5mm;">This Collection Order is subject to and governed by the terms and conditions
-                of the Customer Metal Agreement executed and entered into by and between me/us and {if isset($COMPANY)}
+            <div style="margin-top: 3.5mm;">This Collection Order is subject to and governed by the terms and conditions
+                of From A. executed and entered into by and between me/us and {if isset($COMPANY)}
                     <span style="text-transform: capitalize;">{$COMPANY->get('company_name')}</span>
                 {/if}
             </div>

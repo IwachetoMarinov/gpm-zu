@@ -668,7 +668,7 @@
             <div class="additional-section" style="margin-top: 0;">
                 <div style="margin-bottom:1mm;" class="bolder-element">
                     4. This Shipment & Storage Order and any agreement with GPM resulting therefrom shall be subject to
-                    and governed by the terms and conditions of the Customer Metal Agreement executed and entered into
+                    and governed by the terms and conditions of From A. executed and entered into
                     by and between me/us and Global Precious Metals Pte. Ltd.
                 </div>
             </div>
