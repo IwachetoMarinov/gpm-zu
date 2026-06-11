@@ -244,14 +244,13 @@
                                     {$RECORD_MODEL->get('mailingcountry')}
                                 {/if}
                             {/if}
+                            
+                            <div style="font-size:9pt; font-weight: bold; margin-top: 2mm;">
+                                INVOICE
+                            </div>
                         </div>
                     </td>
 
-                    <td style="margin-top: 2mm;">
-                        <div style="font-size:9pt; font-weight: bold;">
-                            INVOICE
-                        </div>
-                    </td>
                 </tr>
 
                 <tr >
