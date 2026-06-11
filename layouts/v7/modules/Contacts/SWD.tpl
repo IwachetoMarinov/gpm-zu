@@ -274,7 +274,7 @@
 
                 <tr>
                     <td style="height: 12mm; text-decoration: underline; text-align: center;">
-                        <strong>YOUR PURCHASE:</strong>
+                        <strong>YOUR PURCHASE</strong>
                     </td>
                 </tr>
 

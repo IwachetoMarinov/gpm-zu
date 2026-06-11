@@ -286,7 +286,7 @@
 
                     <tr>
                         <td style="height: 12mm; text-decoration: underline;text-align: center;">
-                            <strong>YOUR SALE:</strong>
+                            <strong>YOUR SALE</strong>
                         </td>
                     </tr>
 
