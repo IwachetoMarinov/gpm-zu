@@ -277,7 +277,7 @@
                                     {/if}
                                 {/if}
                             
-                                <div style="font-size:9pt; font-weight: bold; margin-top: 2mm;">
+                                <div style="font-size:10pt; font-weight: bold; margin-top: 2mm;">
                                     INVOICE
                                 </div>
                             </div>
