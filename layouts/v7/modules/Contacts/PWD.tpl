@@ -254,7 +254,7 @@
                 </tr>
 
                 <tr >
-                    <td style="height: 10mm; text-decoration: underline;text-align: center; margin-top: 2mm;">
+                    <td style="height: 10mm; text-decoration: underline;text-align: center; margin-top: 4mm; margin-bottom: 2mm;">
                         <strong>YOUR SALE</strong>
                     </td>
                 </tr>
