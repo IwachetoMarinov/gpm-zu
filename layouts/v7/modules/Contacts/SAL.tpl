@@ -274,16 +274,20 @@
                                         {/if}
                                     {/if}
                                 {/if}
+
+                                <div style="font-size:10pt; font-weight: bold; margin-top: 2mm;">
+                                    INVOICE
+                                </div>
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td style="height: 10mm; text-decoration: underline;text-align: center">
 
-                            <strong>{if isset($COMPANY) && !empty($COMPANY->get('company_gst_no'))}TAX INVOICE
-                                {else}INVOICE{/if}</strong>
+                    <tr>
+                        <td style="height: 12mm; text-decoration: underline; text-align: center;">
+                            <strong>YOUR PURCHASE:</strong>
                         </td>
                     </tr>
+
                     {if isset($COMPANY) && !empty($COMPANY->get('company_gst_no'))}
                         <tr style="font-weight: bold;font-size: 9pt">
                             <td>GST Reg No.: {$COMPANY->get('company_gst_no')}</td>
@@ -302,9 +306,6 @@
                         <td>
                             <table style="width:100%; border-collapse:collapse;">
                                 <tr>
-                                    <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
-                                        YOUR PURCHASE:
-                                    </td>
                                     <td style="font-size:9pt; text-align:right;">
                                         All amounts in {$ERP_DOCUMENT->currency}
                                     </td>
