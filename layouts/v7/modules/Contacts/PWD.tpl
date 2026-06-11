@@ -246,10 +246,17 @@
                             {/if}
                         </div>
                     </td>
+
+                    <td style="margin-top: 2mm;">
+                        <div style="font-size:9pt; font-weight: bold;">
+                            INVOICE
+                        </div>
+                    </td>
                 </tr>
-                <tr>
-                    <td style="height: 10mm; text-decoration: underline;text-align: center">
-                        <strong>RECEIPT</strong>
+
+                <tr >
+                    <td style="height: 10mm; text-decoration: underline;text-align: center; margin-top: 2mm;">
+                        <strong>YOUR SALE</strong>
                     </td>
                 </tr>
 
@@ -257,9 +264,6 @@
                     <td>
                         <table style="width:100%; border-collapse:collapse;">
                             <tr>
-                                <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
-                                    YOUR SALE:
-                                </td>
                                 <td style="font-size:9pt; text-align:right;">
                                     All amounts in {$ERP_DOCUMENT->currency}
                                 </td>

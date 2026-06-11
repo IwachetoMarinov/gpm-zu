@@ -199,31 +199,31 @@
 
             {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
             {assign var="barItemWarningExcludes" value=[
-                                                                "metal_code",
-                                                                "metal_name",
-                                                                "metal_type_code",
-                                                                "warehouse",
-                                                                "tx_amount",
-                                                                "avg_spot_price",
-                                                                "posting_date",
-                                                                "item_code",
-                                                                "fine_oz",
-                                                                "gross_oz",
-                                                                "purity",
-                                                                "total_item_dc_amount",
-                                                                "weight",
-                                                                "remarks",
-                                                                "other_charge",
-                                                                "narration",
-                                                                "long_desc",
-                                                                "bar_number"
-                                                        ]}
+                "metal_code",
+                "metal_name",
+                "metal_type_code",
+                "warehouse",
+                "tx_amount",
+                "avg_spot_price",
+                "posting_date",
+                "item_code",
+                "fine_oz",
+                "gross_oz",
+                "purity",
+                "total_item_dc_amount",
+                "weight",
+                "remarks",
+                "other_charge",
+                "narration",
+                "long_desc",
+                "bar_number"                                                           
+            ]}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                                                            ERP_DOCUMENT=$ERP_DOCUMENT
-                                                            TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                                                            BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-                                                        }
+                ERP_DOCUMENT=$ERP_DOCUMENT
+                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+            }                                            
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
@@ -278,10 +278,17 @@
                                 {/if}
                             </div>
                         </td>
+
+                        <td style="margin-top: 2mm;">
+                            <div style="font-size:9pt; font-weight: bold;">
+                                INVOICE
+                            </div>
+                        </td>
                     </tr>
+
                     <tr>
-                        <td style="height: 10mm; text-decoration: underline;text-align: center">
-                            <strong>RECEIPT</strong>
+                        <td style="height: 10mm; text-decoration: underline;text-align: center; margin-top: 2mm;">
+                            <strong>YOUR SALE:</strong>
                         </td>
                     </tr>
 
@@ -289,9 +296,6 @@
                         <td>
                             <table style="width:100%; border-collapse:collapse;">
                                 <tr>
-                                    <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
-                                        YOUR SALE:
-                                    </td>
                                     <td style="font-size:9pt; text-align:right;">
                                         All amounts in {$ERP_DOCUMENT->currency}
                                     </td>
