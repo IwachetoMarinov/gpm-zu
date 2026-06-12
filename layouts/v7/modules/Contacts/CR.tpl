@@ -371,7 +371,7 @@
                         <span> .......................</span>)
                         <span> to collect the Stored Metal on my/our behalf. This
                             authorisation is only valid for the collection of the Stored Metal specified above and shall not
-                            be extended any other services covered under From A.</span>
+                            be extended any other services covered under Form A,</span>
                     </div>
 
 
@@ -380,7 +380,7 @@
                         original passport(s) will need to be presented prior to Collection at the Storage Facility.</p>
 
                     <div style="margin-top: 4mm;">This Collection Order is subject to and governed by the terms and
-                        conditions of From A.
+                        conditions of Form A,
                         executed and entered into by and between me/us and {if isset($COMPANY)}
                             <span style="text-transform: capitalize;">{$COMPANY->get('company_name')}</span>
                         {/if}
