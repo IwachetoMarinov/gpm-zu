@@ -660,7 +660,7 @@
                 <div class="additional-section company-heading" style="margin-top:4mm;">
                     <span class="bolder-element">4. This Purchase & Storage Order and any agreement with GPM resulting
                         therefrom shall be subject to and governed by
-                        the terms and conditions of the Customer Metal Agreement executed and entered into by and
+                        the terms and conditions of the Form A executed and entered into by and
                         between
                         me/us and
                         {if isset($COMPANY)}

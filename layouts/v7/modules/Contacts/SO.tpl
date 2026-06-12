@@ -404,7 +404,7 @@
         <section class="main-table">
             <div class="additional-section bolder-element">
                 <strong>1.</strong> This Sale Order is subject to and governed by the terms and conditions of the
-                Form A, (CMA) executed and entered into by and between me/us and GPM.
+                Form A (CMA) executed and entered into by and between me/us and GPM.
             </div>
 
             <div class="section-title bolder-element">
