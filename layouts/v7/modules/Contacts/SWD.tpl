@@ -265,7 +265,7 @@
                                 {/if}
                             {/if}
 
-                            <div style="font-size:10pt; font-weight: bold; margin-top: 2mm;">
+                            <div style="font-size:10pt; font-weight: bold; margin-top: 2mm; font-size: 18pt;">
                                 INVOICE
                             </div>
                         </div>
@@ -273,7 +273,7 @@
                 </tr>
 
                 <tr>
-                    <td style="height: 12mm; text-decoration: underline; text-align: center;">
+                    <td style="height: 12mm; text-decoration: underline; text-align: center; font-size:12pt;">
                         <strong>YOUR PURCHASE</strong>
                     </td>
                 </tr>

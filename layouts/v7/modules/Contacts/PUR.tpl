@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>RECEIPT</title>
+    <title>INVOICE</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -277,7 +277,7 @@
                                     {/if}
                                 {/if}
                             
-                                <div style="font-size:10pt; font-weight: bold; margin-top: 4mm; margin-bottom: 2mm;">
+                                <div style="font-size:10pt; font-weight: bold; margin-top: 4mm; margin-bottom: 2mm; font-size: 18pt;">
                                     INVOICE
                                 </div>
                             </div>
@@ -285,7 +285,7 @@
                     </tr>
 
                     <tr>
-                        <td style="height: 12mm; text-decoration: underline;text-align: center;">
+                        <td style="height: 12mm; text-decoration: underline;text-align: center; font-size:12pt;">
                             <strong>YOUR SALE</strong>
                         </td>
                     </tr>
