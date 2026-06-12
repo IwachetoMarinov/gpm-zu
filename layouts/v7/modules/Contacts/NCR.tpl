@@ -471,7 +471,7 @@
                 authorisation is only valid for the collection of the Stored Metal specified above and shall not
                 be
                 extended
-                to any other services covered under Form A,
+                to any other services covered under Form A
             </span>
 
 
@@ -480,7 +480,7 @@
                 original passport(s) will need to be presented prior to Collection at the Storage Facility.</p>
 
             <div style="margin-top: 3.5mm;">This Collection Order is subject to and governed by the terms and conditions
-                of Form A, executed and entered into by and between me/us and {if isset($COMPANY)}
+                of Form A executed and entered into by and between me/us and {if isset($COMPANY)}
                     <span style="text-transform: capitalize;">{$COMPANY->get('company_name')}</span>
                 {/if}
             </div>
