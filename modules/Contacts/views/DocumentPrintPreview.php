@@ -172,12 +172,12 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
         $docNoParts = explode('/', $request->get('docNo'));
         $docNoLastPart = end($docNoParts);
 
-        // $last_doctype = $docType;
+        $last_doctype = "PI";
 
-        // if ($docType == 'PUR') $last_doctype = 'RCPT';
+        if ($docType === 'SAL' || $docType === 'SWD') $last_doctype = 'SI';
 
-        $fileName = $clientID . '-' . $docType . '-' . $year . '-' . $docNoLastPart;
-        
+        $fileName = $clientID . '-' . $docType . '-' . $year . '-' . $docNoLastPart . '-' . $last_doctype;
+
         $handle = fopen($root_directory . $fileName . '.html', 'a') or die('Cannot open file:  ');
         fwrite($handle, $html);
         fclose($handle);
