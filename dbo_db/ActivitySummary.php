@@ -405,6 +405,8 @@ class ActivitySummary
             $results = [];
 
             foreach ($summary as $index => $item) {
+                $doctype = strtoupper(explode('/', $item['Tx_No'] ?? '')[0]);
+                if ($doctype === 'SO') continue;
 
                 $mapped = ActivitySummaryMapper::mapTransactionRow($item);
 

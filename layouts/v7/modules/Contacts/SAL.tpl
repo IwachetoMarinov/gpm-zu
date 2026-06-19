@@ -244,46 +244,16 @@
                         <td style="height: 28mm;">
                             <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
                                 style="max-height: 100%; float:right;width: 154px;">
-                            <div style="font-size:11pt;margin-top: 14px;margin-bottom: 32px;">
-                                {$RECORD_MODEL->get('cf_898')}<br>
-                                {if !$HIDE_BP_INFO}
-                                    {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
-                                    {if !empty($RECORD_MODEL->get('cf_968'))} {$RECORD_MODEL->get('cf_968')}<br>{/if}
-                                    {if !empty($RECORD_MODEL->get('mailingstreet'))}
-                                    {$RECORD_MODEL->get('mailingstreet')}<br>{/if}
-                                    {if !empty($RECORD_MODEL->get('cf_970'))} {$RECORD_MODEL->get('cf_970')}<br>{/if}
-                                    {if empty($RECORD_MODEL->get('mailingpobox'))}
-                                        {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip')) }
-                                            {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')}<br>
-                                        {else if !empty($RECORD_MODEL->get('mailingcity'))}
-                                            {$RECORD_MODEL->get('mailingcity')}<br>
-                                        {else}
-                                            {$RECORD_MODEL->get('mailingzip')}<br>
-                                        {/if}
-                                        {$RECORD_MODEL->get('mailingcountry')}
-                                    {else}
-                                        {if !empty($RECORD_MODEL->get('mailingcity'))}
-                                            P.O. Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
-                                        {else}
-                                            P.O. Box {$RECORD_MODEL->get('mailingpobox')}<br>
-                                        {/if}
-                                        {if !empty($RECORD_MODEL->get('mailingstate'))}
-                                            {$RECORD_MODEL->get('mailingstate')}, {$RECORD_MODEL->get('mailingcountry')}
-                                        {else}
-                                            {$RECORD_MODEL->get('mailingcountry')}
-                                        {/if}
-                                    {/if}
-                                {/if}
-                            </div>
+                            {include file='CustomerAddressHeader.tpl'|vtemplate_path:'Contacts'}
                         </td>
                     </tr>
-                    <tr>
-                        <td style="height: 10mm; text-decoration: underline;text-align: center">
 
-                            <strong>{if isset($COMPANY) && !empty($COMPANY->get('company_gst_no'))}TAX INVOICE
-                                {else}INVOICE{/if}</strong>
+                    <tr>
+                        <td style="height: 12mm; text-decoration: underline; text-align: center; font-size:12pt;">
+                            <strong>YOUR PURCHASE</strong>
                         </td>
                     </tr>
+
                     {if isset($COMPANY) && !empty($COMPANY->get('company_gst_no'))}
                         <tr style="font-weight: bold;font-size: 9pt">
                             <td>GST Reg No.: {$COMPANY->get('company_gst_no')}</td>
@@ -302,9 +272,6 @@
                         <td>
                             <table style="width:100%; border-collapse:collapse;">
                                 <tr>
-                                    <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
-                                        YOUR PURCHASE:
-                                    </td>
                                     <td style="font-size:9pt; text-align:right;">
                                         All amounts in {$ERP_DOCUMENT->currency}
                                     </td>

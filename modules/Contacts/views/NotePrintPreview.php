@@ -3,6 +3,7 @@
 include_once 'dbo_db/ActivitySummary.php';
 include_once 'dbo_db/HoldingsDB.php';
 include_once 'dbo_db/Helper.php';
+include_once 'modules/Contacts/download/SimplePdfDownload.php';
 
 class Contacts_NotePrintPreview_View extends Vtiger_Index_View
 {
@@ -116,29 +117,10 @@ class Contacts_NotePrintPreview_View extends Vtiger_Index_View
 
     function downloadPDF($html, Vtiger_Request $request, string $template_name)
     {
-        global $root_directory;
         $recordModel = $this->record->getRecord();
-        $clientID = $recordModel->get('cf_898');
-        $year = date('Y');
-        $docNoParts = explode('/', $request->get('docNo'));
-        $docNoLastPart = end($docNoParts);
+        $clientID = SimplePdfDownload::clientIdFromRecord($recordModel);
+        $fileName = SimplePdfDownload::fileNameTemplateYear($clientID, $template_name, (string) $request->get('docNo'));
 
-        $fileName = $clientID . '-' . $template_name . '-' . $year . '-' . $docNoLastPart . '-' . $template_name;
-        $handle = fopen($root_directory . $fileName . '.html', 'a') or die('Cannot open file:  ');
-        fwrite($handle, $html);
-        fclose($handle);
-
-        exec("wkhtmltopdf --enable-local-file-access  -L 0 -R 0 -B 0 -T 0 --disable-smart-shrinking " . $root_directory . "$fileName.html " . $root_directory . "$fileName.pdf");
-        unlink($root_directory . $fileName . '.html');
-
-        header("Content-type: application/pdf");
-        header("Cache-Control: private");
-        header("Content-Disposition: attachment; filename=$fileName.pdf");
-        header("Content-Description: Global Precious Metals CRM Data");
-        ob_clean();
-        flush();
-        readfile($root_directory . "$fileName.pdf");
-        unlink($root_directory . "$fileName.pdf");
-        exit;
+        SimplePdfDownload::process($html, $fileName);
     }
 }

@@ -37,10 +37,10 @@ class CollectionRequestDownload
         'fields' => [
             // These get values from request via CoreDownload::applyLayout
             ['name' => 'reference',             'x' => 23.5, 'y' => 67.2,  'w' => 40.0, 'h' => 5.6],
-            ['name' => 'place_input',           'x' => 25.0, 'y' => 260.0, 'w' => 58.0, 'h' => 5.6],
-            ['name' => 'signed_by',             'x' => 109.0, 'y' => 260.0, 'w' => 80.0, 'h' => 5.6],
-            ['name' => 'date_input',            'x' => 25.0, 'y' => 267.3, 'w' => 58.0, 'h' => 5.6],
-            ['name' => 'on_behalf_of',          'x' => 118.0, 'y' => 267.3, 'w' => 77.0, 'h' => 5.6],
+            ['name' => 'place_input',           'x' => 25.0, 'y' => 257.0, 'w' => 58.0, 'h' => 5.6],
+            ['name' => 'signed_by',             'x' => 109.0, 'y' => 257.0, 'w' => 80.0, 'h' => 5.6],
+            ['name' => 'date_input',            'x' => 25.0, 'y' => 264.3, 'w' => 58.0, 'h' => 5.6],
+            ['name' => 'on_behalf_of',          'x' => 118.0, 'y' => 264.3, 'w' => 77.0, 'h' => 5.6],
 
             // totals (no request mapping in old code, but still valid fields)
             ['name' => 'total_value',           'x' => 22.0, 'y' => 179.5, 'w' => 35.0, 'h' => 5.5],

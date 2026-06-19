@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>RECEIPT</title>
+    <title>INVOICE</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -199,31 +199,31 @@
 
             {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt']}
             {assign var="barItemWarningExcludes" value=[
-                                                                "metal_code",
-                                                                "metal_name",
-                                                                "metal_type_code",
-                                                                "warehouse",
-                                                                "tx_amount",
-                                                                "avg_spot_price",
-                                                                "posting_date",
-                                                                "item_code",
-                                                                "fine_oz",
-                                                                "gross_oz",
-                                                                "purity",
-                                                                "total_item_dc_amount",
-                                                                "weight",
-                                                                "remarks",
-                                                                "other_charge",
-                                                                "narration",
-                                                                "long_desc",
-                                                                "bar_number"
-                                                        ]}
+                "metal_code",
+                "metal_name",
+                "metal_type_code",
+                "warehouse",
+                "tx_amount",
+                "avg_spot_price",
+                "posting_date",
+                "item_code",
+                "fine_oz",
+                "gross_oz",
+                "purity",
+                "total_item_dc_amount",
+                "weight",
+                "remarks",
+                "other_charge",
+                "narration",
+                "long_desc",
+                "bar_number"                                                           
+            ]}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                                                            ERP_DOCUMENT=$ERP_DOCUMENT
-                                                            TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                                                            BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-                                                        }
+                ERP_DOCUMENT=$ERP_DOCUMENT
+                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+            }                                            
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
@@ -246,42 +246,13 @@
                         <td style="height: 28mm;">
                             <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
                                 style="max-height: 100%; float:right;width: 154px;">
-                            <div style="font-size:11pt;margin-top: 14px;margin-bottom: 32px;">
-                                {$RECORD_MODEL->get('cf_898')}<br>
-                                {if !$HIDE_BP_INFO}
-                                    {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
-                                    {if !empty($RECORD_MODEL->get('cf_968'))} {$RECORD_MODEL->get('cf_968')}<br>{/if}
-                                    {if !empty($RECORD_MODEL->get('mailingstreet'))}
-                                    {$RECORD_MODEL->get('mailingstreet')}<br>{/if}
-                                    {if !empty($RECORD_MODEL->get('cf_970'))} {$RECORD_MODEL->get('cf_970')}<br>{/if}
-                                    {if empty($RECORD_MODEL->get('mailingpobox'))}
-                                        {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip')) }
-                                            {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')}<br>
-                                        {else if !empty($RECORD_MODEL->get('mailingcity'))}
-                                            {$RECORD_MODEL->get('mailingcity')}<br>
-                                        {else}
-                                            {$RECORD_MODEL->get('mailingzip')}<br>
-                                        {/if}
-                                        {$RECORD_MODEL->get('mailingcountry')}
-                                    {else}
-                                        {if !empty($RECORD_MODEL->get('mailingcity'))}
-                                            P.O. Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
-                                        {else}
-                                            P.O. Box {$RECORD_MODEL->get('mailingpobox')}<br>
-                                        {/if}
-                                        {if !empty($RECORD_MODEL->get('mailingstate'))}
-                                            {$RECORD_MODEL->get('mailingstate')}, {$RECORD_MODEL->get('mailingcountry')}
-                                        {else}
-                                            {$RECORD_MODEL->get('mailingcountry')}
-                                        {/if}
-                                    {/if}
-                                {/if}
-                            </div>
+                            {include file='CustomerAddressHeader.tpl'|vtemplate_path:'Contacts' invoice_title_style='margin-top: 4mm; margin-bottom: 2mm;'}
                         </td>
                     </tr>
+
                     <tr>
-                        <td style="height: 10mm; text-decoration: underline;text-align: center">
-                            <strong>RECEIPT</strong>
+                        <td style="height: 12mm; text-decoration: underline;text-align: center; font-size:12pt;">
+                            <strong>YOUR SALE</strong>
                         </td>
                     </tr>
 
@@ -289,9 +260,6 @@
                         <td>
                             <table style="width:100%; border-collapse:collapse;">
                                 <tr>
-                                    <td style="font-size:9pt; text-decoration:underline; font-weight: bold;">
-                                        YOUR SALE:
-                                    </td>
                                     <td style="font-size:9pt; text-align:right;">
                                         All amounts in {$ERP_DOCUMENT->currency}
                                     </td>

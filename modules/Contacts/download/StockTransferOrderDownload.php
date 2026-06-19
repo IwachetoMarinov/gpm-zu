@@ -33,10 +33,10 @@ class StockTransferOrderDownload
             ['name' => 'country',        'x' => 28.0, 'y' => 196.0, 'w' => 41.0],
 
             // signature section
-            ['name' => 'place_input',    'x' => 22.0, 'y' => 256.0,  'w' => 48.0],
-            ['name' => 'signed_by',      'x' => 108.0, 'y' => 256.0,  'w' => 70.0],
-            ['name' => 'date_input',     'x' => 22.0, 'y' => 265.0, 'w' => 48.0],
-            ['name' => 'on_behalf_of',   'x' => 112.0, 'y' => 265.0, 'w' => 67.0],
+            ['name' => 'place_input',    'x' => 22.0, 'y' => 259.5,  'w' => 48.0],
+            ['name' => 'signed_by',      'x' => 108.0, 'y' => 259.5,  'w' => 70.0],
+            ['name' => 'date_input',     'x' => 22.0, 'y' => 268.0, 'w' => 48.0],
+            ['name' => 'on_behalf_of',   'x' => 112.0, 'y' => 268.0, 'w' => 67.0],
         ],
 
         'grids' => [
