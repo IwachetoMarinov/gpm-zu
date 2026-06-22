@@ -322,13 +322,7 @@
                                 </div>
                             {/if}
                             <div>
-                                {if isset($COMPANY)}
-                                    {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg. No.
-                                    {$COMPANY->get('company_reg_no')})<br>{/if}
-                                    {$COMPANY->get('company_address')}<br>
-                                    T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax:
-                                    {$COMPANY->get('company_fax')} {/if} | {$COMPANY->get('email')}<br>
-                                {/if}
+                                {include file='CompanyInfo.tpl'|vtemplate_path:'Contacts' show_name=false address_field='raw'}
                             </div>
                         </div>
                     </td>

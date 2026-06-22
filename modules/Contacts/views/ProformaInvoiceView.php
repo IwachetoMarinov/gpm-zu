@@ -1,8 +1,8 @@
 <?php
 
-include_once 'dbo_db/ActivitySummary.php';
-include_once 'dbo_db/HoldingsDB.php';
 include_once 'dbo_db/Helper.php';
+include_once 'dbo_db/HoldingsDB.php';
+include_once 'dbo_db/ActivitySummary.php';
 include_once 'modules/Contacts/helpers/ContactsHelper.php';
 include_once 'modules/Contacts/download/SimplePdfDownload.php';
 

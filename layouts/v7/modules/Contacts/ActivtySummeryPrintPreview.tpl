@@ -417,20 +417,9 @@
                             {/if}
                         </td>
                     </tr>
-                    <tr>
+                    <tr> 
                         <td style='font-size: 8pt;font-weight: bold;'>
-                            <div>
-                                <div style="float:left">
-                                    {if isset($COMPANY)}
-                                        {$COMPANY->get('company_name')} {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg.
-                                        No. {$COMPANY->get('company_reg_no')}){/if}<br>
-                                        {$COMPANY->get('company_address')}<br>
-                                        T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax:
-                                        {$COMPANY->get('company_fax')} {/if} | {$COMPANY->get('email')}<br>
-                                    {/if}
-                                </div>
-                                <div style="float:right;"><br><br>Page {$page} | {$PAGES}</div>
-                            </div>
+                            {include file='CompanyPrintFooter.tpl'|vtemplate_path:'Contacts' address_field='raw'}
                         </td>
                     </tr>
                 </table>

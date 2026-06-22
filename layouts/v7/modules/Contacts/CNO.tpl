@@ -324,15 +324,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style='font-size: 8pt;font-weight: bold;position: absolute;bottom: 14px;'>
-                        {if isset($COMPANY)}
-                            {$COMPANY->get('company_name')} {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg. No.
-                            {$COMPANY->get('company_reg_no')}){/if}<br>
-                            {$COMPANY_FULL_ADDRESS}
-                            <br>
-                            T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax:
-                            {$COMPANY->get('company_fax')} {/if} | {$COMPANY->get('email')}<br>
-                        {/if}
+                     <td style='font-size: 8pt;font-weight: bold;position: absolute;bottom: 14px;'>
+                        {include file='CompanyInfo.tpl'|vtemplate_path:'Contacts'}
                     </td>
                 </tr>
             </table>

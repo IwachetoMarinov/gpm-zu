@@ -379,30 +379,12 @@
 
                             {assign var="exchangeRateInfo" value=MASForex_Record_Model::getLatestExchangeRateByCurrency($ERP_DOCUMENT->documentDate, $ERP_DOCUMENT->currency)}
 
-                            {* {if !empty($exchangeRateInfo) && isset($exchangeRateInfo['rate'])}
-                                <div>
-                                    {if $ERP_DOCUMENT->currency eq 'SGD'}
-                                        *Remarks: USD/SGD exchange rate at SGD {$exchangeRateInfo['rate']} / USD
-                                    {else}
-                                        *Remarks: {$ERP_DOCUMENT->currency}/SGD exchange rate at SGD
-                                        {$exchangeRateInfo['rate']} / {$ERP_DOCUMENT->currency}
-                                    {/if}
-                                </div>
-                            {/if} *}
-
                             {include file='BankDetails.tpl'|vtemplate_path:'Contacts' selected_bank=$SELECTED_BANK}
                         </td>
                     </tr>
                     <tr>
                         <td style='font-size: 8pt;font-weight: bold;position: absolute;bottom: 14px;'>
-                            {if isset($COMPANY)}
-                                {$COMPANY->get('company_name')} {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg. No.
-                                {$COMPANY->get('company_reg_no')}){/if}<br>
-                                {$COMPANY_FULL_ADDRESS}
-                                <br>
-                                T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax:
-                                {$COMPANY->get('company_fax')} {/if} | {$COMPANY->get('email')}<br>
-                            {/if}
+                            {include file='CompanyInfo.tpl'|vtemplate_path:'Contacts'}
                         </td>
                     </tr>
                 </table>
