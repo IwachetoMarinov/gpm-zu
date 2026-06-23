@@ -26,10 +26,10 @@ class PurchaseOrderDownload
             ['name' => 'address',      'x' => 57.0,  'y' => 157.3,  'w' => 60.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
             ['name' => 'country',      'x' => 32.0,  'y' => 175.5,  'w' => 60.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
 
-            ['name' => 'place_input',  'x' => 21.0,  'y' => 266.0,  'w' => 50.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
-            ['name' => 'signed_by',    'x' => 108.0, 'y' => 266.0,  'w' => 69.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
-            ['name' => 'date_input',   'x' => 22.0,  'y' => 272.8,  'w' => 50.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
-            ['name' => 'on_behalf_of', 'x' => 112.0, 'y' => 272.8,  'w' => 66.0],
+            ['name' => 'place_input',  'x' => 21.0,  'y' => 263.0,  'w' => 50.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
+            ['name' => 'signed_by',    'x' => 108.0, 'y' => 263.0,  'w' => 69.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
+            ['name' => 'date_input',   'x' => 22.0,  'y' => 269.5,  'w' => 50.0, 'opts' => ['da' => '/Helv 6.5 Tf 0 g']],
+            ['name' => 'on_behalf_of', 'x' => 112.0, 'y' => 269.5,  'w' => 66.0],
         ],
 
         'grids' => [
@@ -130,7 +130,7 @@ class PurchaseOrderDownload
         $makeCheckbox('country_checked',   14.0, 150.5, $countryChk);
         $makeCheckbox('address_checked',   14.0, 158.0, $addressChk);
 
-        $makeCheckbox('pricing_option_1',  12.0, 240.5, $firstPricing);
-        $makeCheckbox('pricing_option_2',  12.0, 248.0, $secondPricing);
+        $makeCheckbox('pricing_option_1',  12.0, 236.0, $firstPricing);
+        $makeCheckbox('pricing_option_2',  12.0, 243.7, $secondPricing);
     }
 }
