@@ -32,6 +32,7 @@ class Contacts_DefaultCompany_View
             'company_name'     => $org['organizationname'] ?? '',
             'company_reg_no'   => $org['registration_number'] ?? '',
             'company_address'  => $org['address'] ?? '',
+            'company_address_2' => $org['address_2'] ?? '',
             'company_phone'    => $org['phone'] ?? '',
             'company_fax'      => $org['fax'] ?? '',
             'company_website'  => $org['website'] ?? '',

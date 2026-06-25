@@ -24,6 +24,7 @@ class Settings_Vtiger_CompanyDetails_Model extends Settings_Vtiger_Module_Model
 		'logoname' => 'text',
 		'logo' => 'file',
 		'address' => 'textarea',
+		'address_2' => 'textarea',
 		'city' => 'text',
 		'state' => 'text',
 		'code'  => 'text',
@@ -40,6 +41,7 @@ class Settings_Vtiger_CompanyDetails_Model extends Settings_Vtiger_Module_Model
 		'logoname' => 'text',
 		'logo' => 'file',
 		'address' => 'textarea',
+		'address_2' => 'textarea',
 		'city' => 'text',
 		'state' => 'text',
 		'code'  => 'text',
@@ -166,6 +168,8 @@ class Settings_Vtiger_CompanyDetails_Model extends Settings_Vtiger_Module_Model
 	 */
 	public static function getInstance($name = '')
 	{
+		self::ensureSchema();
+		
 		$moduleModel = new self();
 		$db = PearDatabase::getInstance();
 
@@ -177,5 +181,11 @@ class Settings_Vtiger_CompanyDetails_Model extends Settings_Vtiger_Module_Model
 
 		$moduleModel->getFields();
 		return $moduleModel;
+	}
+
+	private static function ensureSchema()
+	{
+		require_once 'vtlib/Vtiger/Utils.php';
+		Vtiger_Utils::AddColumn('vtiger_organizationdetails', 'address_2', 'VARCHAR(150)');
 	}
 }

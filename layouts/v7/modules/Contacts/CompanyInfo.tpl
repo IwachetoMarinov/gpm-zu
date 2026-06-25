@@ -5,9 +5,31 @@
         (Co. Reg. No. {$COMPANY->get('company_reg_no')})<br>
     {/if}
     {if isset($address_field) && $address_field eq 'raw'}
-        {$COMPANY->get('company_address')}
+        {if !empty($COMPANY->get('company_address'))}
+            {$COMPANY->get('company_address')}<br>
+        {/if}
+        {if !empty($COMPANY->get('company_address_2'))}
+            {$COMPANY->get('company_address_2')}<br>
+        {/if}
     {else}
-        {$COMPANY_FULL_ADDRESS}
+        {if !empty($COMPANY->get('company_address'))}
+            {$COMPANY->get('company_address')}<br>
+        {/if}
+        {if !empty($COMPANY->get('company_address_2'))}
+            {$COMPANY->get('company_address_2')}<br>
+        {/if}
+        {if !empty($COMPANY->get('city')) && !empty($COMPANY->get('code'))}
+            {$COMPANY->get('city')} {$COMPANY->get('code')}<br>
+        {elseif !empty($COMPANY->get('city'))}
+            {$COMPANY->get('city')}<br>
+        {elseif !empty($COMPANY->get('code'))}
+            {$COMPANY->get('code')}<br>
+        {/if}
+        {if !empty($COMPANY->get('state'))}
+            {$COMPANY->get('state')}{if !empty($COMPANY->get('country'))}, {$COMPANY->get('country')}{/if}
+        {else}
+            {$COMPANY->get('country')}
+        {/if}
     {/if}
     <br>
     T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax: {$COMPANY->get('company_fax')} {/if} |
