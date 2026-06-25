@@ -2,9 +2,8 @@
     {$RECORD_MODEL->get('cf_898')}<br>
     {if empty($HIDE_BP_INFO)}
         {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')} <br>
-        {* {$RECORD_MODEL->get('cf_968')} <br> *}
         {$RECORD_MODEL->get('mailingstreet')} <br>
-        {* {$RECORD_MODEL->get('cf_970')} <br> *}
+         {if !empty($RECORD_MODEL->get('cf_902'))} {$RECORD_MODEL->get('cf_902')}<br>{/if}
         {if empty($RECORD_MODEL->get('mailingpobox'))}
             {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip'))}
                 {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')} <br>
