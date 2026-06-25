@@ -20,33 +20,8 @@
                         <img src='layouts/v7/modules/Contacts/resources/gpm-new-logo.png'
                             style="max-height: 100%; float:right;width: 154px;">
                         <div style="font-size:11pt;margin-top: 14px;margin-bottom: 32px">
-                            {$INTENT->get('contact_erp_no')}<br>
-                            {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
-                            {if !empty($RECORD_MODEL->get('cf_968'))} {$RECORD_MODEL->get('cf_968')}<br>{/if}
-                            {if !empty($RECORD_MODEL->get('mailingstreet'))}
-                            {$RECORD_MODEL->get('mailingstreet')}<br>{/if}
-                            {if !empty($RECORD_MODEL->get('cf_970'))} {$RECORD_MODEL->get('cf_970')}<br>{/if}
-                            {if empty($RECORD_MODEL->get('mailingpobox'))}
-                                {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip')) }
-                                    {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')}<br>
-                                {else if !empty($RECORD_MODEL->get('mailingcity'))}
-                                    {$RECORD_MODEL->get('mailingcity')}<br>
-                                {else}
-                                    {$RECORD_MODEL->get('mailingzip')}<br>
-                                {/if}
-                                {$RECORD_MODEL->get('mailingcountry')}
-                            {else}
-                                {if !empty($RECORD_MODEL->get('mailingcity'))}
-                                    P.O. Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
-                                {else}
-                                    P.O. Box {$RECORD_MODEL->get('mailingpobox')}<br>
-                                {/if}
-                                {if !empty($RECORD_MODEL->get('mailingstate'))}
-                                    {$RECORD_MODEL->get('mailingstate')}, {$RECORD_MODEL->get('mailingcountry')}
-                                {else}
-                                    {$RECORD_MODEL->get('mailingcountry')}
-                                {/if}
-                            {/if}
+                            {assign var="CLIENT_ERP_NO" value=$INTENT->get('contact_erp_no')}
+                            {include file='CustomerPrintInfo.tpl'|vtemplate_path:'Contacts'}
                         </div>
                     </td>
                 </tr>

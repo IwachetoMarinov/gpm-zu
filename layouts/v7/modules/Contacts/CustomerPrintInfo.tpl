@@ -1,4 +1,8 @@
+{if isset($CLIENT_ERP_NO) && $CLIENT_ERP_NO ne ''}
+{$CLIENT_ERP_NO}<br>
+{elseif !empty($RECORD_MODEL->get('cf_898'))}
 {$RECORD_MODEL->get('cf_898')}<br>
+{/if}
 {assign var="show_bp_details" value=true}
 {if isset($HIDE_BP_INFO) && $HIDE_BP_INFO}
     {assign var="show_bp_details" value=false}
@@ -8,7 +12,7 @@
     {if !empty($RECORD_MODEL->get('cf_968'))} {$RECORD_MODEL->get('cf_968')}<br>{/if}
     {if !empty($RECORD_MODEL->get('mailingstreet'))}
     {$RECORD_MODEL->get('mailingstreet')}<br>{/if}
-    {if !empty($RECORD_MODEL->get('cf_970'))} {$RECORD_MODEL->get('cf_970')}<br>{/if}
+    {if !empty($RECORD_MODEL->get('cf_902'))} {$RECORD_MODEL->get('cf_902')}<br>{/if}
     {if empty($RECORD_MODEL->get('mailingpobox'))}
         {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip')) }
             {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')}<br>
