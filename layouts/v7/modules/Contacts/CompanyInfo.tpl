@@ -26,12 +26,11 @@
             {$COMPANY->get('code')}<br>
         {/if}
         {if !empty($COMPANY->get('state'))}
-            {$COMPANY->get('state')}{if !empty($COMPANY->get('country'))}, {$COMPANY->get('country')}{/if}
+            {$COMPANY->get('state')}{if !empty($COMPANY->get('country'))}, {$COMPANY->get('country')}{/if} <br>
         {else}
-            {$COMPANY->get('country')}
+            {$COMPANY->get('country')} <br>
         {/if}
     {/if}
-    <br>
     T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax: {$COMPANY->get('company_fax')} {/if} |
     {if isset($contact_field) && $contact_field eq 'website'}
         {$COMPANY->get('company_website')}

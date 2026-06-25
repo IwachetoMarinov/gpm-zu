@@ -96,6 +96,9 @@
                             {if !empty($RECORD_MODEL->get('mailingstreet'))}
                                 {$RECORD_MODEL->get('mailingstreet')}<br>
                             {/if}
+                            {if !empty($RECORD_MODEL->get('cf_902'))}
+                                {$RECORD_MODEL->get('cf_902')}<br>
+                            {/if}
 
                             {if empty($RECORD_MODEL->get('mailingpobox'))}
 
@@ -146,9 +149,13 @@
 
                         <div style="margin-top: 1.5mm;">
                             {if isset($COMPANY)}
-                                {$COMPANY->get('company_address')}
+                                {if !empty($COMPANY->get('company_address'))}
+                                    {$COMPANY->get('company_address')}<br>
+                                {/if}
+                                {if !empty($COMPANY->get('company_address_2'))}
+                                    {$COMPANY->get('company_address_2')}<br>
+                                {/if}
                             {/if}
-                            <br />
                             {if isset($COMPANY)}
                                 {if !empty($COMPANY->get('city'))}
                                     {$COMPANY->get('city')},

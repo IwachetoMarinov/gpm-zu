@@ -58,14 +58,14 @@
                 <tr>
                     <td style="height: 20mm;text-align: left">
                         <div>
-                            {if isset($COMPANY)}
-                                <div style="margin-top: 4mm;">To:
+                            <div style="margin-top: 2.5mm;">To:
+                                {if isset($COMPANY)}
                                     <span style="font-weight: 700; text-transform: capitalize;">
                                         {$COMPANY->get('company_name')}
                                     </span>
-                                </div>
-                            {/if}
-                            <div>
+                                {/if}
+                            </div>
+                            <div style="font-size: 8.3pt; height: 50px">
                                 {include file='CompanyInfo.tpl'|vtemplate_path:'Contacts' show_name=false address_field='raw'}
                             </div>
                         </div>

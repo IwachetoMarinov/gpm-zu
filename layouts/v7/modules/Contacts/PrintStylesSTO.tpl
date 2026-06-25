@@ -83,6 +83,7 @@ body {
     border: 1px solid #000;
     display: flex;
     margin-top: 1mm;
+    font-size: 8.3pt;
 }
 
 .company-half {
