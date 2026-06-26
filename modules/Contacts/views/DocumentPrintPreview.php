@@ -28,7 +28,7 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
         $docNo = $request->get('docNo');
         $docType = $request->get('docType');
         $tableName = $request->get('tableName');
-        $hideSerials = $request->get('hideSerials');
+        $hideSerials = (string) $request->get('hideSerials') === '1';
         $moduleName = $request->getModule();
         $recordModel = $this->record->getRecord();
 

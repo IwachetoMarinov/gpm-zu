@@ -17,13 +17,13 @@
     {/if}
 
     {assign var=HCI value=""}
-    {if isset($smarty.request.hideCustomerInfo) && $smarty.request.hideCustomerInfo neq ""}
-        {assign var=HCI value="&hideCustomerInfo=`$smarty.request.hideCustomerInfo`"}
+    {if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}
+        {assign var=HCI value="&hideCustomerInfo=1"}
     {/if}
 
     {assign var=HS value=""}
-    {if isset($smarty.request.hideSerials) && $smarty.request.hideSerials neq ""}
-        {assign var=HS value="&hideSerials=`$smarty.request.hideSerials`"}
+    {if $smarty.request.hideSerials eq '1' || $smarty.request.hideSerials eq 1}
+        {assign var=HS value="&hideSerials=1"}
     {/if}
 
     {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
@@ -252,11 +252,25 @@
             downloadBtn.addEventListener('click', function() {
                 var url = new URL(downloadBtn.href, window.location.origin);
                 var paymentMethod = paymentSelect.value;
+                var hideSerialsEl = document.getElementById('hideSerials');
+                var hideCustomerInfoEl = document.getElementById('hideCustomerInfo');
 
                 if (paymentMethod) {
                     url.searchParams.set('paymentMethod', paymentMethod);
                 } else {
                     url.searchParams.delete('paymentMethod');
+                }
+
+                if (hideSerialsEl && hideSerialsEl.checked) {
+                    url.searchParams.set('hideSerials', '1');
+                } else {
+                    url.searchParams.delete('hideSerials');
+                }
+
+                if (hideCustomerInfoEl && hideCustomerInfoEl.checked) {
+                    url.searchParams.set('hideCustomerInfo', '1');
+                } else {
+                    url.searchParams.delete('hideCustomerInfo');
                 }
 
                 downloadBtn.href = url.toString();

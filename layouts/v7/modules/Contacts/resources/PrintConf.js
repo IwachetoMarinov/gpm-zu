@@ -1,4 +1,36 @@
 jQuery(function () {
+  function setUrlParam(url, key, value) {
+    var pattern = new RegExp("([?&])" + key + "=[^&]*");
+    if (pattern.test(url)) {
+      return url.replace(pattern, "$1" + key + "=" + value);
+    }
+    return url + (url.indexOf("?") >= 0 ? "&" : "?") + key + "=" + value;
+  }
+
+  function removeUrlParam(url, key) {
+    return url
+      .replace(new RegExp("[?&]" + key + "=[^&]*"), function (match) {
+        return match.charAt(0) === "?" ? "?" : "";
+      })
+      .replace(/\?&/, "?")
+      .replace(/[?&]$/, "");
+  }
+
+  function syncPrintSettingLinks(key, value) {
+    var links = jQuery("#printConfSave, #downloadPdfBtn");
+    links.each(function () {
+      var href = jQuery(this).attr("href");
+      if (!href || href === "#") {
+        return;
+      }
+      var newHref =
+        value === "1" || value === 1
+          ? setUrlParam(href, key, value)
+          : removeUrlParam(href, key);
+      jQuery(this).attr("href", newHref);
+    });
+  }
+
   jQuery("body").on("click", "#printConf", function (e) {
     var modal = document.getElementById("myModal");
 
@@ -38,30 +70,12 @@ jQuery(function () {
   });
 
   jQuery("body").on("change", "#hideCustomerInfo", function (e) {
-    var hideCustomerInfo = jQuery(e.currentTarget).is(":checked") ? 1 : 0;
-
-    var saveUrl = jQuery("#printConfSave").attr("href");
-
-    saveUrl = saveUrl.replace(
-      /([?&])hideCustomerInfo=[^&]*/,
-      "$1hideCustomerInfo=" + hideCustomerInfo,
-    );
-
-    jQuery("#printConfSave").attr("href", saveUrl);
+    var hideCustomerInfo = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
+    syncPrintSettingLinks("hideCustomerInfo", hideCustomerInfo);
   });
 
   jQuery("body").on("change", "#hideSerials", function (e) {
-    var hideSerials = jQuery(e.currentTarget).is(":checked") ? 1 : 0;
-
-    console.log("hideSerials", hideSerials);
-
-    var saveUrl = jQuery("#printConfSave").attr("href");
-
-    saveUrl = saveUrl.replace(
-      /([?&])hideSerials=[^&]*/,
-      "$1hideSerials=" + hideSerials,
-    );
-
-    jQuery("#printConfSave").attr("href", saveUrl);
+    var hideSerials = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
+    syncPrintSettingLinks("hideSerials", hideSerials);
   });
 });

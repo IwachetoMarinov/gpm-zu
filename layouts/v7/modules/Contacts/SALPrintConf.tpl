@@ -75,7 +75,7 @@
             <span>
                 <a id="printConfSave"
                     style="color: white;text-align: center;padding: 10px;text-decoration: none;background-color: #bea364;"
-                    href="index.php?module=Contacts&view={$view}&record={$RECORD_MODEL->getId()}&tableName={$smarty.request.tableName}&docNo={$smarty.request.docNo}&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&docType={$smarty.request.docType}&hideCustomerInfo={$smarty.request.hideCustomerInfo}&hideSerials={if $hideSerials}1{else}0{/if}">
+                    href="index.php?module=Contacts&view={$view}&record={$RECORD_MODEL->getId()}&tableName={$smarty.request.tableName}&docNo={$smarty.request.docNo}&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&docType={$smarty.request.docType}{if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}&hideCustomerInfo=1{/if}{if $hideSerials eq '1' || $hideSerials eq 1}&hideSerials=1{/if}">
                     Save</a>
             </span>
         {/if}

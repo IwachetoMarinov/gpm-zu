@@ -11,6 +11,21 @@
 </head>
 
 <body>
+    {assign var=FROM_INTENT value=""}
+    {if isset($smarty.request.fromIntent) && $smarty.request.fromIntent neq ""}
+        {assign var=FROM_INTENT value="&fromIntent=`$smarty.request.fromIntent`"}
+    {/if}
+
+    {assign var=HCI value=""}
+    {if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}
+        {assign var=HCI value="&hideCustomerInfo=1"}
+    {/if}
+
+    {assign var=HS value=""}
+    {if $smarty.request.hideSerials eq '1' || $smarty.request.hideSerials eq 1}
+        {assign var=HS value="&hideSerials=1"}
+    {/if}
+
     {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
         <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
         <link type='text/css' rel='stylesheet' href='layouts/v7/lib/jquery/select2/select2.css'>
@@ -25,8 +40,9 @@
 
             {if $SELECTED_BANK}
                 <li style="float:right">
-                    <a style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
-                        href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&hideSerials={$smarty.request.hideSerials}&hideCustomerInfo={$smarty.request.hideCustomerInfo}">Download</a>
+                    <a id="downloadPdfBtn"
+                        style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
+                        href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{$FROM_INTENT}{$HS}{$HCI}">Download</a>
                 </li>
             {/if}
             <li id='printConf' style="float:right">
@@ -266,6 +282,35 @@
             </div>
         </div>
     {/for}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var downloadBtn = document.getElementById('downloadPdfBtn');
+            if (!downloadBtn) {
+                return;
+            }
+
+            downloadBtn.addEventListener('click', function() {
+                var url = new URL(downloadBtn.href, window.location.origin);
+                var hideSerialsEl = document.getElementById('hideSerials');
+                var hideCustomerInfoEl = document.getElementById('hideCustomerInfo');
+
+                if (hideSerialsEl && hideSerialsEl.checked) {
+                    url.searchParams.set('hideSerials', '1');
+                } else {
+                    url.searchParams.delete('hideSerials');
+                }
+
+                if (hideCustomerInfoEl && hideCustomerInfoEl.checked) {
+                    url.searchParams.set('hideCustomerInfo', '1');
+                } else {
+                    url.searchParams.delete('hideCustomerInfo');
+                }
+
+                downloadBtn.href = url.toString();
+            });
+        });
+    </script>
 </body>
 
 </html>
