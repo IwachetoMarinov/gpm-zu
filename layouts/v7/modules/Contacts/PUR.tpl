@@ -245,9 +245,7 @@
             var downloadBtn = document.getElementById('downloadPdfBtn');
             var paymentSelect = document.getElementById('paymentMethod');
 
-            if (!downloadBtn || !paymentSelect) {
-                return;
-            }
+            if (!downloadBtn || !paymentSelect) return;
 
             downloadBtn.addEventListener('click', function() {
                 var url = new URL(downloadBtn.href, window.location.origin);

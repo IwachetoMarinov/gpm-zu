@@ -286,9 +286,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var downloadBtn = document.getElementById('downloadPdfBtn');
-            if (!downloadBtn) {
-                return;
-            }
+            if (!downloadBtn) return;
 
             downloadBtn.addEventListener('click', function() {
                 var url = new URL(downloadBtn.href, window.location.origin);
