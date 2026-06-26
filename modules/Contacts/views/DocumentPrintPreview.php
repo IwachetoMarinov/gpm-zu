@@ -6,6 +6,8 @@ include_once 'dbo_db/ActivitySummary.php';
 include_once 'modules/Contacts/helpers/ContactsHelper.php';
 include_once 'modules/Contacts/download/SimplePdfDownload.php';
 
+// ini_set('display_errors', 1); error_reporting(E_ALL);
+
 class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
 {
 
@@ -26,6 +28,7 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
         $docNo = $request->get('docNo');
         $docType = $request->get('docType');
         $tableName = $request->get('tableName');
+        $hideSerials = $request->get('hideSerials');
         $moduleName = $request->getModule();
         $recordModel = $this->record->getRecord();
 
@@ -40,6 +43,16 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
 
         $activity = new dbo_db\ActivitySummary();
         $activity_data = $activity->getDocumentPrintPreviewData($docNo, $tableName);
+
+        if ($hideSerials && ($docType === 'PUR' || $docType === 'SAL')) {
+            if (!empty($activity_data['barItems'])) {
+                foreach ($activity_data['barItems'] as $barItem) {
+                    if (!empty($barItem->serialNumbers)) {
+                        $barItem->serialNumbers = $this->removeSerialNumbersOnlyBrands($barItem->serialNumbers);
+                    }
+                }
+            }
+        }
 
         $average_spot_price = ContactsHelper::getAverageSpotPrice($activity_data['barItems'] ?? []);
 
@@ -139,5 +152,23 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
         $fileName = SimplePdfDownload::fileNameDocTypeYear($clientID, $docType, $docNo, $lastDocType);
 
         SimplePdfDownload::process($html, $fileName);
+    }
+
+    private function removeSerialNumbersOnlyBrands($serials): string
+    {
+        if (!$serials) return '';
+
+        $lines = preg_split('/\r\n|\r|\n/', $serials);
+        $brands = [];
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+
+            if ($line === '') continue;
+
+            $brands[] = explode(':', $line, 2)[0];
+        }
+
+        return implode("\n", $brands);
     }
 }

@@ -46,26 +46,39 @@
         <br>
 
         {assign var=hideInfo value=$smarty.request.hideCustomerInfo|default:0}
+        {assign var=hideSerials value=$smarty.request.hideSerials|default:0}
 
         <span style="margin-top: 10px; display:block">
             Hide Customer Info :
             <input type="checkbox" id="hideCustomerInfo" name="hideCustomerInfo" value="1" {if $hideInfo}checked{/if}>
         </span>
 
+        <span style="margin-top: 10px; display:block">
+            Hide Serial Numbers :
+            <input type="checkbox" id="hideSerials" name="hideSerials" value="1" {if $hideSerials}checked{/if}>
+        </span>
+
         <br>
 
         <span>
-            <a id="printConfSave"
-                style="color: white;text-align: center;padding: 10px;text-decoration: none;background-color: #bea364;"
-                href="#" onclick="
-     var hide = document.getElementById('hideCustomerInfo')?.checked ? 1 : 0;
-     window.location.href='index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&hideCustomerInfo=' + hide;
-     return false;
-   ">
-                Save
-            </a>
+    <a id="printConfSave"
+        style="color: white;text-align: center;padding: 10px;text-decoration: none;background-color: #bea364;"
+        href="#"
+        onclick="
+            var hide = document.getElementById('hideCustomerInfo')?.checked ? 1 : 0;
+            var hideSerials = document.getElementById('hideSerials')?.checked ? 1 : 0;
 
-        </span>
+            window.location.href =
+                'index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&hideCustomerInfo='
+                + hide
+                + '&hideSerials='
+                + hideSerials;
+
+            return false;
+        ">
+        Save
+    </a>
+</span>
 
     </div>
 </div>
