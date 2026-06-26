@@ -4,7 +4,7 @@
     {/if}
 </div>
 
-<div style="margin-top: 1.5mm;">
+<div style="margin-top: 0.5mm;">
     {if isset($COMPANY)}
         {if !empty($COMPANY->get('company_address'))}
             {$COMPANY->get('company_address')}<br>

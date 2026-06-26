@@ -91,13 +91,13 @@ body {
 }
 
 .company-top {
-    height: 24mm;
+    height: 26mm;
     display: flex;
     border-bottom: 1px solid #000;
 }
 
 .company-bottom {
-    height: 14mm;
+    height: 12mm;
     padding: 2mm;
     overflow: hidden;
 }
