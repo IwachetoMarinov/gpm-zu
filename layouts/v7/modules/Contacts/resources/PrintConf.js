@@ -62,8 +62,6 @@ jQuery(function () {
       "$1hideSerials=" + hideSerials,
     );
 
-    console.log("newSaveUrl", saveUrl);
-
     jQuery("#printConfSave").attr("href", saveUrl);
   });
 });

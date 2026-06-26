@@ -21,6 +21,11 @@
         {assign var=HCI value="&hideCustomerInfo=`$smarty.request.hideCustomerInfo`"}
     {/if}
 
+    {assign var=HS value=""}
+    {if isset($smarty.request.hideSerials) && $smarty.request.hideSerials neq ""}
+        {assign var=HS value="&hideSerials=`$smarty.request.hideSerials`"}
+    {/if}
+
     {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
         <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
 
@@ -30,6 +35,7 @@
                     style="display:block;color:white;text-align:center;padding:14px 16px;text-decoration:none;background-color:#bea364;"
                     href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true
                 {$FROM_INTENT}
+                {$HS}
                 {$HCI}">
                     Download
                 </a>
