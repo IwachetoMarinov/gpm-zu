@@ -10,10 +10,6 @@ class Helper
             $parts[] = $company->get('company_address');
         }
 
-        if ($company->get('company_address_2')) {
-            $parts[] = $company->get('company_address_2');
-        }
-
         if ($company->get('city')) {
             $parts[] = $company->get('city');
         }
@@ -39,10 +35,6 @@ class Helper
 
         if ($company->get('company_address')) {
             $parts[] = $company->get('company_address');
-        }
-
-        if ($company->get('company_address_2')) {
-            $parts[] = $company->get('company_address_2');
         }
 
         if ($company->get('city')) {
