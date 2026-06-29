@@ -8,16 +8,16 @@
         {if !empty($COMPANY->get('company_address'))}
             {$COMPANY->get('company_address')}<br>
         {/if}
-        {if !empty($COMPANY->get('company_address_2'))}
+        {* {if !empty($COMPANY->get('company_address_2'))}
             {$COMPANY->get('company_address_2')}<br>
-        {/if}
+        {/if} *}
     {else}
         {if !empty($COMPANY->get('company_address'))}
             {$COMPANY->get('company_address')}<br>
         {/if}
-        {if !empty($COMPANY->get('company_address_2'))}
+        {* {if !empty($COMPANY->get('company_address_2'))}
             {$COMPANY->get('company_address_2')}<br>
-        {/if}
+        {/if} *}
         {if !empty($COMPANY->get('city')) && !empty($COMPANY->get('code'))}
             {$COMPANY->get('city')} {$COMPANY->get('code')}<br>
         {elseif !empty($COMPANY->get('city'))}
