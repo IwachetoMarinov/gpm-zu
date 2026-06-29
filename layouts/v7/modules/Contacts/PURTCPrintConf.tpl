@@ -47,10 +47,16 @@
 
         {assign var=hideInfo value=$smarty.request.hideCustomerInfo|default:0}
         {assign var=hideSerials value=$smarty.request.hideSerials|default:0}
+        {assign var=europeanAddress value=$smarty.request.europeanAddress|default:0}
 
         <span style="margin-top: 10px; display:block">
             Hide Customer Info :
             <input type="checkbox" id="hideCustomerInfo" name="hideCustomerInfo" value="1" {if $hideInfo}checked{/if}>
+        </span>
+
+        <span style="margin-top: 10px; display:block">
+            European Address :
+            <input type="checkbox" id="europeanAddress" name="europeanAddress" value="1" {if $europeanAddress}checked{/if}>
         </span>
 
         <span style="margin-top: 10px; display:block">
@@ -67,12 +73,15 @@
         onclick="
             var hide = document.getElementById('hideCustomerInfo')?.checked ? 1 : 0;
             var hideSerials = document.getElementById('hideSerials')?.checked ? 1 : 0;
+            var europeanAddress = document.getElementById('europeanAddress')?.checked ? 1 : 0;
 
             window.location.href =
                 'index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&hideCustomerInfo='
                 + hide
                 + '&hideSerials='
-                + hideSerials;
+                + hideSerials
+                + '&europeanAddress='
+                + europeanAddress;
 
             return false;
         ">

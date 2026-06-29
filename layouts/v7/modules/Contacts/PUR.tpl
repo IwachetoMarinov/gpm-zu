@@ -26,6 +26,11 @@
         {assign var=HS value="&hideSerials=1"}
     {/if}
 
+    {assign var=EA value=""}
+    {if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}
+        {assign var=EA value="&europeanAddress=1"}
+    {/if}
+
     {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
         <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
 
@@ -36,7 +41,8 @@
                     href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true
                 {$FROM_INTENT}
                 {$HS}
-                {$HCI}">
+                {$HCI}
+                {$EA}">
                     Download
                 </a>
             </li>
@@ -252,6 +258,7 @@
                 var paymentMethod = paymentSelect.value;
                 var hideSerialsEl = document.getElementById('hideSerials');
                 var hideCustomerInfoEl = document.getElementById('hideCustomerInfo');
+                var europeanAddressEl = document.getElementById('europeanAddress');
 
                 if (paymentMethod) {
                     url.searchParams.set('paymentMethod', paymentMethod);
@@ -269,6 +276,12 @@
                     url.searchParams.set('hideCustomerInfo', '1');
                 } else {
                     url.searchParams.delete('hideCustomerInfo');
+                }
+
+                if (europeanAddressEl && europeanAddressEl.checked) {
+                    url.searchParams.set('europeanAddress', '1');
+                } else {
+                    url.searchParams.delete('europeanAddress');
                 }
 
                 downloadBtn.href = url.toString();

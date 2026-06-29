@@ -26,6 +26,11 @@
         {assign var=HS value="&hideSerials=1"}
     {/if}
 
+    {assign var=EA value=""}
+    {if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}
+        {assign var=EA value="&europeanAddress=1"}
+    {/if}
+
     {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
         <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
         <link type='text/css' rel='stylesheet' href='layouts/v7/lib/jquery/select2/select2.css'>
@@ -42,7 +47,7 @@
                 <li style="float:right">
                     <a id="downloadPdfBtn"
                         style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
-                        href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{$FROM_INTENT}{$HS}{$HCI}">Download</a>
+                        href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&docType={$smarty.request.docType}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{$FROM_INTENT}{$HS}{$HCI}{$EA}">Download</a>
                 </li>
             {/if}
             <li id='printConf' style="float:right">
@@ -292,6 +297,7 @@
                 var url = new URL(downloadBtn.href, window.location.origin);
                 var hideSerialsEl = document.getElementById('hideSerials');
                 var hideCustomerInfoEl = document.getElementById('hideCustomerInfo');
+                var europeanAddressEl = document.getElementById('europeanAddress');
 
                 if (hideSerialsEl && hideSerialsEl.checked) {
                     url.searchParams.set('hideSerials', '1');
@@ -303,6 +309,12 @@
                     url.searchParams.set('hideCustomerInfo', '1');
                 } else {
                     url.searchParams.delete('hideCustomerInfo');
+                }
+
+                if (europeanAddressEl && europeanAddressEl.checked) {
+                    url.searchParams.set('europeanAddress', '1');
+                } else {
+                    url.searchParams.delete('europeanAddress');
                 }
 
                 downloadBtn.href = url.toString();

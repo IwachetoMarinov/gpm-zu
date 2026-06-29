@@ -148,6 +148,16 @@ jQuery(function () {
       downloadUrl += "&end_date=" + encodeURIComponent(endDate);
     }
 
+    const hideCustomerInfo = urlParams.get("hideCustomerInfo");
+    if (hideCustomerInfo) {
+      downloadUrl += "&hideCustomerInfo=" + encodeURIComponent(hideCustomerInfo);
+    }
+
+    const europeanAddress = urlParams.get("europeanAddress");
+    if (europeanAddress) {
+      downloadUrl += "&europeanAddress=" + encodeURIComponent(europeanAddress);
+    }
+
     console.log("downloadUrl: ", downloadUrl);
 
     window.location.href = downloadUrl;
@@ -162,6 +172,7 @@ jQuery(function () {
     var start = jQuery("#start_date").val();
     var end = jQuery("#end_date").val();
     var hide = jQuery("#hideCustomerInfo").is(":checked") ? 1 : 0;
+    var europeanAddress = jQuery("#europeanAddress").is(":checked") ? 1 : 0;
 
     if (!start || !end) {
       alert("Please select Start Date and End Date");
@@ -177,6 +188,8 @@ jQuery(function () {
       "&end_date=" +
       encodeURIComponent(end) +
       "&hideCustomerInfo=" +
-      hide;
+      hide +
+      "&europeanAddress=" +
+      europeanAddress;
   });
 });

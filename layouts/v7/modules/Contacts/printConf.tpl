@@ -59,6 +59,10 @@
                 name="hideCustomerInfo" {if $smarty.request.hideCustomerInfo}value="1" checked 
                 {else}value="0"
                 {/if}></span>
+        <span style="margin-top: 10px; display:block">European Address : <input type="checkbox" id="europeanAddress"
+                name="europeanAddress" {if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}value="1" checked
+                {else}value="0"
+                {/if}></span>
         <br>
 
         {assign var="view" value=$smarty.request.view|default:'DocumentPrintPreview'}
@@ -67,7 +71,7 @@
             <span>
                 <a id="printConfSave"
                     style="color: white;text-align: center;padding: 10px;text-decoration: none;background-color: #bea364;"
-                    href="index.php?module=Contacts&view={$view}&record={$RECORD_MODEL->getId()}&tableName={$smarty.request.tableName}&docNo={$smarty.request.docNo}&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&docType={$smarty.request.docType}&hideCustomerInfo={$smarty.request.hideCustomerInfo}">Save</a>
+                    href="index.php?module=Contacts&view={$view}&record={$RECORD_MODEL->getId()}&tableName={$smarty.request.tableName}&docNo={$smarty.request.docNo}&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&docType={$smarty.request.docType}&hideCustomerInfo={$smarty.request.hideCustomerInfo}&europeanAddress={$smarty.request.europeanAddress|default:0}">Save</a>
             </span>
         {/if}
     </div>

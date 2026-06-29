@@ -47,10 +47,16 @@
 
         {assign var=hideInfo value=$smarty.request.hideCustomerInfo|default:0}
         {assign var=hideDiscount value=$smarty.request.hideDiscount|default:0}
+        {assign var=europeanAddress value=$smarty.request.europeanAddress|default:0}
 
         <span style="margin-top: 10px; display:block">
             Hide Customer Info :
             <input type="checkbox" id="hideCustomerInfo" name="hideCustomerInfo" value="1" {if $hideInfo}checked{/if}>
+        </span>
+
+        <span style="margin-top: 10px; display:block">
+            European Address :
+            <input type="checkbox" id="europeanAddress" name="europeanAddress" value="1" {if $europeanAddress}checked{/if}>
         </span>
         <br>
 
@@ -66,7 +72,8 @@
                 href="#" onclick="
      var hide = document.getElementById('hideCustomerInfo')?.checked ? 1 : 0;
      var hideDiscount = document.getElementById('hideDiscount')?.checked ? 1 : 0;
-     window.location.href='index.php?module=Contacts&view=TCPrintPreview&record={$RECORD_MODEL->getId()}&tableName={$smarty.request.tableName|escape:'url'}&docNo={$smarty.request.docNo|escape:'url'}{if $INTENT}&fromIntent={$smarty.request.fromIntent|escape:'url'}{/if}&hideCustomerInfo=' + hide + '&hideDiscount=' + hideDiscount;
+     var europeanAddress = document.getElementById('europeanAddress')?.checked ? 1 : 0;
+     window.location.href='index.php?module=Contacts&view=TCPrintPreview&record={$RECORD_MODEL->getId()}&tableName={$smarty.request.tableName|escape:'url'}&docNo={$smarty.request.docNo|escape:'url'}{if $INTENT}&fromIntent={$smarty.request.fromIntent|escape:'url'}{/if}&hideCustomerInfo=' + hide + '&hideDiscount=' + hideDiscount + '&europeanAddress=' + europeanAddress;
      return false;
    ">
                 Save

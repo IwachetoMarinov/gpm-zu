@@ -74,6 +74,11 @@ jQuery(function () {
     syncPrintSettingLinks("hideCustomerInfo", hideCustomerInfo);
   });
 
+  jQuery("body").on("change", "#europeanAddress", function (e) {
+    var europeanAddress = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
+    syncPrintSettingLinks("europeanAddress", europeanAddress);
+  });
+
   jQuery("body").on("change", "#hideSerials", function (e) {
     var hideSerials = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
     syncPrintSettingLinks("hideSerials", hideSerials);

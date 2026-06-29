@@ -130,8 +130,15 @@
         {* Hide customer info *}
         <div class="fieldRow">
             <label style="font-weight:normal;">
-                <input type="checkbox" id="hideCustomerInfo" value="1">
+                <input type="checkbox" id="hideCustomerInfo" value="1" {if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}checked{/if}>
                 Hide Customer Info
+            </label>
+        </div>
+
+        <div class="fieldRow">
+            <label style="font-weight:normal;">
+                <input type="checkbox" id="europeanAddress" value="1" {if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}checked{/if}>
+                European Address
             </label>
         </div>
 
