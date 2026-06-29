@@ -6,137 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        @font-face {
-            font-family: 'Open Sans';
-            font-style: normal;
-            font-weight: 400;
-            src: url('layouts/v7/resources/fonts/OpenSans-Regular.woff') format('woff');
-        }
-
-        @font-face {
-            font-family: 'Open Sans';
-            font-style: normal;
-            font-weight: 700;
-            src: url('layouts/v7/resources/fonts/OpenSans-Bold.woff') format('woff');
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0px
-        }
-
-        .printAreaContainer {
-            height: 297mm;
-            width: 210mm;
-            border: 1px solid #fff;
-            margin: auto;
-            padding: 10mm 10mm;
-            position: relative;
-        }
-
-        .bottom-container {
-            display: flex;
-            gap: 8mm;
-            font-size: 9.5pt;
-        }
-
-        .bottom-container-item {
-            flex: 1;
-        }
-
-        .printAreaContainer * {
-            box-sizing: border-box;
-            font-family: 'Open Sans';
-            color: #666;
-        }
-
-        .printAreaContainer .full-width {
-            width: 100%;
-        }
-
-        .printAreaContainer .header-logo {
-            width: 50%;
-            height: 11mm;
-        }
-
-        .printAreaContainer .header-text {
-            width: 50%;
-            height: 11mm;
-            color: #fff;
-            background: #008ECA;
-            font-weight: bold;
-            font-size: 10pt;
-        }
-
-        .printAreaContainer .header-text span {
-            font-weight: normal;
-            color: #fff;
-        }
-
-        .printAreaContainer .print-tbl {
-            border-collapse: collapse;
-            width: 100%;
-            border: none;
-        }
-
-        table.content-table th {
-            border: 1px dotted #666666;
-            font-size: 10pt;
-            background: #ECECEC;
-            font-weight: bold;
-            padding: 4px
-        }
-
-        table.content-table tr.footer th {
-            color: #008ECA;
-        }
-
-        table.content-table td {
-            border: none;
-            font-size: 10pt;
-            font-weight: normal;
-            padding: 4px
-        }
-
-        table.graph-table td {
-            width: 50%;
-            font-size: 10pt;
-            padding: 4px 0px;
-        }
-
-        .graph-bar {
-            height: 1.5mm
-        }
-
-        .graph-bar.blue {
-            background: #008ECA;
-        }
-
-        .graph-bar.green {
-            background: #BACE10;
-        }
-
-        .doted-bg {
-            background: url(graph_bg.jpg);
-            background-size: 338px auto;
-        }
-
-        table.activity-tbl {
-            border-collapse: collapse;
-            width: 100%;
-            border: 1px solid #333;
-        }
-
-        table.activity-tbl td,
-        table.activity-tbl th {
-            border: 1px solid #000;
-            padding: 1mm 2mm;
-            text-align: left;
-        }
-
-        table.activity-tbl th {
-            background: #bca263;
-        }
+        {include file='PrintStyles.tpl'|vtemplate_path:'Contacts' print_layout='form_ca'}
     </style>
 </head>
 
@@ -220,13 +90,7 @@
                                 {/if}
 
                                 <div>
-                                    {if isset($COMPANY)}
-                                        {if !empty($COMPANY->get('company_reg_no'))}(Co. Reg. No.
-                                        {$COMPANY->get('company_reg_no')})<br>{/if}
-                                        {$COMPANY_FULL_ADDRESS}<br>
-                                        T: {$COMPANY->get('company_phone')} {if !empty($COMPANY->get('company_fax'))}| Fax:
-                                        {$COMPANY->get('company_fax')} {/if} | {$COMPANY->get('email')}<br>
-                                    {/if}
+                                    {include file='CompanyInfo.tpl'|vtemplate_path:'Contacts' show_name=false}
                                 </div>
                             </div>
                         </td>

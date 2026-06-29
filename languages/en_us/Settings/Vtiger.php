@@ -271,6 +271,7 @@ $languageStrings = array(
 	'organizationname' => 'Company Name',
 	'logoname' => 'Company Logo',
 	'address' => 'Address',
+	'address_2' => 'Address Line 2',
 	'city' => 'City',
 	'state' => 'State',
 	'code'  => 'Postal Code',

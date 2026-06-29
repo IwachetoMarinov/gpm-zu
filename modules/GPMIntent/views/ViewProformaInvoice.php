@@ -87,7 +87,8 @@ class GPMIntent_ViewProformaInvoice_View extends GPMIntent_DocView_View
 
 		if (empty($selectedBank)) {
 			// fallback dummy object to prevent template fatal
-			$selectedBank = new Vtiger_Record_Model();
+			// $selectedBank = new Vtiger_Record_Model();
+			$selectedBank = new BankAccount_Record_Model();
 			$selectedBank->set('beneficiary_name', '');
 			$selectedBank->set('account_no', '');
 			$selectedBank->set('account_currency', '');

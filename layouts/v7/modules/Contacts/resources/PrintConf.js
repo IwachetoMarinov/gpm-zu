@@ -1,4 +1,36 @@
 jQuery(function () {
+  function setUrlParam(url, key, value) {
+    var pattern = new RegExp("([?&])" + key + "=[^&]*");
+    if (pattern.test(url)) {
+      return url.replace(pattern, "$1" + key + "=" + value);
+    }
+    return url + (url.indexOf("?") >= 0 ? "&" : "?") + key + "=" + value;
+  }
+
+  function removeUrlParam(url, key) {
+    return url
+      .replace(new RegExp("[?&]" + key + "=[^&]*"), function (match) {
+        return match.charAt(0) === "?" ? "?" : "";
+      })
+      .replace(/\?&/, "?")
+      .replace(/[?&]$/, "");
+  }
+
+  function syncPrintSettingLinks(key, value) {
+    var links = jQuery("#printConfSave, #downloadPdfBtn");
+    links.each(function () {
+      var href = jQuery(this).attr("href");
+      if (!href || href === "#") {
+        return;
+      }
+      var newHref =
+        value === "1" || value === 1
+          ? setUrlParam(href, key, value)
+          : removeUrlParam(href, key);
+      jQuery(this).attr("href", newHref);
+    });
+  }
+
   jQuery("body").on("click", "#printConf", function (e) {
     var modal = document.getElementById("myModal");
 
@@ -22,45 +54,33 @@ jQuery(function () {
     modal.style.display = "none";
   });
 
-  // jQuery(document).ready(function () {
-  //   jQuery(".select2")?.select2();
-  // });
-
   jQuery("body").on("change", "#bank_accounts", function (e) {
     var element = jQuery(e.currentTarget);
     var bankId = Number(element.val());
     saveUrl = jQuery("#printConfSave").attr("href");
-    // var saveUrl = window.location.href;
-    console.log("saveUrl: ", saveUrl);
-    
+
     splitSaveUrl = saveUrl.split("&bank");
     newSaveUrl =
       splitSaveUrl[0] +
       "&bank=" +
       bankId +
-      splitSaveUrl[1].substr(splitSaveUrl[1].indexOf("&"));
-
-    console.log("saveUrl: ", saveUrl);
-    console.log("newSaveUrl: ", newSaveUrl);
+      splitSaveUrl?.[1]?.substr(splitSaveUrl[1]?.indexOf("&"));
 
     jQuery("#printConfSave").attr("href", newSaveUrl);
   });
 
   jQuery("body").on("change", "#hideCustomerInfo", function (e) {
-    var element = jQuery(e.currentTarget);
-    var hideCustomerInfoInit = jQuery("#hideCustomerInfo").val();
+    var hideCustomerInfo = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
+    syncPrintSettingLinks("hideCustomerInfo", hideCustomerInfo);
+  });
 
-    if (hideCustomerInfoInit == 1) {
-      jQuery("#hideCustomerInfo").val(0);
-      hideCustomerInfo = 0;
-    } else {
-      jQuery("#hideCustomerInfo").val(1);
-      hideCustomerInfo = 1;
-    }
+  jQuery("body").on("change", "#europeanAddress", function (e) {
+    var europeanAddress = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
+    syncPrintSettingLinks("europeanAddress", europeanAddress);
+  });
 
-    saveUrl = jQuery("#printConfSave").attr("href");
-    splitSaveUrl = saveUrl.split("&hideCustomerInfo");
-    newSaveUrl = splitSaveUrl[0] + "&hideCustomerInfo=" + hideCustomerInfo;
-    jQuery("#printConfSave").attr("href", newSaveUrl);
+  jQuery("body").on("change", "#hideSerials", function (e) {
+    var hideSerials = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
+    syncPrintSettingLinks("hideSerials", hideSerials);
   });
 });

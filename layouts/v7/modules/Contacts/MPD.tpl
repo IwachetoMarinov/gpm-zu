@@ -6,85 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        @font-face {
-            font-family: 'Open Sans';
-            font-style: normal;
-            font-weight: 400;
-            src: url('layouts/v7/resources/fonts/OpenSans-Regular.woff') format('woff');
-        }
-
-        @font-face {
-            font-family: 'Open Sans';
-            font-style: normal;
-            font-weight: 700;
-            src: url('layouts/v7/resources/fonts/OpenSans-Bold.woff') format('woff');
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0px
-        }
-
-        .printAreaContainer {
-            width: 210mm;
-            height: 297mm;
-            padding: 15mm;
-            box-sizing: border-box;
-            margin: 0 auto;
-            position: relative;
-            page-break-after: always;
-            break-after: page;
-        }
-
-        .printAreaContainer:last-child {
-            page-break-after: auto;
-            break-after: auto;
-        }
-
-        @media print {
-            @page {
-                size: A4;
-                margin: 0;
-            }
-        }
-
-        .printAreaContainer * {
-            box-sizing: border-box;
-            font-family: 'Open Sans';
-            color: #666;
-        }
-
-        .printAreaContainer .full-width {
-            width: 100%;
-        }
-
-        .printAreaContainer .print-tbl {
-            border-collapse: collapse;
-            width: 100%;
-            border: none;
-        }
-
-        .print-footer {
-            height: 20mm;
-            background: #008ECA;
-        }
-
-        table.activity-tbl {
-            border-collapse: collapse;
-            width: 100%;
-            border: 1px solid #333;
-        }
-
-        table.activity-tbl td,
-        table.activity-tbl th {
-            border: 1px solid #000;
-            padding: 1mm 2mm;
-            text-align: left;
-        }
-
-        table.activity-tbl th {
-            background: #bca263;
-        }
+        {include file='PrintStyles.tpl'|vtemplate_path:'Contacts' print_layout='paginated'}
     </style>
 </head>
 
@@ -156,55 +78,7 @@
                             style="max-height:100%; float:right;width:154px;">
 
                         <div style="font-size:11pt;margin-top:14px;margin-bottom:32px">
-
-                            {$RECORD_MODEL->get('cf_898')}<br>
-
-                            {if !$HIDE_BP_INFO}
-
-                                {$RECORD_MODEL->get('firstname')} {$RECORD_MODEL->get('lastname')}<br>
-
-                                {if !empty($RECORD_MODEL->get('cf_968'))}
-                                    {$RECORD_MODEL->get('cf_968')}<br>
-                                {/if}
-
-                                {if !empty($RECORD_MODEL->get('mailingstreet'))}
-                                    {$RECORD_MODEL->get('mailingstreet')}<br>
-                                {/if}
-
-                                {if !empty($RECORD_MODEL->get('cf_970'))}
-                                    {$RECORD_MODEL->get('cf_970')}<br>
-                                {/if}
-
-                                {if empty($RECORD_MODEL->get('mailingpobox'))}
-
-                                    {if !empty($RECORD_MODEL->get('mailingcity')) && !empty($RECORD_MODEL->get('mailingzip'))}
-                                        {$RECORD_MODEL->get('mailingcity')} {$RECORD_MODEL->get('mailingzip')}<br>
-                                    {elseif !empty($RECORD_MODEL->get('mailingcity'))}
-                                        {$RECORD_MODEL->get('mailingcity')}<br>
-                                    {else}
-                                        {$RECORD_MODEL->get('mailingzip')}<br>
-                                    {/if}
-
-                                    {$RECORD_MODEL->get('mailingcountry')}
-
-                                {else}
-
-                                    {if !empty($RECORD_MODEL->get('mailingcity'))}
-                                        P.O. Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
-                                    {else}
-                                        P.O. Box {$RECORD_MODEL->get('mailingpobox')}<br>
-                                    {/if}
-
-                                    {if !empty($RECORD_MODEL->get('mailingstate'))}
-                                        {$RECORD_MODEL->get('mailingstate')}, {$RECORD_MODEL->get('mailingcountry')}
-                                    {else}
-                                        {$RECORD_MODEL->get('mailingcountry')}
-                                    {/if}
-
-                                {/if}
-
-                            {/if}
-
+                            {include file='CustomerPrintInfo.tpl'|vtemplate_path:'Contacts'}
                         </div>
                     </td>
                 </tr>
@@ -296,28 +170,7 @@
 
                 <tr>
                     <td style="font-size:8pt;font-weight:bold;width:85%;position: absolute; bottom: 14px;">
-
-                        <div style="margin-top: 2mm;">
-                            {if isset($COMPANY)}
-                                <div style="float:left">
-                                    {$COMPANY->get('company_name')}
-                                    {if $COMPANY->get('company_reg_no')} (Co. Reg. No. {$COMPANY->get('company_reg_no')})
-                                    {/if}<br>
-                                    {$COMPANY_FULL_ADDRESS}
-                                    <br>
-                                    T: {$COMPANY->get('company_phone')}
-                                    {if $COMPANY->get('company_fax')} | Fax: {$COMPANY->get('company_fax')} {/if}
-                                    | {$COMPANY->get('email')}<br>
-                                </div>
-                            {/if}
-
-                            <div style="float:right;">
-                                <br><br>
-                                Page {$page} | {$PAGES}
-                            </div>
-
-                        </div>
-
+                        {include file='CompanyPrintFooter.tpl'|vtemplate_path:'Contacts' inner_div_style='margin-top: 2mm;'}
                     </td>
                 </tr>
 

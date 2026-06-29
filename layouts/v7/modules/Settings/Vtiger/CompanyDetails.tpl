@@ -63,7 +63,7 @@
 									<tr>
 										<td class="{$WIDTHTYPE} fieldLabel" style="width:25%"><label >{vtranslate($FIELD,$QUALIFIED_MODULE)}</label></td>
 										<td class="{$WIDTHTYPE}" style="word-wrap:break-word;">
-											{if $FIELD eq 'address'} {decode_html($MODULE_MODEL->get($FIELD))|nl2br} {else} {decode_html($MODULE_MODEL->get($FIELD))} {/if}
+											{if $FIELD eq 'address' || $FIELD eq 'address_2'} {decode_html($MODULE_MODEL->get($FIELD))|nl2br} {else} {decode_html($MODULE_MODEL->get($FIELD))} {/if}
 										</td>
 									</tr>
 								{/if}

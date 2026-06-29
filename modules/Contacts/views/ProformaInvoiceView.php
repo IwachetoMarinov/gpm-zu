@@ -1,8 +1,9 @@
 <?php
 
-include_once 'dbo_db/ActivitySummary.php';
-include_once 'dbo_db/HoldingsDB.php';
 include_once 'dbo_db/Helper.php';
+include_once 'dbo_db/HoldingsDB.php';
+include_once 'dbo_db/ActivitySummary.php';
+include_once 'modules/Contacts/helpers/ContactsHelper.php';
 include_once 'modules/Contacts/download/SimplePdfDownload.php';
 
 class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
@@ -31,15 +32,14 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
 
         $companyRecord = Contacts_DefaultCompany_View::process();
 
-        // ✅ Bank accounts
-        // $allBankAccounts = BankAccount_Record_Model::getInstancesByCompanyID($companyId);
+        // ✅ Bank accounts;
         $allBankAccounts = BankAccount_Record_Model::getAllInstances();
         $bankAccountId   = $request->get('bank');
 
         $activity = new dbo_db\ActivitySummary();
         $activity_data = $activity->getProformaInvoiceData($docNo, $tableName);
 
-        $average_spot_price = $this->getAverageSpotPrice($activity_data['barItems'] ?? []);
+        $average_spot_price = ContactsHelper::getAverageSpotPrice($activity_data['barItems'] ?? []);
 
         $docType = "PI";
         $erpDoc = (object) $activity_data;
@@ -47,7 +47,7 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
         // Reorder Activitity Items for DN documents based on description if it is equal to "Monthly Storage Fee Invoice"
         foreach ($erpDoc->barItems as $key => $item) {
             $item = (object) $item;
-            $item->metal = $this->getMetalName($item->metal_type_code);
+            $item->metal = ContactsHelper::getMetalName($item->metal_type_code);
         }
 
         $bankAccountId = $request->get('bank');
@@ -64,7 +64,7 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
 
         if (empty($selectedBank)) {
             // fallback dummy object to prevent template fatal
-            $selectedBank = new Vtiger_Record_Model();
+            $selectedBank = new BankAccount_Record_Model();
             $selectedBank->set('beneficiary_name', '');
             $selectedBank->set('account_no', '');
             $selectedBank->set('account_currency', '');
@@ -109,37 +109,6 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
             $totalPage = ceil($totaldataAfterFirstPage / $recordCount) + 1;
         }
         return $totalPage;
-    }
-
-    protected function getMetalName($code)
-    {
-        $metal_names = [
-            'XAU' => 'Gold',
-            'XAG' => 'Silver',
-            'XPT' => 'Platinum',
-            'XPD' => 'Palladium',
-            'XPL' => 'Palladium',
-            'MBTC' => 'mBitCoin',
-        ];
-
-        return $metal_names[$code] ?? '';
-    }
-
-    protected function getAverageSpotPrice($items)
-    {
-        $totalSpotPrice = 0.00;
-        $count = 0;
-
-        if (empty($items)) return $totalSpotPrice;
-
-        foreach ($items as $item) {
-            if (isset($item->averageSpotPrice) && $item->averageSpotPrice > 0) {
-                $totalSpotPrice += $item->averageSpotPrice;
-                $count++;
-            }
-        }
-
-        return $count > 0 ? round($totalSpotPrice / $count, 2) : 0.00;
     }
 
     public function postProcess(Vtiger_Request $request) {}
