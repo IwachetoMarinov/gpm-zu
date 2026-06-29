@@ -76,9 +76,9 @@
                                         {$RECORD_MODEL->get('mailingcountry')}
                                     {else}
                                         {if !empty($RECORD_MODEL->get('mailingcity'))}
-                                            P.O. Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
+                                            PO Box {$RECORD_MODEL->get('mailingpobox')}, {$RECORD_MODEL->get('mailingcity')}<br>
                                         {else}
-                                            P.O. Box {$RECORD_MODEL->get('mailingpobox')}<br>
+                                            PO Box {$RECORD_MODEL->get('mailingpobox')}<br>
                                         {/if}
                                         {if !empty($RECORD_MODEL->get('mailingstate'))}
                                             {$RECORD_MODEL->get('mailingstate')}, {$RECORD_MODEL->get('mailingcountry')}

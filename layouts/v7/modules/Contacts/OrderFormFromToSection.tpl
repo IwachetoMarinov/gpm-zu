@@ -7,10 +7,7 @@
             </div>
         </div>
 
-        <div class="company-bottom">
-            Customer number:
-            <span style="font-weight: 600;">{$RECORD_MODEL->get('cf_898')}</span>
-        </div>
+        <div class="company-bottom"></div>
     </div>
 
     <div class="company-half company-right">

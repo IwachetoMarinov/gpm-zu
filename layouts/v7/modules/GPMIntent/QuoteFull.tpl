@@ -25,7 +25,7 @@
                             {if !empty($RECORD_MODEL->get('lane'))}
                                 {$RECORD_MODEL->get('lane')}, {$RECORD_MODEL->get('city')}<br>
                                 {if !empty($RECORD_MODEL->get('code'))}
-                                    P.O. Box {$RECORD_MODEL->get('code')}<br>
+                                    PO Box {$RECORD_MODEL->get('code')}<br>
                                 {/if}
                                 {$RECORD_MODEL->get('country')}
                             {/if}
