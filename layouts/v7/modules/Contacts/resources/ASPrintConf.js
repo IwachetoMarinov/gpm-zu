@@ -174,22 +174,22 @@ jQuery(function () {
     var hide = jQuery("#hideCustomerInfo").is(":checked") ? 1 : 0;
     var europeanAddress = jQuery("#europeanAddress").is(":checked") ? 1 : 0;
 
-    if (!start || !end) {
-      alert("Please select Start Date and End Date");
-      return;
+    var baseUrl = jQuery(this).attr("href");
+    var saveUrl = baseUrl;
+
+    if (start) {
+      saveUrl += "&start_date=" + encodeURIComponent(start);
+    }
+    if (end) {
+      saveUrl += "&end_date=" + encodeURIComponent(end);
     }
 
-    var baseUrl = jQuery(this).attr("href");
-
-    window.location.href =
-      baseUrl +
-      "&start_date=" +
-      encodeURIComponent(start) +
-      "&end_date=" +
-      encodeURIComponent(end) +
+    saveUrl +=
       "&hideCustomerInfo=" +
       hide +
       "&europeanAddress=" +
       europeanAddress;
+
+    window.location.href = saveUrl;
   });
 });
