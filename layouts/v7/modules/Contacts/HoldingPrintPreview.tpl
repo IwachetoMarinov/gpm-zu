@@ -17,6 +17,7 @@
 
 <body>
     {if $ENABLE_DOWNLOAD_BUTTON}
+        <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
         <ul style="list-style-type: none;
    		margin: 0;
    		padding: 0;
@@ -28,8 +29,16 @@
       		padding: 14px 16px;
       		text-decoration: none;
       		background-color: #bea364;"
-                    href="index.php?module=Contacts&view=HoldingPrintPreview&record={$RECORD_MODEL->getId()}&PDFDownload=true">Download</a>
+                    href="index.php?module=Contacts&view=HoldingPrintPreview&record={$RECORD_MODEL->getId()}&PDFDownload=true&europeanAddress={$smarty.request.europeanAddress|default:0}">Download</a>
             </li>
+            <li id="printConf" style="float:right">
+                <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
+                display: block;
+                text-align: center;
+                padding: 14px;cursor: pointer;">Settings</span>
+            </li>
+
+            {include file='EuropeanAddressPrintConf.tpl'|vtemplate_path:'Contacts' PRINT_CONF_VIEW='HoldingPrintPreview'}
 
             {assign var="holdingWarningExcludes" value=[]}
 

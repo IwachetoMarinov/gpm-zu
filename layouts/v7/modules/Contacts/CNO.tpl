@@ -25,8 +25,17 @@
             {if isset($SELECTED_BANK) && $SELECTED_BANK && method_exists($SELECTED_BANK, 'getId')}
                 <li style="float:right">
                     <a style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
-                        href="index.php?module=Contacts&view=NotePrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&PDFDownload=true&bank={$SELECTED_BANK->getId()}&hideCustomerInfo={$smarty.request.hideCustomerInfo}">Download</a>
+                        href="index.php?module=Contacts&view=NotePrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&PDFDownload=true&bank={$SELECTED_BANK->getId()}&hideCustomerInfo={$smarty.request.hideCustomerInfo|default:0}&europeanAddress={$smarty.request.europeanAddress|default:0}">Download</a>
                 </li>
+                <li id="printConf" style="float:right">
+                    <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
+                    display: block;
+                    text-align: center;
+                    padding: 14px;cursor: pointer;">Settings</span>
+                </li>
+
+                {assign var="PRINT_CONF_QUERY" value="&tableName=`$smarty.request.tableName`&bank=`$SELECTED_BANK->getId()`{if $smarty.request.hideCustomerInfo}&hideCustomerInfo=`$smarty.request.hideCustomerInfo`{/if}"}
+                {include file='EuropeanAddressPrintConf.tpl'|vtemplate_path:'Contacts' PRINT_CONF_VIEW='NotePrintPreview'}
 
                 {assign var="transactionWarningExcludes" value=["description", "posting_date", "grand_total", "matched_amt"]}
                 {assign var="barItemWarningExcludes" value=[
