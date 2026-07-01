@@ -36,32 +36,6 @@
                 padding: 14px;cursor: pointer;">Settings</span>
             </li>
 
-            {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt', 'posting_date']}
-            {assign var="barItemWarningExcludes" value=[
-                'metal_code',
-                "metal_name",
-                "metal_type_code",
-                'warehouse',
-                'tx_amount',
-                'avg_spot_price',
-                'posting_date',
-                'item_code',
-                'fine_oz',
-                'gross_oz',
-                'purity',
-                'total_item_dc_amount',
-                'weight',
-                'remarks',
-                'other_charge',
-                'item_price',
-                'narration',
-                'long_desc',
-                'premium_final',
-                'exchange_rate',
-                'serial_numbers',
-                'bar_number'
-            ]}
-
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
                 ERP_DOCUMENT=$ERP_DOCUMENT
                 TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes

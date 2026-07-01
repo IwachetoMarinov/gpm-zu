@@ -518,4 +518,47 @@ final class ContactsHelper
             'bar_number',
         ];
     }
+
+    /**
+     * Transaction fields excluded from TC warning checks on PI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPiTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt', 'posting_date'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on PI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPiBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'item_price',
+            'narration',
+            'long_desc',
+            'premium_final',
+            'exchange_rate',
+            'serial_numbers',
+            'bar_number',
+        ];
+    }
 }
