@@ -132,4 +132,96 @@ final class ContactsHelper
             'remarks',
         ];
     }
+
+    /**
+     * Transaction fields excluded from TC warning checks on TC print preview.
+     *
+     * @return list<string>
+     */
+    public static function getTcTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on TC print preview.
+     *
+     * @return list<string>
+     */
+    public static function getTcBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'exchange_rate',
+            'item_price',
+            'premium_final',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on STI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getStiTransactionWarningExcludes(): array
+    {
+        return ['voucher_type', 'posting_date', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on STI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getStiBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'quantity',
+            'metal_name',
+            'warehouse',
+            'tx_amount',
+            'spot_price',
+            'posting_date',
+            'exchange_rate',
+            'item_code',
+            'item_description',
+            'fine_oz',
+            'total_fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'unit_price',
+            'premium_perc',
+            'premium_final',
+            'total_item_dc_amount',
+            'serial_numbers',
+            'weight',
+            'bar_number',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'metal_code',
+            'remarks',
+            'avg_spot_price',
+            'currency',
+        ];
+    }
 }
