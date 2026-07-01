@@ -38,10 +38,6 @@ class ActivitySummary
 
         $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
-        echo "<pre>";
-        print_r($summary);
-        echo "</pre>";
-
         if (!is_array($summary) || count($summary) === 0) return [];
 
         $results  = [];

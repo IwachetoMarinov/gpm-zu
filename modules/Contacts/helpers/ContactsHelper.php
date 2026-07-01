@@ -86,4 +86,50 @@ final class ContactsHelper
             ['label' => 'Other', 'grams' => $otherGrams],
         ];
     }
+
+    /**
+     * Transaction fields excluded from TC warning checks on MPD / MRD print previews.
+     *
+     * @return list<string>
+     */
+    public static function getMpdMrdTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt', 'currency', 'voucher_type'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on MPD / MRD print previews.
+     *
+     * @return list<string>
+     */
+    public static function getMpdMrdBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'currency',
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'unit_price',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'weight',
+            'narration',
+            'bar_number',
+            'other_charge',
+            'long_desc',
+            'remarks',
+        ];
+    }
 }
