@@ -438,4 +438,84 @@ final class ContactsHelper
             'bar_number',
         ];
     }
+
+    /**
+     * Transaction fields excluded from TC warning checks on PWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPwdTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on PWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPwdBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'narration',
+            'bar_number',
+            'field',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on SWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getSwdTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on SWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getSwdBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'exchange_rate',
+            'item_price',
+            'premium_final',
+            'bar_number',
+        ];
+    }
 }

@@ -132,6 +132,16 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
             );
         }
 
+        if ($docType === 'PWD') {
+            $viewer->assign('transactionWarningExcludes', ContactsHelper::getPwdTransactionWarningExcludes());
+            $viewer->assign('barItemWarningExcludes', ContactsHelper::getPwdBarItemWarningExcludes());
+        }
+
+        if ($docType === 'SWD') {
+            $viewer->assign('transactionWarningExcludes', ContactsHelper::getSwdTransactionWarningExcludes());
+            $viewer->assign('barItemWarningExcludes', ContactsHelper::getSwdBarItemWarningExcludes());
+        }
+
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("$docType.tpl", $moduleName, true);
             $this->downloadPDF($html, $request);
