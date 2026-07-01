@@ -73,7 +73,7 @@ body {
     border: 1px solid #000;
     display: flex;
     margin-top: 1mm;
-    font-size: 8.3pt;
+    font-size: 8pt;
 }
 
 .company-half {
@@ -87,27 +87,27 @@ body {
 }
 
 .company-top {
-    height: 26mm;
+    height: 28mm;
     display: flex;
     border-bottom: 1px solid #000;
 }
 
 .company-bottom {
-    height: 12mm;
-    padding: 2mm;
+    height: 10mm;
+    padding: 1mm;
     overflow: hidden;
 }
 
 .company-label {
     width: 18mm;
-    padding: 2mm 0 0 2mm;
+    padding: 1mm 0 0 2mm;
     border-right: 1px solid #000;
     flex-shrink: 0;
 }
 
 .company-content {
     flex: 1;
-    padding: 2mm 2mm 0 2mm;
+    padding: 1mm 2mm 0 2mm;
     overflow: hidden;
     line-height: 1.35;
 }
