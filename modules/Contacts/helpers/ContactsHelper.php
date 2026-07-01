@@ -224,4 +224,97 @@ final class ContactsHelper
             'currency',
         ];
     }
+
+    /**
+     * Transaction fields excluded from TC warning checks on CR print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCrTransactionWarningExcludes(): array
+    {
+        return ['voucher_type', 'description', 'grand_total', 'matched_amt', 'currency'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on CR print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCrBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'currency',
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'fine_oz',
+            'gross_oz',
+            'item_price',
+            'unit_price',
+            'purity',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on CA print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCaTransactionWarningExcludes(): array
+    {
+        return ['voucher_type', 'description', 'grand_total', 'matched_amt', 'currency'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on CA print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCaBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'currency',
+            'metal_code',
+            'item_code',
+            'metal_name',
+            'metal_type_code',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'fine_oz',
+            'gross_oz',
+            'item_price',
+            'unit_price',
+            'purity',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+        ];
+    }
 }
