@@ -61,25 +61,6 @@
                 the following precious metals:
             </div>
 
-            {assign var="metals" value=[
-            'Gold 999.9',
-            'Silver 999.0',
-            'Platinum 999.5',
-            'Palladium 999.5'
-        ]}
-
-            {assign var="weights" value=[
-            ["label" => "1000oz", "grams" => "31,103g"],
-            ["label" => "400oz", "grams" => "12,441g"],
-            ["label" => "100oz", "grams" => "3,110g"],
-            ["label" => "32.15oz", "grams" => "1,000g"],
-            ["label" => "16.08oz", "grams" => "500g"],
-            ["label" => "10oz", "grams" => "311g"],
-            ["label" => "3.22oz", "grams" => "100g"],
-            ["label" => "1oz", "grams" => "31g"],
-            ["label" => "Other", "grams" => ""]
-        ]}
-
             <table class="metals-table">
                 <colgroup>
                     <col style="width:18%;">
