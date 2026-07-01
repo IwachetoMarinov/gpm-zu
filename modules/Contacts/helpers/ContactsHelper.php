@@ -317,4 +317,125 @@ final class ContactsHelper
             'long_desc',
         ];
     }
+
+    /**
+     * Transaction fields excluded from TC warning checks on CNO / DNO print previews.
+     *
+     * @return list<string>
+     */
+    public static function getCnoDnoTransactionWarningExcludes(): array
+    {
+        return ['description', 'posting_date', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on CNO / DNO print previews.
+     *
+     * @return list<string>
+     */
+    public static function getCnoDnoBarItemWarningExcludes(): array
+    {
+        return [
+            'quantity',
+            'metal_code',
+            'metal_name',
+            'metal_type',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'item_description',
+            'fine_oz',
+            'total_fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'unit_price',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'serial_numbers',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'long_desc',
+            'narration',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on PUR / SAL print previews.
+     *
+     * @return list<string>
+     */
+    public static function getPurSalTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on PUR print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPurBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'bar_number',
+        ];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on SAL print preview.
+     *
+     * @return list<string>
+     */
+    public static function getSalBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'premium_final',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'long_desc',
+            'narration',
+            'bar_number',
+        ];
+    }
 }

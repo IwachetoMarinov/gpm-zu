@@ -121,6 +121,17 @@ class Contacts_DocumentPrintPreview_View extends Vtiger_Index_View
         $viewer->assign('COMPANY_FULL_ADDRESS', $company_full_address);
         $viewer->assign('AVERAGE_SPOT_PRICE', $average_spot_price);
         $viewer->assign('PAGES', $this->makeDataPage($erpDoc->barItems, $docType));
+
+        if ($docType === 'PUR' || $docType === 'SAL') {
+            $viewer->assign('transactionWarningExcludes', ContactsHelper::getPurSalTransactionWarningExcludes());
+            $viewer->assign(
+                'barItemWarningExcludes',
+                $docType === 'SAL'
+                    ? ContactsHelper::getSalBarItemWarningExcludes()
+                    : ContactsHelper::getPurBarItemWarningExcludes()
+            );
+        }
+
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("$docType.tpl", $moduleName, true);
             $this->downloadPDF($html, $request);

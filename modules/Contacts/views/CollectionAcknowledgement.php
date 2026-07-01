@@ -49,7 +49,7 @@ class Contacts_CollectionAcknowledgement_View extends Vtiger_Index_View
         $viewer->assign('PDFDownload', $request->get('PDFDownload'));
         $viewer->assign('hideCustomerInfo', $request->get('hideCustomerInfo'));
         $viewer->assign('transactionWarningExcludes', ContactsHelper::getCaTransactionWarningExcludes());
-        $viewer->assign('barItemWarningExcludes', ContactsHelper::getCaBarItemWarningExcludes());
+        $viewer->assign('barItemWarningExcludes', ContactsHelper::getCaBarItemWarningExcludes());   
 
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("CA.tpl", $moduleName, true);
