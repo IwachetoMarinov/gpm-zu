@@ -170,13 +170,13 @@ class Contacts_Detail_View extends Accounts_Detail_View
 			});
 		}
 
-		echo "<pre>";
-		echo "Activity Data:";
-		echo "<br>";
-		echo "Count: " . count($activity_data);
-		echo "<br>";
-		print_r($activity_data);
-		echo "</pre>";
+		// echo "<pre>";
+		// echo "Activity Data:";
+		// echo "<br>";
+		// echo "Count: " . count($activity_data);
+		// echo "<br>";
+		// print_r($activity_data);
+		// echo "</pre>";
 
 		// Assign safely to TPL
 		$viewer->assign('CLIENT_CURRENCY', $currency_list);
