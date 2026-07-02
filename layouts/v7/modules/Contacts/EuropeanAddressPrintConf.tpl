@@ -57,7 +57,7 @@
         </span>
         <br>
         <a id="europeanAddressPrintConfSave"
-            href="index.php?module=Contacts&view={$PRINT_CONF_VIEW}&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}{$PRINT_CONF_QUERY|default:''}">
+            href="index.php?module={$PRINT_CONF_MODULE|default:'Contacts'}&view={$PRINT_CONF_VIEW}&record={if isset($PRINT_CONF_RECORD)}{$PRINT_CONF_RECORD}{else}{$RECORD_MODEL->getId()}{/if}{if isset($smarty.request.docNo) && $smarty.request.docNo neq ''}&docNo={$smarty.request.docNo}{/if}{$PRINT_CONF_QUERY|default:''}">
             Save
         </a>
     </div>
