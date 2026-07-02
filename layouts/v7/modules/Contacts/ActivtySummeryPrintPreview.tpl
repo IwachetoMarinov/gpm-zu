@@ -226,7 +226,7 @@
                     </tr>
                     <tr> 
                         <td style='font-size: 8pt;font-weight: bold;'>
-                            {include file='CompanyPrintFooter.tpl'|vtemplate_path:'Contacts' address_field='raw'}
+                            {include file='CompanyPrintFooter.tpl'|vtemplate_path:'Contacts' inner_div_style='margin-top: 2mm;'}
                         </td>
                     </tr>
                 </table>
