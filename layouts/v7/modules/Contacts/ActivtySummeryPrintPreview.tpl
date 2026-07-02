@@ -225,7 +225,6 @@
                         </td>
                     </tr>
                     <tr>
-                        {* <td style='font-size: 8pt;font-weight: bold;'> *}
                         <td style='font-size: 8pt;font-weight: bold;width: 85%; position: absolute;bottom: 14px;'>
                             {include file='CompanyPrintFooter.tpl'|vtemplate_path:'Contacts' inner_div_style='margin-top: 2mm;'}
                         </td>

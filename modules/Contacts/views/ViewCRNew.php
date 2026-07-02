@@ -2,6 +2,7 @@
 
 // include_once 'dbo_db/ActivitySummary.php';
 // include_once 'dbo_db/HoldingsDB.php';
+include_once 'dbo_db/Helper.php';
 include_once 'modules/Contacts/download/CollectionRequestDownload.php';
 
 class Contacts_ViewCRNew_View extends Vtiger_Index_View
@@ -35,6 +36,8 @@ class Contacts_ViewCRNew_View extends Vtiger_Index_View
             $erpData = [];
         }
 
+        $company_full_address = Helper::getCompanyFullAddressWithoutCommas($companyRecord);
+
         $ROOT_DIRECTORY = getenv('ROOT_DIRECTORY') ?: ($ROOT_DIRECTORY ?? null);
 
         $viewer = $this->getViewer($request);
@@ -42,6 +45,7 @@ class Contacts_ViewCRNew_View extends Vtiger_Index_View
         $viewer->assign('PAGES', 1);
         $viewer->assign('HIDE_BP_INFO', false);
         $viewer->assign('COMPANY', $companyRecord);
+        $viewer->assign('COMPANY_FULL_ADDRESS', $company_full_address);
         $viewer->assign('ROOT_DIRECTORY', $ROOT_DIRECTORY);
         $viewer->assign('ERP_DOCUMENT', $erpData);
         $viewer->assign('ID_OPTION', $request->get('idOption') ?? null);

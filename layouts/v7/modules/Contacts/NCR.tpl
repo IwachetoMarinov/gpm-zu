@@ -66,7 +66,7 @@
                                 {/if}
                             </div>
                             <div style="font-size: 8.3pt; height: 50px">
-                                {include file='CompanyInfo.tpl'|vtemplate_path:'Contacts' show_name=false address_field='raw'}
+                                {include file='CompanyInfo.tpl'|vtemplate_path:'Contacts' show_name=false}
                             </div>
                         </div>
                     </td>
