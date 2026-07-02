@@ -23,6 +23,14 @@
                 <a style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
                     href="{$DOWNLOAD_LINK}&europeanAddress={$smarty.request.europeanAddress|default:0}">Download</a>
             </li>
+
+            <li id="printConf" style="float:right">
+                <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
+                display: block;
+                text-align: center;
+                padding: 14px;cursor: pointer;">Settings</span>
+            </li>
+            
             <li style="float: right;margin-top: 5px;margin-right: 5px;width: 198px;">
                 <select class="inputElement select2" name="bank_accounts" id="bank_accounts">
                     <option value="">Select Bank Account</option>
@@ -31,12 +39,6 @@
                             {$account->get('bank_alias_name')}</option>
                     {/foreach}
                 </select>
-            </li>
-            <li id="printConf" style="float:right">
-                <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
-                display: block;
-                text-align: center;
-                padding: 14px;cursor: pointer;">Settings</span>
             </li>
 
             {assign var="PRINT_CONF_QUERY" value="&bank=`$smarty.request.bank|default:$SELECTED_BANK->getId()`"}

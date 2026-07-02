@@ -28,17 +28,19 @@
                         background-color: #bea364;"
                     href="{$DOWNLOAD_LINK}&europeanAddress={$smarty.request.europeanAddress|default:0}">Download</a>
             </li>
-            <li style="float: right;margin-top: 5px;margin-right: 5px;width: 198px;">
-                <select class="inputElement select2" name="view_type" id="view_type">
-                    <option {if $smarty.request.type eq 'full'} selected {/if} value="full">Full</option>
-                    <option {if $smarty.request.type eq 'simple'} selected {/if} value="simple">Simple</option>
-                </select>
-            </li>
+
             <li id="printConf" style="float:right">
                 <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
                 display: block;
                 text-align: center;
                 padding: 14px;cursor: pointer;">Settings</span>
+            </li>
+            
+            <li style="float: right;margin-top: 5px;margin-right: 5px;width: 198px;">
+                <select class="inputElement select2" name="view_type" id="view_type">
+                    <option {if $smarty.request.type eq 'full'} selected {/if} value="full">Full</option>
+                    <option {if $smarty.request.type eq 'simple'} selected {/if} value="simple">Simple</option>
+                </select>
             </li>
 
             {assign var="PRINT_CONF_QUERY" value="&type=`$smarty.request.type|default:'full'`"}
