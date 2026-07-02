@@ -39,6 +39,11 @@ class ActivitySummary
         $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
         echo "<pre>";
+        echo "params:";
+        print_r($params);
+        echo "</pre>";
+
+        echo "<pre>";
         echo "summary:";
         echo "<br>";
         print_r($sql);
