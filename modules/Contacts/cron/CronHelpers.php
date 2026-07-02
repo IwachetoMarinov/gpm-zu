@@ -26,10 +26,13 @@ class Contacts_CronHelpers
         $db = PearDatabase::getInstance();
 
         $query = "
-        SELECT DISTINCT cf_898 AS client_id
-        FROM vtiger_contactscf
-        WHERE cf_898 IS NOT NULL AND cf_898 != ''
-    ";
+        SELECT DISTINCT ccf.cf_898 AS client_id
+        FROM vtiger_contactscf ccf
+        INNER JOIN vtiger_contactdetails c ON c.contactid = ccf.contactid
+        INNER JOIN vtiger_crmentity ce ON ce.crmid = c.contactid
+        WHERE ccf.cf_898 IS NOT NULL AND ccf.cf_898 != ''
+        AND ce.deleted = 0
+        ";
 
         $result = $db->pquery($query, []);
 
