@@ -41,6 +41,8 @@
 			<div class="noDataMsg">
 				{if $REQ->get('name') eq 'OverdueActivities'}
 					{vtranslate('LBL_NO_OVERDUE_ACTIVITIES', $MODULE_NAME)}
+				{elseif $REQ->get('name') eq 'TodayTasks'}
+					{vtranslate('LBL_NO_TODAY_ACTIVITIES', $MODULE_NAME)}
 				{else}
 					{vtranslate('LBL_NO_SCHEDULED_ACTIVITIES', $MODULE_NAME)}
 				{/if}

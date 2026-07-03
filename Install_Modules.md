@@ -33,7 +33,24 @@ so that modules, menus, fields, and UI appear correctly.
 ## 5. Install Intent module
 - Visit site_url/Install_GPMIntent.php 
 
+## 6. Install dashboard widgets
+- Visit site_url/install_widgets.php
+- Safe to run more than once — already-installed widgets are detected and skipped
 
+---
+
+## Installer script conventions
+
+Every PHP installer in this project (e.g. `Install_GPMIntent.php`, `install_widgets.php`) **must** start with:
+
+```php
+$Vtiger_Utils_Log = true;
+require_once __DIR__ . '/vendor/autoload.php';
+```
+
+`vendor/autoload.php` loads Composer dependencies (including `.env` support) and must be the **first** `require_once` before `config.inc.php` or vtiger includes.
+
+Installers should also be **idempotent**: check whether the module, field, or widget already exists before creating it, and print a clear skip message on subsequent runs.
 
 
 

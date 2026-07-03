@@ -892,3 +892,9 @@ Vtiger_History_Widget_Js('Vtiger_OverdueActivities_Widget_Js', {}, {
 });
 
 Vtiger_OverdueActivities_Widget_Js('Vtiger_CalendarActivities_Widget_Js', {}, {});
+
+Vtiger_CalendarActivities_Widget_Js('Vtiger_TodayTasks_Widget_Js', {}, {});
+
+Vtiger_Widget_Js('Vtiger_ClientsList_Widget_Js', {}, {});
+
+Vtiger_Widget_Js('Vtiger_ClientTransactions_Widget_Js', {}, {});

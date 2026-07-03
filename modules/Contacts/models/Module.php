@@ -339,5 +339,39 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
     public function getDefaultSearchField(){
         return "lastname";
     }
-    
+
+    /**
+     * Contacts assigned to the given user (smownerid).
+     * @param int $userId
+     * @return Vtiger_Record_Model[]
+     */
+    public function getAssignedClients($userId) {
+        $db = PearDatabase::getInstance();
+
+        $query = 'SELECT vtiger_contactdetails.contactid, vtiger_contactdetails.firstname, vtiger_contactdetails.lastname,
+                    vtiger_contactdetails.email, vtiger_contactdetails.phone, vtiger_contactscf.cf_898, vtiger_crmentity.label
+                  FROM vtiger_contactdetails
+                  INNER JOIN vtiger_contactscf ON vtiger_contactscf.contactid = vtiger_contactdetails.contactid
+                  INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = vtiger_contactdetails.contactid
+                  WHERE vtiger_crmentity.deleted = 0
+                    AND vtiger_crmentity.smownerid = ?';
+
+        $params = array($userId);
+        $query .= Users_Privileges_Model::getNonAdminAccessControlQuery('Contacts');
+        $query .= ' ORDER BY vtiger_contactdetails.lastname ASC, vtiger_contactdetails.firstname ASC';
+
+        $result = $db->pquery($query, $params);
+        $clients = array();
+        $count = $db->num_rows($result);
+        for ($i = 0; $i < $count; $i++) {
+            $row = $db->query_result_rowdata($result, $i);
+            $model = Vtiger_Record_Model::getCleanInstance('Contacts');
+            $model->setData($row);
+            $model->setId($row['contactid']);
+            $clients[] = $model;
+        }
+
+        return $clients;
+    }
+
 }

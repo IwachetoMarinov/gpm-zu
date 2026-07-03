@@ -169,7 +169,7 @@ class Home_Module_Model extends Vtiger_Module_Model {
 
 	/**
 	 * Function returns the Calendar Events for the module
-	 * @param <String> $mode - upcoming/overdue mode
+	 * @param <String> $mode - upcoming/overdue/today/today_tasks mode
 	 * @param <Vtiger_Paging_Model> $pagingModel - $pagingModel
 	 * @param <String> $user - all/userid
 	 * @param <String> $recordId - record id
@@ -210,6 +210,10 @@ class Home_Module_Model extends Vtiger_Module_Model {
 			$query .= " AND CASE WHEN vtiger_activity.activitytype='Task' THEN due_date >= '$currentDate' ELSE CONCAT(due_date,' ',time_end) >= '$nowInDBFormat' END";
 		} elseif ($mode === 'overdue') {
 			$query .= " AND CASE WHEN vtiger_activity.activitytype='Task' THEN due_date < '$currentDate' ELSE CONCAT(due_date,' ',time_end) < '$nowInDBFormat' END";
+		} elseif ($mode === 'today') {
+			$query .= " AND CASE WHEN vtiger_activity.activitytype='Task' THEN due_date = '$currentDate' ELSE (date_start <= '$currentDate' AND due_date >= '$currentDate') END";
+		} elseif ($mode === 'today_tasks') {
+			$query .= " AND vtiger_activity.activitytype = 'Task' AND due_date = '$currentDate'";
 		}
 
 		$params = array();
