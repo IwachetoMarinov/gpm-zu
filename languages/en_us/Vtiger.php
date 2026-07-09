@@ -393,6 +393,7 @@ $languageStrings = array(
 	'LBL_NO_SCHEDULED_ACTIVITIES' => 'No scheduled activities',
 	'LBL_NO_TODAY_ACTIVITIES' => 'No tasks for today',
 	'LBL_NO_ASSIGNED_CLIENTS' => 'No clients assigned to you',
+
 	'LBL_CLIENT_TRANSACTIONS_PLACEHOLDER' => 'Sample charts — ERP data will be wired in a later stage.',
 	'LBL_CLIENT_TRANSACTIONS_BY_CLIENT' => 'Transactions by client',
 	'LBL_CLIENT_TRANSACTIONS_BY_MONTH' => 'Transaction volume by month',

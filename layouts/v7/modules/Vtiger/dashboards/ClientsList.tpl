@@ -33,7 +33,7 @@
 </div>
 
 {* Test Charts *}
-<div style="padding:10px 0 20px 0;">
+{* <div style="padding:10px 0 20px 0;">
     <h4>Client Transactions Test Chart</h4>
     <canvas id="clientsTransactionsChart_{$WIDGET->get('linkid')}" height="90"></canvas>
 </div>
@@ -106,4 +106,4 @@
             });
         }
     });
-</script>
+</script> *}
