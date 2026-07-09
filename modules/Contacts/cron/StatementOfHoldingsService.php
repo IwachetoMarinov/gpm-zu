@@ -33,6 +33,8 @@ class Contacts_StatementOfHoldingsService
 
         echo "Fetched ->>>>>>>>>>>" . count($holdings) . " holdings for client ID $client_id\n";
 
+        return;
+
         if (!is_array($holdings) || count($holdings) === 0) return;
 
         // 3. Get metals for every holding in the date range
@@ -146,7 +148,9 @@ class Contacts_StatementOfHoldingsService
 
     private function fetchHoldings(string $client_id, array $date_range, dbo_db\HoldingsDB $holdings)
     {
-        $holdings_data = $holdings->getHoldingsByDateRange($client_id, $date_range[0], $date_range[1]);
+
+        $holdings_data = $holdings->getHoldingsByDateRange($client_id);
+        // $holdings_data = $holdings->getHoldingsByDateRange($client_id, $date_range[0], $date_range[1]);
 
         return $holdings_data;
     }

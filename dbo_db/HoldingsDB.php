@@ -146,7 +146,7 @@ class HoldingsDB
         }
     }
 
-    public function getHoldingsByDateRange(string $customer_id, string $start_date, string $end_date)
+    public function getHoldingsByDateRange(string $customer_id, string $start_date = null, string $end_date = null)
     {
         if (!$customer_id || !$start_date || !$end_date) return [];
 
@@ -172,11 +172,8 @@ class HoldingsDB
             $params[] = $end_date;
         }
 
-        echo "Params: " . json_encode($params) . "\n";
-        
         try {
             $sql = "SELECT * FROM $this->database_prefix.[DW_DocHoldings] $where";
-            echo "SQL: $sql\n";
 
             $stmt = sqlsrv_query($this->connection, $sql, $params);
 
