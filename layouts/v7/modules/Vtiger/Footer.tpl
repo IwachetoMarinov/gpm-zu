@@ -11,6 +11,10 @@
 	<p>
 		Powered by vtiger CRM - {$VTIGER_VERSION}&nbsp;&nbsp;© 2004 - {date('Y')}&nbsp;&nbsp;
 		<a href="//www.vtiger.com" target="_blank">Vtiger</a>&nbsp;|&nbsp;
+		<span
+			style="background:#d9534f; color:#fff; padding:2px; border-radius:3px; font-weight:bold;">
+			v 1.2.0-zu.1
+		</span>&nbsp;|&nbsp;
 		<a href="https://www.vtiger.com/privacy-policy" target="_blank">Privacy Policy</a>
 	</p>
 </footer>
