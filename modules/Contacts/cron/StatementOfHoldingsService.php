@@ -44,7 +44,12 @@ class Contacts_StatementOfHoldingsService
         // 5 Build LBMA date from the first holding record (assuming all records have the same spot date) and format it as 'd-M-y'
         $LBMA_DATE = isset($holdings[0]['spot_date']) && is_array($holdings) ? date('d-M-y', strtotime($holdings[0]['spot_date'])) : '';
 
+        // Get last date from all goldings
+        $last_date = Contacts_CronHelpers::getLastAvalableDate($holdings);
+
         echo "LBMA DATE: $LBMA_DATE\n";
+
+        echo "LAST AVAILABLE DATE: $last_date\n";
 
         return;
 

@@ -120,6 +120,16 @@ class Contacts_CronHelpers
         return $pdfPath;
     }
 
+    public static function getLastAvalableDate(array $holdings)
+    {
+        $last_date = null;
+        foreach ($holdings as $holding) {
+            $date = $holding['spot_date'];
+            if ($date > $last_date) $last_date = $date;
+        }
+        return $last_date;
+    }
+
     public static function logYTDReport(string $client_id, string $start_date, string $end_date, int $activityDocId)
     {
         $db = PearDatabase::getInstance();
