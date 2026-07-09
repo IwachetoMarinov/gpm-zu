@@ -43,9 +43,9 @@
             {assign var="holdingWarningExcludes" value=[]}
 
             {include file='HoldingWarnings.tpl'|vtemplate_path:'Contacts'
-                HOLDINGS=$ERP_HOLDINGS
-                HOLDING_WARNING_EXCLUDES=$holdingWarningExcludes
-            }
+                            HOLDINGS=$ERP_HOLDINGS
+                            HOLDING_WARNING_EXCLUDES=$holdingWarningExcludes
+                        }
         </ul>
     {/if}
     <div class="printAreaContainer">
@@ -123,9 +123,14 @@
 
                                         <td>
                                             {$HOLDING->longDesc} <br>
-                                            <span style="font-size: smaller;font-style: italic;">
-                                                <pre>{$HOLDING->serials}</pre>
-                                            </span>
+                                            {* <span style="font-size: smaller;font-style: italic;">
+                                                <pre>{$HOLDING->serials|replace:',':',<wbr>'}</pre>
+                                            </span> *}
+                                            <div
+                                                style="font-size: smaller; font-style: italic; max-width: 300px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                                                {$HOLDING->serials|replace:",":", "}
+                                            </div>
+
                                         </td>
 
                                         <td style='vertical-align: top;text-align:right'>
