@@ -33,7 +33,7 @@ class Contacts_StatementOfHoldingsService
 
         echo "Fetched ->>>>>>>>>>>" . count($holdings) . " holdings for client ID $client_id\n";
 
-        return;
+       
 
         if (!is_array($holdings) || count($holdings) === 0) return;
 
@@ -45,6 +45,10 @@ class Contacts_StatementOfHoldingsService
 
         // 5 Build LBMA date from the first holding record (assuming all records have the same spot date) and format it as 'd-M-y'
         $LBMA_DATE = isset($holdings[0]['spot_date']) && is_array($holdings) ? date('d-M-y', strtotime($holdings[0]['spot_date'])) : '';
+
+        echo "LBMA DATE: $LBMA_DATE\n";
+
+        return;
 
         // 6. Group holdings by location and prepare data for storage
         $grouped_holdings = $this->groupHoldingsByLocation($holdings);
