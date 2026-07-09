@@ -18,15 +18,15 @@ class Contacts_StatementOfHoldingsService
         $start_date = !empty($date_range) ? $date_range[0] : date('Y-m-01');
         $end_date = !empty($date_range) ? $date_range[1] : date('Y-m-t');
 
-        // if (Contacts_CronHelpers::ytdReportExists(
-        //     $client_id,
-        //     $start_date,
-        //     $end_date,
-        //     'Statement of Holdings'
-        // )) {
-        //     echo "Statement of Holdings already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
-        //     return 0;
-        // }
+        if (Contacts_CronHelpers::ytdReportExists(
+            $client_id,
+            $start_date,
+            $end_date,
+            'Statement of Holdings'
+        )) {
+            echo "Statement of Holdings already exists for client {$client_id}, period {$start_date} to {$end_date}\n";
+            return 0;
+        }
 
         // 2. Fetch Statement of Holdings data for the client and date range
         $holdings = $this->fetchHoldings($client_id, $date_range, $holding);
@@ -42,16 +42,10 @@ class Contacts_StatementOfHoldingsService
         $total = $this->calculateSpotTotal($holdings);
 
         // 5 Build LBMA date from the first holding record (assuming all records have the same spot date) and format it as 'd-M-y'
-        $LBMA_DATE = isset($holdings[0]['spot_date']) && is_array($holdings) ? date('d-M-y', strtotime($holdings[0]['spot_date'])) : '';
+        // $LBMA_DATE = isset($holdings[0]['spot_date']) && is_array($holdings) ? date('d-M-y', strtotime($holdings[0]['spot_date'])) : '';
 
-        // Get last date from all goldings
-        $last_date = Contacts_CronHelpers::getLastAvalableDate($holdings);
-
-        echo "LBMA DATE: $LBMA_DATE\n";
-
-        echo "LAST AVAILABLE DATE: $last_date\n";
-
-        return;
+        // 5. Get last date from all holdings
+        $LBMA_DATE = Contacts_CronHelpers::getLastAvalableDate($holdings);
 
         // 6. Group holdings by location and prepare data for storage
         $grouped_holdings = $this->groupHoldingsByLocation($holdings);

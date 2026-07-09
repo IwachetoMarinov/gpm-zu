@@ -127,7 +127,7 @@ class Contacts_CronHelpers
             $date = $holding['spot_date'];
             if ($date > $last_date) $last_date = $date;
         }
-        return $last_date;
+        return date('d-M-y', strtotime($last_date));
     }
 
     public static function logYTDReport(string $client_id, string $start_date, string $end_date, int $activityDocId)
