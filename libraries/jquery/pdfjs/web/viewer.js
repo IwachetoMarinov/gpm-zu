@@ -221,6 +221,55 @@ function getPDFFileNameFromURL(url) {
   return suggestedFilename || 'document.pdf';
 }
 
+/**
+ * vtiger: use filename from hash/query params passed by FilePreview iframe.
+ */
+function parseVtigerDownloadParams() {
+  var href = document.location.href;
+  var hashIndex = href.indexOf('#');
+  if (hashIndex !== -1) {
+    var hashParams = PDFView.parseQueryString(href.substring(hashIndex + 1));
+    if (hashParams.vtigerFilename) {
+      PDFView.vtigerDownloadFilename = hashParams.vtigerFilename;
+    }
+    if (hashParams.vtigerDownload) {
+      PDFView.vtigerDownloadUrl = hashParams.vtigerDownload;
+    }
+  }
+
+  if (!PDFView.vtigerDownloadFilename) {
+    var match = /[?&]filename=([^&#]+)/i.exec(href);
+    if (match && match[1]) {
+      PDFView.vtigerDownloadFilename = decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+  }
+}
+
+function getVtigerDownloadFilename(url) {
+  if (PDFView.vtigerDownloadFilename) {
+    var name = PDFView.vtigerDownloadFilename;
+    if (name && name.toLowerCase().indexOf('.pdf') === -1) {
+      name += '.pdf';
+    }
+    return name;
+  }
+  return getPDFFileNameFromURL(url);
+}
+
+function setVtigerDownloadButtonTitles(filename) {
+  if (!filename) {
+    return;
+  }
+  ['download', 'secondaryDownload'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) {
+      return;
+    }
+    el.title = filename;
+    el.setAttribute('aria-label', filename);
+  });
+}
+
 var ProgressBar = (function ProgressBarClosure() {
 
   function clamp(v, min, max) {
@@ -2879,13 +2928,18 @@ var PDFView = {
     }
 
     var url = this.url.split('#')[0];
-    var filename = getPDFFileNameFromURL(url);
+    var filename = getVtigerDownloadFilename(url);
     var downloadManager = new DownloadManager();
     downloadManager.onerror = function (err) {
       // This error won't really be helpful because it's likely the
       // fallback won't work either (or is already open).
       PDFView.error('PDF failed to download.');
     };
+
+    if (PDFView.vtigerDownloadUrl) {
+      downloadManager.downloadUrl(PDFView.vtigerDownloadUrl, filename);
+      return;
+    }
 
     if (!this.pdfDocument) { // the PDF is not ready yet
       noData();
@@ -4990,6 +5044,13 @@ function webViewerLoad(evt) {
 
   var params = PDFView.parseQueryString(document.location.search.substring(1));
   var file = 'file' in params ? params.file : DEFAULT_URL;
+
+  parseVtigerDownloadParams();
+  if (PDFView.vtigerDownloadFilename) {
+    mozL10n.ready(function() {
+      setVtigerDownloadButtonTitles(PDFView.vtigerDownloadFilename);
+    });
+  }
 
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
