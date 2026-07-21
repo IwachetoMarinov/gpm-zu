@@ -136,6 +136,15 @@ class OAuth
         $scopes = array_values(array_filter($scopes ?: []));
 
         foreach ($requiredScopes as $requiredScope) {
+            if (function_exists('logf')) {
+                logf('auth0.token_permissions', [
+                    'required_scopes' => $requiredScopes,
+                    'scope' => $token->scope ?? null,
+                    'permissions' => $token->permissions ?? null,
+                    'client_id' => $token->azp ?? null,
+                    'subject' => $token->sub ?? null,
+                ]);
+            }
             if (!in_array($requiredScope, $scopes, true)) {
                 self::forbidden('insufficient_scope');
             }
