@@ -4,6 +4,7 @@ namespace Api\Helper;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Firebase\JWT\JWK;
 use Exception;
 
 class OAuth
@@ -62,6 +63,93 @@ class OAuth
 
     /** Protect routes: require a valid Bearer token and (optional) scopes */
     public static function requireBearer(array $requiredScopes = []): array
+    {
+        $headers = function_exists('getallheaders') ? getallheaders() : [];
+
+        $auth = trim(
+            $_SERVER['HTTP_AUTHORIZATION']
+                ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+                ?? $headers['Authorization']
+                ?? $headers['authorization']
+                ?? ''
+        );
+
+        if (!preg_match('/^Bearer\s+(.+)$/i', $auth, $matches)) {
+            self::unauthorized('missing_bearer');
+        }
+
+        $jwt = trim($matches[1]);
+
+        try {
+            $jwksJson = file_get_contents(AUTH0_JWKS_URL);
+
+            if ($jwksJson === false) {
+                throw new Exception('Unable to download Auth0 JWKS.');
+            }
+
+            $jwks = json_decode($jwksJson, true);
+
+            if (!is_array($jwks) || empty($jwks['keys'])) {
+                throw new Exception('Invalid Auth0 JWKS response.');
+            }
+
+            $token = JWT::decode($jwt, JWK::parseKeySet($jwks));
+        } catch (\Throwable $e) {
+            if (function_exists('logf')) {
+                logf('auth0.token_decode_fail', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            self::unauthorized('invalid_token');
+        }
+
+        $now = time();
+
+        if (!empty($token->nbf) && $now < (int) $token->nbf) {
+            self::unauthorized('token_not_active');
+        }
+
+        if (empty($token->exp) || $now >= (int) $token->exp) {
+            self::unauthorized('token_expired');
+        }
+
+        if (
+            empty($token->iss) ||
+            rtrim((string) $token->iss, '/') !== rtrim(AUTH0_ISSUER, '/')
+        ) {
+            self::unauthorized('bad_issuer');
+        }
+
+        $audiences = is_array($token->aud ?? null)
+            ? $token->aud
+            : [$token->aud ?? null];
+
+        if (!in_array(AUTH0_AUDIENCE, $audiences, true)) {
+            self::unauthorized('bad_audience');
+        }
+
+        $scopes = isset($token->scope)
+            ? preg_split('/\s+/', trim((string) $token->scope))
+            : [];
+
+        $scopes = array_values(array_filter($scopes ?: []));
+
+        foreach ($requiredScopes as $requiredScope) {
+            if (!in_array($requiredScope, $scopes, true)) {
+                self::forbidden('insufficient_scope');
+            }
+        }
+
+        return [
+            'client_id' => $token->azp ?? null,
+            'sub'       => $token->sub ?? null,
+            'scopes'    => $scopes,
+            'claims'    => (array) $token,
+        ];
+    }
+
+    public static function requireBearerOld(array $requiredScopes = []): array
     {
         // --- Capture Authorization header reliably ---
         $auth = trim(

@@ -1,6 +1,8 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /api/
+    # For locallly
+    # RewriteBase /vtiger-gpm-zu/api/
 
     # ✅ Ensure Authorization header is passed to PHP
     SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
