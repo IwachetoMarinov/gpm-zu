@@ -50,4 +50,515 @@ final class ContactsHelper
 
         return $count > 0 ? round($totalSpotPrice / $count, 2) : 0.00;
     }
+
+    /**
+     * Precious metal types shown on PO / SO / STO order forms.
+     *
+     * @return list<string>
+     */
+    public static function getOrderFormMetals(): array
+    {
+        return [
+            'Gold 999.9',
+            'Silver 999.0',
+            'Platinum 999.5',
+            'Palladium 999.5',
+        ];
+    }
+
+    /**
+     * Weight column options for PO / SO / STO metals tables.
+     *
+     * @param string $otherGrams Label shown under the "Other" column (empty for SO/STO, "(pls specify)" for PO)
+     * @return list<array{label: string, grams: string}>
+     */
+    public static function getOrderFormWeights(string $otherGrams = ''): array
+    {
+        return [
+            ['label' => '1000oz', 'grams' => '31,103g'],
+            ['label' => '400oz', 'grams' => '12,441g'],
+            ['label' => '100oz', 'grams' => '3,110g'],
+            ['label' => '32.15oz', 'grams' => '1,000g'],
+            ['label' => '16.08oz', 'grams' => '500g'],
+            ['label' => '10oz', 'grams' => '311g'],
+            ['label' => '3.22oz', 'grams' => '100g'],
+            ['label' => '1oz', 'grams' => '31g'],
+            ['label' => 'Other', 'grams' => $otherGrams],
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on MPD / MRD print previews.
+     *
+     * @return list<string>
+     */
+    public static function getMpdMrdTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt', 'currency', 'voucher_type'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on MPD / MRD print previews.
+     *
+     * @return list<string>
+     */
+    public static function getMpdMrdBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'currency',
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'unit_price',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'weight',
+            'narration',
+            'bar_number',
+            'other_charge',
+            'long_desc',
+            'remarks',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on TC print preview.
+     *
+     * @return list<string>
+     */
+    public static function getTcTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on TC print preview.
+     *
+     * @return list<string>
+     */
+    public static function getTcBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'exchange_rate',
+            'item_price',
+            'premium_final',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on STI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getStiTransactionWarningExcludes(): array
+    {
+        return ['voucher_type', 'posting_date', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on STI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getStiBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'quantity',
+            'metal_name',
+            'warehouse',
+            'tx_amount',
+            'spot_price',
+            'posting_date',
+            'exchange_rate',
+            'item_code',
+            'item_description',
+            'fine_oz',
+            'total_fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'unit_price',
+            'premium_perc',
+            'premium_final',
+            'total_item_dc_amount',
+            'serial_numbers',
+            'weight',
+            'bar_number',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'metal_code',
+            'remarks',
+            'avg_spot_price',
+            'currency',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on CR print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCrTransactionWarningExcludes(): array
+    {
+        return ['voucher_type', 'description', 'grand_total', 'matched_amt', 'currency'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on CR print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCrBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'currency',
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'fine_oz',
+            'gross_oz',
+            'item_price',
+            'unit_price',
+            'purity',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on CA print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCaTransactionWarningExcludes(): array
+    {
+        return ['voucher_type', 'description', 'grand_total', 'matched_amt', 'currency'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on CA print preview.
+     *
+     * @return list<string>
+     */
+    public static function getCaBarItemWarningExcludes(): array
+    {
+        return [
+            'transaction_type',
+            'currency',
+            'metal_code',
+            'item_code',
+            'metal_name',
+            'metal_type_code',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'fine_oz',
+            'gross_oz',
+            'item_price',
+            'unit_price',
+            'purity',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on CNO / DNO print previews.
+     *
+     * @return list<string>
+     */
+    public static function getCnoDnoTransactionWarningExcludes(): array
+    {
+        return ['description', 'posting_date', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on CNO / DNO print previews.
+     *
+     * @return list<string>
+     */
+    public static function getCnoDnoBarItemWarningExcludes(): array
+    {
+        return [
+            'quantity',
+            'metal_code',
+            'metal_name',
+            'metal_type',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'spot_price',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'item_description',
+            'fine_oz',
+            'total_fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'unit_price',
+            'premium_perc',
+            'premium_final',
+            'total_item_amount',
+            'total_item_dc_amount',
+            'serial_numbers',
+            'weight',
+            'bar_number',
+            'remarks',
+            'other_charge',
+            'long_desc',
+            'narration',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on PUR / SAL print previews.
+     *
+     * @return list<string>
+     */
+    public static function getPurSalTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on PUR print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPurBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'bar_number',
+        ];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on SAL print preview.
+     *
+     * @return list<string>
+     */
+    public static function getSalBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'exchange_rate',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'item_price',
+            'premium_final',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'long_desc',
+            'narration',
+            'bar_number',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on PWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPwdTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on PWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPwdBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'narration',
+            'bar_number',
+            'field',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on SWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getSwdTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on SWD print preview.
+     *
+     * @return list<string>
+     */
+    public static function getSwdBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'narration',
+            'long_desc',
+            'exchange_rate',
+            'item_price',
+            'premium_final',
+            'bar_number',
+        ];
+    }
+
+    /**
+     * Transaction fields excluded from TC warning checks on PI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPiTransactionWarningExcludes(): array
+    {
+        return ['description', 'grand_total', 'matched_amt', 'posting_date'];
+    }
+
+    /**
+     * Bar item fields excluded from TC warning checks on PI print preview.
+     *
+     * @return list<string>
+     */
+    public static function getPiBarItemWarningExcludes(): array
+    {
+        return [
+            'metal_code',
+            'metal_name',
+            'metal_type_code',
+            'warehouse',
+            'tx_amount',
+            'avg_spot_price',
+            'posting_date',
+            'item_code',
+            'fine_oz',
+            'gross_oz',
+            'purity',
+            'total_item_dc_amount',
+            'weight',
+            'remarks',
+            'other_charge',
+            'item_price',
+            'narration',
+            'long_desc',
+            'premium_final',
+            'exchange_rate',
+            'serial_numbers',
+            'bar_number',
+        ];
+    }
 }

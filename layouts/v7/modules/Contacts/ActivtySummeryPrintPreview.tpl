@@ -28,19 +28,19 @@
             </li>
 
             {assign var="activityWarningExcludes" value=[
-                'scr_description',
-                'transaction_2',
-                'transaction_3',
-                'table_name_2',
-                'table_name_3',
-                'matched_amt',
-                'posting_date'
-            ]}
+                    'scr_description',
+                    'transaction_2',
+                    'transaction_3',
+                    'table_name_2',
+                    'table_name_3',
+                    'matched_amt',
+                    'posting_date'
+                ]}
 
             {include file='ActivitySummaryWarnings.tpl'|vtemplate_path:'Contacts'
-                TRANSACTIONS=$TRANSACTIONS
-                ACTIVITY_WARNING_EXCLUDES=$activityWarningExcludes
-            }
+                    TRANSACTIONS=$TRANSACTIONS
+                    ACTIVITY_WARNING_EXCLUDES=$activityWarningExcludes
+                }
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/ASPrintConf.js"></script>
@@ -224,9 +224,9 @@
                             {/if}
                         </td>
                     </tr>
-                    <tr> 
-                        <td style='font-size: 8pt;font-weight: bold;'>
-                            {include file='CompanyPrintFooter.tpl'|vtemplate_path:'Contacts' address_field='raw'}
+                    <tr>
+                        <td style='font-size: 8pt;font-weight: bold;width: 85%; position: absolute;bottom: 14px;'>
+                            {include file='CompanyPrintFooter.tpl'|vtemplate_path:'Contacts' inner_div_style='margin-top: 2mm;'}
                         </td>
                     </tr>
                 </table>

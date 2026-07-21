@@ -3,6 +3,7 @@
 include_once 'dbo_db/ActivitySummary.php';
 include_once 'dbo_db/HoldingsDB.php';
 include_once 'dbo_db/Helper.php';
+include_once 'modules/Contacts/helpers/ContactsHelper.php';
 include_once 'modules/Contacts/download/SimplePdfDownload.php';
 
 // ini_set('display_errors', 1); error_reporting(E_ALL);
@@ -48,6 +49,8 @@ class Contacts_TCPrintPreview_View extends Vtiger_Index_View
         $viewer->assign('COMPANY_FULL_ADDRESS', $company_full_address);
         $viewer->assign('PAGES', $pages);
         $viewer->assign('PAGE_COUNT', count($pages));
+        $viewer->assign('transactionWarningExcludes', ContactsHelper::getTcTransactionWarningExcludes());
+        $viewer->assign('barItemWarningExcludes', ContactsHelper::getTcBarItemWarningExcludes());
 
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("TC.tpl", $moduleName, true);

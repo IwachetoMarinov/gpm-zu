@@ -25,6 +25,14 @@
                 <a style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
                     href="index.php?module=Contacts&view=NotePrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&PDFDownload=true&bank={$SELECTED_BANK->getId()}&hideCustomerInfo={$smarty.request.hideCustomerInfo}">Download</a>
             </li>
+
+            <li id="printConf" style="float:right">
+                <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
+                display: block;
+                text-align: center;
+                padding: 14px;cursor: pointer;">Settings</span>
+            </li>
+          
             <li style="float: right;margin-top: 5px;margin-right: 5px;width: 198px;">
                 <select class="inputElement select2" name="bank_accounts" id="bank_accounts">
                     <option value="">Select Bank Account</option>
@@ -33,40 +41,10 @@
                             {$account->get('bank_alias_name')}</option>
                     {/foreach}
                 </select>
-            </li>
-
-            {assign var="transactionWarningExcludes" value=["description", "posting_date", "grand_total", "matched_amt"]}
-            {assign var="barItemWarningExcludes" value=[
-                        "quantity",
-                        "metal_code",
-                        "metal_name",
-                        "metal_type",
-                        "metal_type_code",
-                        "warehouse",
-                        "tx_amount",
-                        "spot_price",
-                        "avg_spot_price",
-                        "posting_date",
-                        "item_code",
-                        "item_description",
-                        "fine_oz",
-                        "total_fine_oz",
-                        "gross_oz",
-                        "purity",
-                        "item_price",
-                        "unit_price",
-                        "premium_perc",
-                        "premium_final",
-                        "total_item_amount",
-                        "total_item_dc_amount",
-                        "serial_numbers",
-                        "weight",
-                        "bar_number",
-                        "remarks",
-                        "other_charge",
-                        "long_desc",
-                        "narration"
-                    ]}
+            </li>  
+            
+            {assign var="PRINT_CONF_QUERY" value="&tableName=`$smarty.request.tableName`&bank=`$SELECTED_BANK->getId()`{if $smarty.request.hideCustomerInfo}&hideCustomerInfo=`$smarty.request.hideCustomerInfo`{/if}"}
+            {include file='EuropeanAddressPrintConf.tpl'|vtemplate_path:'Contacts' PRINT_CONF_VIEW='NotePrintPreview'}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
                                     ERP_DOCUMENT=$ERP_DOCUMENT

@@ -32,7 +32,8 @@ class Contacts_ActivitySummaryService
         }
 
         // 5. Create a new record for all currencies
-        $this->processClient($client_id, null, $selected_year, $start_date, $end_date, $activity);
+        // Comment this for now
+        // $this->processClient($client_id, null, $selected_year, $start_date, $end_date, $activity);
     }
 
     protected function processClient(string $client_id, $currency = null, string $selected_year, string $start_date, string $end_date, dbo_db\ActivitySummary $activity)

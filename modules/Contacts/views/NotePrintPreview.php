@@ -3,6 +3,7 @@
 include_once 'dbo_db/ActivitySummary.php';
 include_once 'dbo_db/HoldingsDB.php';
 include_once 'dbo_db/Helper.php';
+include_once 'modules/Contacts/helpers/ContactsHelper.php';
 include_once 'modules/Contacts/download/SimplePdfDownload.php';
 
 class Contacts_NotePrintPreview_View extends Vtiger_Index_View
@@ -83,6 +84,9 @@ class Contacts_NotePrintPreview_View extends Vtiger_Index_View
         $viewer->assign('COMPANY', $companyRecord);
         $viewer->assign('COMPANY_FULL_ADDRESS', $company_full_address);
         $viewer->assign('PAGES', $this->makeDataPage($erpDoc->barItems, $docType));
+        $viewer->assign('transactionWarningExcludes', ContactsHelper::getCnoDnoTransactionWarningExcludes());
+        $viewer->assign('barItemWarningExcludes', ContactsHelper::getCnoDnoBarItemWarningExcludes());
+        
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("$template_name.tpl", $moduleName, true);
             $this->downloadPDF($html, $request, $template_name);

@@ -26,10 +26,13 @@ class Contacts_CronHelpers
         $db = PearDatabase::getInstance();
 
         $query = "
-        SELECT DISTINCT cf_898 AS client_id
-        FROM vtiger_contactscf
-        WHERE cf_898 IS NOT NULL AND cf_898 != ''
-    ";
+        SELECT DISTINCT ccf.cf_898 AS client_id
+        FROM vtiger_contactscf ccf
+        INNER JOIN vtiger_contactdetails c ON c.contactid = ccf.contactid
+        INNER JOIN vtiger_crmentity ce ON ce.crmid = c.contactid
+        WHERE ccf.cf_898 IS NOT NULL AND ccf.cf_898 != ''
+        AND ce.deleted = 0
+        ";
 
         $result = $db->pquery($query, []);
 
@@ -94,11 +97,10 @@ class Contacts_CronHelpers
         //     . escapeshellarg($inputFile) . ' '
         //     . escapeshellarg($pdfPath) . ' 2>&1';
 
-        $wkhtmltopdfBinary = trim(shell_exec('which wkhtmltopdf'));
+        // $wkhtmltopdfBinary = trim(shell_exec('which wkhtmltopdf'));
+        $wkhtmltopdfBinary = '/usr/local/bin/wkhtmltopdf';
 
-        if (!$wkhtmltopdfBinary) {
-            throw new Exception('wkhtmltopdf binary not found');
-        }
+        if (!$wkhtmltopdfBinary) throw new Exception('wkhtmltopdf binary not found');
 
         $command = $wkhtmltopdfBinary .
             ' --enable-local-file-access --print-media-type --disable-smart-shrinking -L 0 -R 0 -B 0 -T 0 '
@@ -116,6 +118,16 @@ class Contacts_CronHelpers
         if (file_exists($htmlPath)) unlink($htmlPath);
 
         return $pdfPath;
+    }
+
+    public static function getLastAvalableDate(array $holdings)
+    {
+        $last_date = null;
+        foreach ($holdings as $holding) {
+            $date = $holding['spot_date'];
+            if ($date > $last_date) $last_date = $date;
+        }
+        return date('d-M-y', strtotime($last_date));
     }
 
     public static function logYTDReport(string $client_id, string $start_date, string $end_date, int $activityDocId)

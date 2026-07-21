@@ -3,6 +3,7 @@
 include_once 'dbo_db/Helper.php';
 include_once 'dbo_db/HoldingsDB.php';
 include_once 'dbo_db/ActivitySummary.php';
+include_once 'modules/Contacts/helpers/ContactsHelper.php';
 include_once 'modules/Contacts/download/SimplePdfDownload.php';
 
 // ini_set('display_errors', 1); error_reporting(E_ALL);
@@ -47,6 +48,8 @@ class Contacts_CollectionAcknowledgement_View extends Vtiger_Index_View
         $viewer->assign('DOCNO', $request->get('docNo'));
         $viewer->assign('PDFDownload', $request->get('PDFDownload'));
         $viewer->assign('hideCustomerInfo', $request->get('hideCustomerInfo'));
+        $viewer->assign('transactionWarningExcludes', ContactsHelper::getCaTransactionWarningExcludes());
+        $viewer->assign('barItemWarningExcludes', ContactsHelper::getCaBarItemWarningExcludes());   
 
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("CA.tpl", $moduleName, true);

@@ -3,6 +3,7 @@
 // include_once 'dbo_db/ActivitySummary.php';
 // include_once 'dbo_db/HoldingsDB.php';
 include_once 'modules/Contacts/download/StockTransferOrderDownload.php';
+include_once 'modules/Contacts/helpers/ContactsHelper.php';
 
 class Contacts_StockTransferOrderView_View extends Vtiger_Index_View
 {
@@ -72,6 +73,8 @@ class Contacts_StockTransferOrderView_View extends Vtiger_Index_View
         $viewer->assign('DOCNO', $request->get('docNo'));
         $viewer->assign('PDFDownload', $request->get('PDFDownload'));
         $viewer->assign('hideCustomerInfo', $request->get('hideCustomerInfo'));
+        $viewer->assign('metals', ContactsHelper::getOrderFormMetals());
+        $viewer->assign('weights', ContactsHelper::getOrderFormWeights());
 
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("STO.tpl", $moduleName, true);

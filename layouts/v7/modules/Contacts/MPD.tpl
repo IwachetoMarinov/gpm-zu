@@ -13,41 +13,24 @@
 <body>
 
     {if !isset($smarty.request.PDFDownload) || $smarty.request.PDFDownload neq true}
+        <script type="text/javascript" src="layouts/v7/lib/jquery/jquery.min.js"></script>
         <ul style="list-style-type:none;margin:0;padding:0;overflow:hidden;background-color:#333;">
             <li style="float:right">
                 <a style="display:block;color:white;text-align:center;padding:14px 16px;text-decoration:none;background-color:#bea364;"
-                    href="index.php?module=Contacts&view=MPDPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo|default:''}&tableName={$smarty.request.tableName}&PDFDownload=true&hideCustomerInfo={$smarty.request.hideCustomerInfo|default:0}">
+                    href="index.php?module=Contacts&view=MPDPrintPreview&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo|default:''}&tableName={$smarty.request.tableName}&PDFDownload=true&hideCustomerInfo={$smarty.request.hideCustomerInfo|default:0}&europeanAddress={$smarty.request.europeanAddress|default:0}">
                     Download
                 </a>
             </li>
-            {assign var="transactionWarningExcludes" value=['description', 'grand_total', 'matched_amt', 'currency', 'voucher_type']}
-            {assign var="barItemWarningExcludes" value=[
-                    "transaction_type",
-                    "currency",
-                    "metal_code",
-                    "metal_name",
-                    "metal_type_code",
-                    "tx_amount",
-                    "spot_price",
-                    "avg_spot_price",
-                    "posting_date",
-                    "exchange_rate",
-                    "fine_oz",
-                    "gross_oz",
-                    "purity",
-                    "item_price",
-                    "unit_price",
-                    "premium_perc",
-                    "premium_final",
-                    "total_item_amount",
-                    "total_item_dc_amount",
-                    "weight",
-                    "narration",
-                    "bar_number",
-                    "other_charge",
-                    "long_desc",
-                    "remarks"
-                ]}
+
+            <li id="printConf" style="float:right">
+                <span style="float: right;margin-right: 1px;color: white;background-color: #bea364;text-decoration: none;
+                display: block;
+                text-align: center;
+                padding: 14px;cursor: pointer;">Settings</span>
+            </li> 
+            
+            {assign var="PRINT_CONF_QUERY" value="&tableName=`$smarty.request.tableName`{if $smarty.request.hideCustomerInfo}&hideCustomerInfo=`$smarty.request.hideCustomerInfo`{/if}"}
+            {include file='EuropeanAddressPrintConf.tpl'|vtemplate_path:'Contacts' PRINT_CONF_VIEW='MPDPrintPreview'}
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
                                 ERP_DOCUMENT=$ERP_DOCUMENT

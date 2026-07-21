@@ -29,7 +29,7 @@ class Contacts_MonthlyTransactionCron
 
         echo "Processing Activity Summaries for " . count($clint_ids) . " clients...\n";
         echo "Date Range: " . $date_range[0] . " to " . $date_range[1] . "\n";
-        
+
         // Loop through each client and process their transactions for the month
         foreach ($clint_ids as $client_id) {
             try {
@@ -77,10 +77,13 @@ class Contacts_MonthlyTransactionCron
         $db = PearDatabase::getInstance();
 
         $query = "
-        SELECT DISTINCT cf_898 AS client_id
-        FROM vtiger_contactscf
-        WHERE cf_898 IS NOT NULL AND cf_898 != ''
-    ";
+            SELECT DISTINCT ccf.cf_898 AS client_id
+            FROM vtiger_contactscf ccf
+            INNER JOIN vtiger_contactdetails c ON c.contactid = ccf.contactid
+            INNER JOIN vtiger_crmentity ce ON ce.crmid = c.contactid
+            WHERE ccf.cf_898 IS NOT NULL AND ccf.cf_898 != ''
+            AND ce.deleted = 0
+        ";
 
         $result = $db->pquery($query, []);
 

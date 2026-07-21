@@ -1,6 +1,7 @@
 <?php
 
 include_once 'modules/Contacts/download/PurchaseOrderDownload.php';
+include_once 'modules/Contacts/helpers/ContactsHelper.php';
 
 class Contacts_PurchaseOrderView_View extends Vtiger_Index_View
 {
@@ -71,6 +72,8 @@ class Contacts_PurchaseOrderView_View extends Vtiger_Index_View
         $viewer->assign('hideCustomerInfo', $request->get('hideCustomerInfo'));
         $viewer->assign('COUNTRY_OPTION', $request->get('countryOption') ?? null);
         $viewer->assign('ADDRESS_OPTION', $request->get('addressOption') ?? null);
+        $viewer->assign('metals', ContactsHelper::getOrderFormMetals());
+        $viewer->assign('weights', ContactsHelper::getOrderFormWeights('(pls specify)'));
 
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("PO.tpl", $moduleName, true);

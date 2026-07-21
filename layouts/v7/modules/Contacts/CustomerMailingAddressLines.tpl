@@ -18,7 +18,7 @@
         {/if}
     {else}
         {if !empty($RECORD_MODEL->get('mailingcity'))}
-            {$RECORD_MODEL->get('mailingcity')}{if !empty($RECORD_MODEL->get('mailingstate')) || !empty($RECORD_MODEL->get('mailingzip'))}, {/if}
+            {$RECORD_MODEL->get('mailingcity')}{if !empty($RECORD_MODEL->get('mailingstate'))}, {/if}
         {/if}
         {if !empty($RECORD_MODEL->get('mailingstate'))}
             {$RECORD_MODEL->get('mailingstate')}{if !empty($RECORD_MODEL->get('mailingzip'))} {/if}

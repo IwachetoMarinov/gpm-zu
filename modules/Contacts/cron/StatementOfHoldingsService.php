@@ -36,13 +36,17 @@ class Contacts_StatementOfHoldingsService
         if (!is_array($holdings) || count($holdings) === 0) return;
 
         // 3. Get metals for every holding in the date range
-        $metals = $holding->getHoldingsMetalsByDateRange($client_id, $date_range[0], $date_range[1]);
+        $metals = $holding->getHoldingsMetals($client_id);
+        // $metals = $holding->getHoldingsMetalsByDateRange($client_id, $date_range[0], $date_range[1]);
 
         // 4. Calculate total value of holdings based on metal prices and quantities
         $total = $this->calculateSpotTotal($holdings);
 
         // 5 Build LBMA date from the first holding record (assuming all records have the same spot date) and format it as 'd-M-y'
-        $LBMA_DATE = isset($holdings[0]['spot_date']) && is_array($holdings) ? date('d-M-y', strtotime($holdings[0]['spot_date'])) : '';
+        // $LBMA_DATE = isset($holdings[0]['spot_date']) && is_array($holdings) ? date('d-M-y', strtotime($holdings[0]['spot_date'])) : '';
+
+        // 5. Get last date from all holdings
+        $LBMA_DATE = Contacts_CronHelpers::getLastAvalableDate($holdings);
 
         // 6. Group holdings by location and prepare data for storage
         $grouped_holdings = $this->groupHoldingsByLocation($holdings);
@@ -146,7 +150,8 @@ class Contacts_StatementOfHoldingsService
 
     private function fetchHoldings(string $client_id, array $date_range, dbo_db\HoldingsDB $holdings)
     {
-        $holdings_data = $holdings->getHoldingsByDateRange($client_id, $date_range[0], $date_range[1]);
+        $holdings_data = $holdings->getHoldingsByDateRange($client_id);
+        // $holdings_data = $holdings->getHoldingsByDateRange($client_id, $date_range[0], $date_range[1]);
 
         return $holdings_data;
     }

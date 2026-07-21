@@ -126,7 +126,6 @@
             </div>
         </div>
 
-
         {* Hide customer info *}
         <div class="fieldRow">
             <label style="font-weight:normal;">

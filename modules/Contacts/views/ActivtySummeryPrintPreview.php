@@ -125,6 +125,7 @@ class Contacts_ActivtySummeryPrintPreview_View extends Vtiger_Index_View
         $viewer->assign('LATEST_DATE', $latestDate ? date('Y-M-d', $latestDate) : null);
         $viewer->assign('COMPANY', $companyRecord);
         $viewer->assign('COMPANY_FULL_ADDRESS', $company_full_address);
+        $viewer->assign('HIDE_BP_INFO', $request->get('hideCustomerInfo'));
         if ($request->get('PDFDownload')) {
             $viewer->assign('ENABLE_DOWNLOAD_BUTTON', false);
             $html = $viewer->view('ActivtySummeryPrintPreview.tpl', $moduleName, true);

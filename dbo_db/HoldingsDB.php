@@ -146,11 +146,9 @@ class HoldingsDB
         }
     }
 
-    public function getHoldingsByDateRange(string $customer_id, string $start_date, string $end_date)
+    public function getHoldingsByDateRange(string $customer_id, string $start_date = null, string $end_date = null)
     {
-        if (!$customer_id || !$start_date || !$end_date) return [];
-
-        if (!$this->connection) return [];
+        if (!$customer_id || !$this->connection) return [];
 
         $where = '';
         $params = [];

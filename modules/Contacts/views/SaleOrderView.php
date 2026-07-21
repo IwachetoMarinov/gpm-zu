@@ -1,6 +1,7 @@
 <?php
 
 include_once 'modules/Contacts/download/SaleOrderDownload.php';
+include_once 'modules/Contacts/helpers/ContactsHelper.php';
 
 class Contacts_SaleOrderView_View extends Vtiger_Index_View
 {
@@ -36,6 +37,8 @@ class Contacts_SaleOrderView_View extends Vtiger_Index_View
         $viewer->assign('PDFDownload', $request->get('PDFDownload'));
         $viewer->assign('CLIENT_NAME', $request->get('clientName') ?? '');
         $viewer->assign('hideCustomerInfo', $request->get('hideCustomerInfo'));
+        $viewer->assign('metals', ContactsHelper::getOrderFormMetals());
+        $viewer->assign('weights', ContactsHelper::getOrderFormWeights());
 
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("SO.tpl", $moduleName, true);
