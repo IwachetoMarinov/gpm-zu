@@ -5,7 +5,8 @@ test/templates_c/*
 .vscode/*
 .cursor/
 config.inc.php
-.htaccess
+/.htaccess
+!/api/.htaccess
 logs/
 storage/
 cache/
