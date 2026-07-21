@@ -215,3 +215,4 @@ $default_layout = 'v7';
 $maxListFieldsSelectionSize = 15;
 
 include_once 'config.security.php';
+
