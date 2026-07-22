@@ -1,0 +1,39 @@
+#root {
+  width: 100%;
+}
+
+section {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+section h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 24px;
+}
+
+section p {
+  margin-bottom: 24px;
+  color: #666;
+}
+
+button {
+  margin-right: 10px;
+  padding: 10px 18px;
+  border: 1px solid #bea364;
+  border-radius: 4px;
+  background: #bea364;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #a88f55;
+}
+
+button:first-of-type:not(:last-of-type) {
+  border-color: #ccc;
+  background: #fff;
+  color: #333;
+}
