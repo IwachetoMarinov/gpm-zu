@@ -103,6 +103,8 @@
 			background: #f0f0f0;
 		}
 	</style>
+
+	<link rel="stylesheet" href="libraries/pos-wizard/dist/app.css?v={$smarty.now}">
 </head>
 
 <body>
@@ -133,20 +135,21 @@
 		</div>
 	</div>
 
-	<script type="module">
+	{* <script type="module">
 		import RefreshRuntime from "http://localhost:5173/@react-refresh";
 
 		RefreshRuntime.injectIntoGlobalHook(window);
 		window.$RefreshReg$ = () => {};
 		window.$RefreshSig$ = () => (type) => type;
 		window.__vite_plugin_react_preamble_installed__ = true;
-	</script>
+	</script> *}
 
 	{* Locally *}
 	{* <script type="module" src="http://localhost:5173/src/main.tsx"></script> *}
 
 	{* Production *}
-	<script type="module" src="http://34.170.192.250:5173/src/main.tsx"></script>
+	{* <script type="module" src="http://34.170.192.250:5173/src/main.tsx"></script> *}
+	<script type="module" src="libraries/pos-wizard/dist/app.js?v={$smarty.now}"></script>
 </body>
 
 </html>
