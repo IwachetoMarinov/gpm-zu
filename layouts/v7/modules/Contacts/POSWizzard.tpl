@@ -142,7 +142,11 @@
 		window.__vite_plugin_react_preamble_installed__ = true;
 	</script>
 
+	{* Locally *}
 	<script type="module" src="http://localhost:5173/src/main.tsx"></script>
+
+	{* Production *}
+	<script type="module" src="http://34.170.192.250:5173/src/main.tsx"></script>
 </body>
 
 </html>
