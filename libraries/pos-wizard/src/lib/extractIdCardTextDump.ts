@@ -1,4 +1,4 @@
-import { canvasToBlob } from "./blobToCanvas";
+// import { canvasToBlob } from "./blobToCanvas";
 import { normalizeIdCardImage } from "./normalizeIdCardImage";
 import type { IdCardExtraction } from "../types/idCardCapture";
 import { loadPaddleOcrService } from "../services/loadPaddleOcrService";
@@ -116,14 +116,17 @@ export const extractIdCardTextDump = async (
 
   const formData = new FormData();
 
-  formData.append("module", "Contacts");
-  formData.append("action", "ExtractIdCardTextDump");
+  formData.append("module", CONTACTS_MODULE);
+  formData.append("action", EXTRACT_ACTION);
   formData.append("requestMode", "ajax");
-  formData.append("__vtrftk", (window as Window & { csrfMagicToken?: string }).csrfMagicToken ?? "");
+  const csrfFields = getCsrfFormFields();
+  for (const [name, value] of Object.entries(csrfFields)) {
+    formData.append(name, value);
+  }
   formData.append("rawText", ocrResult.text);
-  
+
   const result = await postVtigerAction(formData);
-  
+
   console.log("PHP response:", result);
 
   return toExtraction(result);
