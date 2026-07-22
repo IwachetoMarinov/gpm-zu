@@ -143,7 +143,7 @@
 	</script>
 
 	{* Locally *}
-	<script type="module" src="http://localhost:5173/src/main.tsx"></script>
+	{* <script type="module" src="http://localhost:5173/src/main.tsx"></script> *}
 
 	{* Production *}
 	<script type="module" src="http://34.170.192.250:5173/src/main.tsx"></script>
