@@ -295,4 +295,60 @@ DEV - `/usr/bin/php /var/www/html/gpm-zu/monthly_transaction.php`
 LIVE - `/usr/bin/php /var/www/html/crm_zu/monthly_transaction.php`  
 LIVE as server - `sudo -u apache /usr/bin/php /var/www/html/crm_zu/monthly_transaction.php`  
 
+## POS Wizard (React + Vite)
+
+The POS Wizard is implemented as a standalone React application located in:
+
+```text
+libraries/pos-wizard
+```
+
+### Prerequisites
+
+- Node.js 20+
+- npm
+
+### Install dependencies
+
+```bash
+cd libraries/pos-wizard
+npm install
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+The development server runs on:
+
+```text
+http://localhost:5173
+```
+
+The standalone vTiger Smarty page loads the React application from the Vite development server during development.
+
+### Production build
+
+```bash
+cd libraries/pos-wizard
+npm run build
+```
+
+This generates the production assets in the `dist/` folder.
+
+### Deployment
+
+After deploying the CRM to a server:
+
+```bash
+cd /path/to/vtiger/libraries/pos-wizard
+npm install
+npm run build
+```
+
+Ensure the generated `dist/` folder is accessible by Apache.
+
+> **Note:** `node_modules` should never be committed to Git.
    

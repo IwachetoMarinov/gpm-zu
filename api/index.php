@@ -60,32 +60,12 @@ try {
     $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
     $dotenv->safeLoad();
 
-    // define('OAUTH_ISSUER',      $_ENV['OAUTH_ISSUER']      ?? getenv('OAUTH_ISSUER')      ?: 'http://localhost/vtiger-gpm/');
-    // define('OAUTH_AUDIENCE',    $_ENV['OAUTH_AUDIENCE']    ?? getenv('OAUTH_AUDIENCE')    ?: 'vtiger-api');
-    // define('OAUTH_SIGNING_KEY', $_ENV['OAUTH_SIGNING_KEY'] ?? getenv('OAUTH_SIGNING_KEY') ?? 'CHANGE_ME');
-    // define('OAUTH_ACCESS_TTL',  (int)($_ENV['OAUTH_ACCESS_TTL']  ?? getenv('OAUTH_ACCESS_TTL')  ?: 3600));
-    // define('OAUTH_REFRESH_TTL', (int)($_ENV['OAUTH_REFRESH_TTL'] ?? getenv('OAUTH_REFRESH_TTL') ?: 2592000));
-    define(
-        'AUTH0_ISSUER',
-        $_ENV['AUTH0_ISSUER']
-            ?? getenv('AUTH0_ISSUER')
-            ?: ''
-    );
-
-    define(
-        'AUTH0_AUDIENCE',
-        $_ENV['AUTH0_AUDIENCE']
-            ?? getenv('AUTH0_AUDIENCE')
-            ?: ''
-    );
-
-    define(
-        'AUTH0_JWKS_URL',
-        $_ENV['AUTH0_JWKS_URL']
-            ?? getenv('AUTH0_JWKS_URL')
-            ?: ''
-    );
-
+    define('OAUTH_ISSUER',      $_ENV['OAUTH_ISSUER']      ?? getenv('OAUTH_ISSUER')      ?: 'http://localhost/vtiger-gpm/');
+    define('OAUTH_AUDIENCE',    $_ENV['OAUTH_AUDIENCE']    ?? getenv('OAUTH_AUDIENCE')    ?: 'vtiger-api');
+    define('OAUTH_SIGNING_KEY', $_ENV['OAUTH_SIGNING_KEY'] ?? getenv('OAUTH_SIGNING_KEY') ?? 'CHANGE_ME');
+    define('OAUTH_ACCESS_TTL',  (int)($_ENV['OAUTH_ACCESS_TTL']  ?? getenv('OAUTH_ACCESS_TTL')  ?: 3600));
+    define('OAUTH_REFRESH_TTL', (int)($_ENV['OAUTH_REFRESH_TTL'] ?? getenv('OAUTH_REFRESH_TTL') ?: 2592000));
+    
     if (
         AUTH0_ISSUER === '' ||
         AUTH0_AUDIENCE === '' ||

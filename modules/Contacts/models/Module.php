@@ -36,6 +36,25 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 	}
 
 	/**
+	 * Function to get Module Header Links (for Vtiger7)
+	 * @return array
+	 */
+	public function getModuleBasicLinks() {
+		$basicLinks = parent::getModuleBasicLinks();
+
+		if (Users_Privileges_Model::isPermitted($this->getName(), 'DetailView')) {
+			array_unshift($basicLinks, array(
+				'linktype' => 'BASIC',
+				'linklabel' => 'LBL_POS',
+				'linkurl' => 'index.php?module=Contacts&view=POSWizzard',
+				'linkicon' => 'fa-credit-card'
+			));
+		}
+
+		return $basicLinks;
+	}
+
+	/**
 	 * Function returns the Calendar Events for the module
 	 * @param <Vtiger_Paging_Model> $pagingModel
 	 * @return <Array>
