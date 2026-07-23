@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>PROFORMA INVOICE</title>
+    <title>YOUR PURCHASE</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -37,10 +37,10 @@
             </li>
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                ERP_DOCUMENT=$ERP_DOCUMENT
-                TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-            }
+                        ERP_DOCUMENT=$ERP_DOCUMENT
+                        TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                        BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+                    }
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
@@ -66,11 +66,15 @@
                             <div style="font-size:11pt;margin-top: 14px;margin-bottom: 32px;">
                                 {include file='CustomerPrintInfo.tpl'|vtemplate_path:'Contacts'}
                             </div>
+
+                            <div style="font-size:10pt; font-weight: bold; font-size: 18pt; margin-top: 2mm;">
+                                INVOICE
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <td style="height: 10mm; text-decoration: underline;text-align: center">
-                            <strong>PROFORMA INVOICE</strong>
+                            <strong>YOUR PURCHASE</strong>
                         </td>
                     </tr>
 
