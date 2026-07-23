@@ -4,24 +4,24 @@ import type { IdCardExtraction } from "../types/idCardCapture";
 import { loadPaddleOcrService } from "../services/loadPaddleOcrService";
 // import { generateLlmResponse } from "../services/llmService";
 
-const VTIGER_AJAX_URL = "index.php";
+// const VTIGER_AJAX_URL = "index.php";
 // const CONTACTS_MODULE = "Contacts";
 // const EXTRACT_ACTION = "ExtractIdCardTextDump";
 
-type VtigerAjaxResponse = {
-  success: boolean;
-  result?: Partial<IdCardExtraction>;
-  error?: {
-    message?: string;
-    code?: string;
-  };
-};
+// type VtigerAjaxResponse = {
+//   success: boolean;
+//   result?: Partial<IdCardExtraction>;
+//   error?: {
+//     message?: string;
+//     code?: string;
+//   };
+// };
 
-type VtigerAppRequest = {
-  request: {
-    post: (params: { data: FormData }) => Promise<[unknown, unknown]>;
-  };
-};
+// type VtigerAppRequest = {
+//   request: {
+//     post: (params: { data: FormData }) => Promise<[unknown, unknown]>;
+//   };
+// };
 
 // const getCsrfFormFields = (): Record<string, string> => {
 //   const win = window as Window & {
