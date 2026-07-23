@@ -27,7 +27,7 @@
             {if $SELECTED_BANK}
                 <li style="float:right">
                     <a id="downloadPdfBtn" style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
-                        href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}{if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}&hideCustomerInfo=1{/if}{if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}&europeanAddress=1{/if}{if $wkinInvoice eq '1' || $wkinInvoice eq 1}&wkinInvoice=1{/if}">Download</a>
+                        href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo|escape:'url'}&recordType={$smarty.request.recordType|escape:'url'}&tableName={$smarty.request.tableName|escape:'url'}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent|escape:'url'}{/if}{if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}&hideCustomerInfo=1{/if}{if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}&europeanAddress=1{/if}{if $wkinInvoice eq '1' || $wkinInvoice eq 1}&wkinInvoice=1{/if}">Download</a>
                 </li>
             {/if}
             <li id='printConf' style="float:right">

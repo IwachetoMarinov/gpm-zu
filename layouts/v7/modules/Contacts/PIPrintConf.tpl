@@ -74,7 +74,15 @@
             <span>
                 <a id="printConfSave"
                     style="color: white;text-align: center;padding: 10px;text-decoration: none;background-color: #bea364;"
-                    href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD_MODEL->getId()}&tableName={$smarty.request.tableName}&docNo={$smarty.request.docNo}&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}{if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}&hideCustomerInfo=1{/if}{if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}&europeanAddress=1{/if}{if $wkinInvoice eq '1' || $wkinInvoice eq 1}&wkinInvoice=1{/if}">Save</a>
+                    href="#"
+                    onclick="
+                        var hideCustomerInfo = document.getElementById('hideCustomerInfo')?.checked ? 1 : 0;
+                        var europeanAddress = document.getElementById('europeanAddress')?.checked ? 1 : 0;
+                        var wkinInvoiceChecked = document.getElementById('wkinInvoice')?.checked ? 1 : 0;
+                        var bankId = document.getElementById('bank_accounts')?.value || '{$SELECTED_BANK->getId()}';
+                        window.location.href = 'index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo|escape:'url'}&recordType={$smarty.request.recordType|escape:'url'}&tableName={$smarty.request.tableName|escape:'url'}&bank=' + bankId + '{if $INTENT}&fromIntent={$smarty.request.fromIntent|escape:'url'}{/if}&hideCustomerInfo=' + hideCustomerInfo + '&europeanAddress=' + europeanAddress + '&wkinInvoice=' + wkinInvoiceChecked;
+                        return false;
+                    ">Save</a>
             </span>
         {/if}
     </div>
