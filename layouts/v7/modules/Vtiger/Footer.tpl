@@ -13,7 +13,7 @@
 		<a href="//www.vtiger.com" target="_blank">Vtiger</a>&nbsp;|&nbsp;
 		<span
 			style="background:#d9534f; color:#fff; padding:2px; border-radius:3px; font-weight:bold;">
-			v 1.2.2-zu.1
+			v 1.2.2-zu.2
 		</span>&nbsp;|&nbsp;
 		<a href="https://www.vtiger.com/privacy-policy" target="_blank">Privacy Policy</a>
 	</p>
