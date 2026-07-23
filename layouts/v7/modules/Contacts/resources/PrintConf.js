@@ -83,4 +83,9 @@ jQuery(function () {
     var hideSerials = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
     syncPrintSettingLinks("hideSerials", hideSerials);
   });
+
+  jQuery("body").on("change", "#wkinInvoice", function (e) {
+    var wkinInvoice = jQuery(e.currentTarget).is(":checked") ? "1" : "0";
+    syncPrintSettingLinks("wkinInvoice", wkinInvoice);
+  });
 });

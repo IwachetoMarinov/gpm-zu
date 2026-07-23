@@ -31,3 +31,7 @@ db_backups/deploy.log
 test-db.php
 
 .env
+
+/libraries/llm-service/models/
+/libraries/llm-service/models/qwen2.5-1.5b-instruct-q5_k_m.gguf
+/libraries/llm-service/node_modules/

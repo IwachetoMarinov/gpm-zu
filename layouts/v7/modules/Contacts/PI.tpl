@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 
+{assign var=wkinInvoice value=$smarty.request.wkinInvoice|default:0}
 <head>
-    <title>YOUR PURCHASE</title>
+    <title>{if $wkinInvoice eq '1' || $wkinInvoice eq 1}YOUR PURCHASE{else}PROFORMA INVOICE{/if}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
@@ -25,8 +26,8 @@
 
             {if $SELECTED_BANK}
                 <li style="float:right">
-                    <a style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
-                        href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}&hideCustomerInfo={$smarty.request.hideCustomerInfo}&europeanAddress={$smarty.request.europeanAddress|default:0}">Download</a>
+                    <a id="downloadPdfBtn" style="display: block;color: white;text-align: center;padding: 14px 16px;text-decoration: none;background-color: #bea364;"
+                        href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD_MODEL->getId()}&docNo={$smarty.request.docNo}&tableName={$smarty.request.tableName}&PDFDownload=true&bank={$SELECTED_BANK->getId()}{if $INTENT}&fromIntent={$smarty.request.fromIntent}{/if}{if $smarty.request.hideCustomerInfo eq '1' || $smarty.request.hideCustomerInfo eq 1}&hideCustomerInfo=1{/if}{if $smarty.request.europeanAddress eq '1' || $smarty.request.europeanAddress eq 1}&europeanAddress=1{/if}{if $wkinInvoice eq '1' || $wkinInvoice eq 1}&wkinInvoice=1{/if}">Download</a>
                 </li>
             {/if}
             <li id='printConf' style="float:right">
@@ -37,14 +38,14 @@
             </li>
 
             {include file='TCWarnings.tpl'|vtemplate_path:'Contacts'
-                        ERP_DOCUMENT=$ERP_DOCUMENT
-                        TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
-                        BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
-                    }
+                    ERP_DOCUMENT=$ERP_DOCUMENT
+                    TRANSACTION_WARNING_EXCLUDES=$transactionWarningExcludes
+                    BARITEM_WARNING_EXCLUDES=$barItemWarningExcludes
+                }
         </ul>
 
         <script type="text/javascript" src="layouts/v7/modules/Contacts/resources/PrintConf.js"></script>
-        {include file='printConf.tpl'|vtemplate_path:'Contacts'}
+        {include file='PIPrintConf.tpl'|vtemplate_path:'Contacts'}
     {/if}
     {assign var="start" value=0}
     {assign var="end" value=1}
@@ -67,14 +68,17 @@
                                 {include file='CustomerPrintInfo.tpl'|vtemplate_path:'Contacts'}
                             </div>
 
-                            <div style="font-size:10pt; font-weight: bold; font-size: 18pt; margin-top: 2mm;">
-                                INVOICE
-                            </div>
+                            {if $wkinInvoice eq '1' || $wkinInvoice eq 1}
+                                <div
+                                    style="font-size:10pt; font-weight: bold; font-size: 18pt; margin-top: 2mm;">
+                                    INVOICE
+                                </div>
+                            {/if}
                         </td>
                     </tr>
                     <tr>
                         <td style="height: 10mm; text-decoration: underline;text-align: center">
-                            <strong>YOUR PURCHASE</strong>
+                            <strong>{if $wkinInvoice eq '1' || $wkinInvoice eq 1}YOUR PURCHASE{else}PROFORMA INVOICE{/if}</strong>
                         </td>
                     </tr>
 
