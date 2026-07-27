@@ -23,7 +23,11 @@ export type CropRect = {
     documentNumber: string | null;
     dateOfBirth: string | null;
     nationality: string | null;
+    issueDate: string | null;
     expiryDate: string | null;
+    residentialAddress: string | null;
+    documentType: string | null;
+    issuingCountry: string | null;
     rawText: string | null;
   };
   

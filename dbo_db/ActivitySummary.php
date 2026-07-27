@@ -248,6 +248,8 @@ class ActivitySummary
             $sql = "
                 SELECT * FROM $this->database_prefix.[$table_name] $where";
 
+            // echo $sql;
+
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
             $items = $this->mapTransactionItems($summary, $transaction);

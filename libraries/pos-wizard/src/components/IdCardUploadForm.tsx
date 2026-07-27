@@ -2,7 +2,7 @@ import { useId, useRef } from "react";
 import type { ChangeEvent } from "react";
 
 import { IdCardImageReview } from "./IdCardImageReview";
-import { useIdCardImageFlow } from "../hooks/useIdCardImageFlow";
+import type { IdCardImageFlow } from "../hooks/useIdCardImageFlow";
 
 const ACCEPTED_IMAGE_TYPES = new Set([
   "image/jpeg",
@@ -11,7 +11,11 @@ const ACCEPTED_IMAGE_TYPES = new Set([
   "image/webp",
 ]);
 
-export const IdCardUpload = () => {
+type IdCardUploadProps = {
+  flow: IdCardImageFlow;
+};
+
+export const IdCardUpload = ({ flow }: IdCardUploadProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const headingId = useId();
   const statusId = useId();
@@ -32,7 +36,7 @@ export const IdCardUpload = () => {
     reset,
     submitImage,
     confirmAndExtract,
-  } = useIdCardImageFlow({ logPrefix: "[ID upload]" });
+  } = flow;
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

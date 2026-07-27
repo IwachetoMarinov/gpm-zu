@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
-
-// import { postIdCardTextDump } from "../api/postIdCardTextDump";
 import { extractIdCardTextDump } from "../lib/extractIdCardTextDump";
-// Field-ROI pipeline kept for later — not used in this step.
-// import { extractIdCardWithLocalModel } from "@/features/registration/lib/extractIdCardWithLocalModel";
-// import { extractIdCardWithOpenAI } from "@/features/registration/lib/extractIdCardWithOpenAI";
-// import { extractIdCardWithOcr } from "@/features/registration/lib/extractIdCardWithOcr";
 import { validateIdCardImage } from "../lib/validateIdCardImage";
 import type { IdCardExtraction } from "../types/idCardCapture";
 
 type UseIdCardImageFlowOptions = {
   logPrefix?: string;
 };
+
+export type IdCardImageFlow = ReturnType<typeof useIdCardImageFlow>;
 
 export const useIdCardImageFlow = (options: UseIdCardImageFlowOptions = {}) => {
   const logPrefix = options.logPrefix ?? "[ID image]";
@@ -105,16 +101,6 @@ export const useIdCardImageFlow = (options: UseIdCardImageFlowOptions = {}) => {
     setExtractionError(null);
 
     try {
-    //   const backendResponse = await postIdCardTextDump(imageBlob);
-    //   console.log(`${logPrefix} Backend text-dump response:`, {
-    //     ok: backendResponse.ok,
-    //     status: backendResponse.status,
-    //     statusText: backendResponse.statusText,
-    //   });
-
-      // const result = await extractIdCardWithOpenAI(imageBlob);
-      // const result = await extractIdCardWithOcr(imageBlob);
-      // const result = await extractIdCardWithLocalModel(imageBlob);
       const result = await extractIdCardTextDump(imageBlob);
 
       console.log(`${logPrefix} PaddleOCR text-dump result:`, result);

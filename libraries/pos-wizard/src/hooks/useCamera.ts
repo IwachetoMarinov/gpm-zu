@@ -1,8 +1,8 @@
 import {
-  useCallback,
-  useEffect,
   useRef,
   useState,
+  useEffect,
+  useCallback,
   type RefObject,
 } from "react";
 import type { CropRect } from "../types/idCardCapture";

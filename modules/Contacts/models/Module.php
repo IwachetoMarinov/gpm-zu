@@ -8,27 +8,29 @@
  * All Rights Reserved.
  * ************************************************************************************/
 
-class Contacts_Module_Model extends Vtiger_Module_Model {
+class Contacts_Module_Model extends Vtiger_Module_Model
+{
 	/**
 	 * Function to get the Quick Links for the module
 	 * @param <Array> $linkParams
 	 * @return <Array> List of Vtiger_Link_Model instances
 	 */
-	public function getSideBarLinks($linkParams) {
+	public function getSideBarLinks($linkParams)
+	{
 		$parentQuickLinks = parent::getSideBarLinks($linkParams);
 
 		$quickLink = array(
-				'linktype' => 'SIDEBARLINK',
-				'linklabel' => 'LBL_DASHBOARD',
-				'linkurl' => $this->getDashBoardUrl(),
-				'linkicon' => '',
+			'linktype' => 'SIDEBARLINK',
+			'linklabel' => 'LBL_DASHBOARD',
+			'linkurl' => $this->getDashBoardUrl(),
+			'linkicon' => '',
 		);
 
 		//Check profile permissions for Dashboards
 		$moduleModel = Vtiger_Module_Model::getInstance('Dashboard');
 		$userPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
 		$permission = $userPrivilegesModel->hasModulePermission($moduleModel->getId());
-		if($permission) {
+		if ($permission) {
 			$parentQuickLinks['SIDEBARLINK'][] = Vtiger_Link_Model::getInstanceFromValues($quickLink);
 		}
 
@@ -39,7 +41,8 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 	 * Function to get Module Header Links (for Vtiger7)
 	 * @return array
 	 */
-	// public function getModuleBasicLinks() {
+	// public function getModuleBasicLinks()
+	// {
 	// 	$basicLinks = parent::getModuleBasicLinks();
 
 	// 	if (Users_Privileges_Model::isPermitted($this->getName(), 'DetailView')) {
@@ -59,7 +62,8 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 	 * @param <Vtiger_Paging_Model> $pagingModel
 	 * @return <Array>
 	 */
-	public function getCalendarActivities($mode, $pagingModel, $user, $recordId = false) {
+	public function getCalendarActivities($mode, $pagingModel, $user, $recordId = false)
+	{
 		$currentUser = Users_Record_Model::getCurrentUserModel();
 		$db = PearDatabase::getInstance();
 
@@ -84,11 +88,11 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 					AND (vtiger_activity.status is NULL OR vtiger_activity.status NOT IN ('Completed', 'Deferred'))
 					AND (vtiger_activity.eventstatus is NULL OR vtiger_activity.eventstatus NOT IN ('Held'))";
 
-		if(!$currentUser->isAdminUser()) {
+		if (!$currentUser->isAdminUser()) {
 			$moduleFocus = CRMEntity::getInstance('Calendar');
 			$condition = $moduleFocus->buildWhereClauseConditionForCalendar();
-			if($condition) {
-				$query .= ' AND '.$condition;
+			if ($condition) {
+				$query .= ' AND ' . $condition;
 			}
 		}
 
@@ -105,40 +109,40 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 			array_push($params, $recordId);
 		}
 
-		if($user != 'all' && $user != '') {
+		if ($user != 'all' && $user != '') {
 			$query .= " AND vtiger_crmentity.smownerid = ?";
 			array_push($params, $user);
 		}
 
-		$query .= " ORDER BY date_start, time_start LIMIT ". $pagingModel->getStartIndex() .", ". ($pagingModel->getPageLimit()+1);
+		$query .= " ORDER BY date_start, time_start LIMIT " . $pagingModel->getStartIndex() . ", " . ($pagingModel->getPageLimit() + 1);
 
 		$result = $db->pquery($query, $params);
 		$numOfRows = $db->num_rows($result);
-		
+
 		$groupsIds = Vtiger_Util_Helper::getGroupsIdsForUsers($currentUser->getId());
 		$activities = array();
 		$recordsToUnset = array();
-		for($i=0; $i<$numOfRows; $i++) {
+		for ($i = 0; $i < $numOfRows; $i++) {
 			$newRow = $db->query_result_rowdata($result, $i);
 			$model = Vtiger_Record_Model::getCleanInstance('Calendar');
 			$ownerId = $newRow['smownerid'];
 			$currentUser = Users_Record_Model::getCurrentUserModel();
-			$visibleFields = array('activitytype','date_start','time_start','due_date','time_end','assigned_user_id','visibility','smownerid','crmid');
+			$visibleFields = array('activitytype', 'date_start', 'time_start', 'due_date', 'time_end', 'assigned_user_id', 'visibility', 'smownerid', 'crmid');
 			$visibility = true;
-			if(in_array($ownerId, $groupsIds)) {
+			if (in_array($ownerId, $groupsIds)) {
 				$visibility = false;
-			} else if($ownerId == $currentUser->getId()){
+			} else if ($ownerId == $currentUser->getId()) {
 				$visibility = false;
 			}
-			if(!$currentUser->isAdminUser() && $newRow['activitytype'] != 'Task' && $newRow['visibility'] == 'Private' && $ownerId && $visibility) {
-				foreach($newRow as $data => $value) {
-					if(in_array($data, $visibleFields) != -1) {
+			if (!$currentUser->isAdminUser() && $newRow['activitytype'] != 'Task' && $newRow['visibility'] == 'Private' && $ownerId && $visibility) {
+				foreach ($newRow as $data => $value) {
+					if (in_array($data, $visibleFields) != -1) {
 						unset($newRow[$data]);
 					}
 				}
-				$newRow['subject'] = vtranslate('Busy','Events').'*';
+				$newRow['subject'] = vtranslate('Busy', 'Events') . '*';
 			}
-			if($newRow['activitytype'] == 'Task') {
+			if ($newRow['activitytype'] == 'Task') {
 				unset($newRow['visibility']);
 
 				$due_date = $newRow["due_date"];
@@ -148,17 +152,17 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 				$dueTimeInDbFormat = $dueDateTimeInDbFormat[1];
 				$newRow['time_end'] = $dueTimeInDbFormat;
 			}
-			
+
 			$model->setData($newRow);
 			$model->setId($newRow['crmid']);
 			$activities[$newRow['crmid']] = $model;
-			if(!$currentUser->isAdminUser() && $newRow['activitytype'] == 'Task' && isToDoPermittedBySharing($newRow['crmid']) == 'no') { 
+			if (!$currentUser->isAdminUser() && $newRow['activitytype'] == 'Task' && isToDoPermittedBySharing($newRow['crmid']) == 'no') {
 				$recordsToUnset[] = $newRow['crmid'];
 			}
 		}
-		
+
 		$pagingModel->calculatePageRange($activities);
-		if($numOfRows > $pagingModel->getPageLimit()){
+		if ($numOfRows > $pagingModel->getPageLimit()) {
 			array_pop($activities);
 			$pagingModel->set('nextPageExists', true);
 		} else {
@@ -178,91 +182,92 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 	 * @param <String> $parentModule - parent module name
 	 * @return <String> - query
 	 */
-	function getSearchRecordsQuery($searchValue, $searchFields, $parentId=false, $parentModule=false) {
-        $db = PearDatabase::getInstance();
-        if($parentId && $parentModule == 'Accounts') {
-			$query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+	function getSearchRecordsQuery($searchValue, $searchFields, $parentId = false, $parentModule = false)
+	{
+		$db = PearDatabase::getInstance();
+		if ($parentId && $parentModule == 'Accounts') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
 						INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
 						WHERE deleted = 0 AND vtiger_contactdetails.accountid = ? AND label like ?";
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
 			return $returnQuery;
-		} else if($parentId && $parentModule == 'Potentials') {
-			$query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+		} else if ($parentId && $parentModule == 'Potentials') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
 						INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
 						LEFT JOIN vtiger_contpotentialrel ON vtiger_contpotentialrel.contactid = vtiger_contactdetails.contactid
 						LEFT JOIN vtiger_potential ON vtiger_potential.contact_id = vtiger_contactdetails.contactid
 						WHERE deleted = 0 AND (vtiger_contpotentialrel.potentialid = ? OR vtiger_potential.potentialid = ?)
 						AND label like ?";
 			$params = array($parentId, $parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
 		} else if ($parentId && $parentModule == 'HelpDesk') {
-            $query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
                         INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
                         INNER JOIN vtiger_troubletickets ON vtiger_troubletickets.contact_id = vtiger_contactdetails.contactid
                         WHERE deleted=0 AND vtiger_troubletickets.ticketid  = ?  AND label like ?";
 
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
-        } else if($parentId && $parentModule == 'Campaigns') {
-            $query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
+		} else if ($parentId && $parentModule == 'Campaigns') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
                         INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
                         INNER JOIN vtiger_campaigncontrel ON vtiger_campaigncontrel.contactid = vtiger_contactdetails.contactid
                         WHERE deleted=0 AND vtiger_campaigncontrel.campaignid = ? AND label like ?";
 
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
-        } else if($parentId && $parentModule == 'Vendors') {
-            $query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
+		} else if ($parentId && $parentModule == 'Vendors') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
                         INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
                         INNER JOIN vtiger_vendorcontactrel ON vtiger_vendorcontactrel.contactid = vtiger_contactdetails.contactid
                         WHERE deleted=0 AND vtiger_vendorcontactrel.vendorid = ? AND label like ?";
 
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
-        } else if ($parentId && $parentModule == 'Quotes') {
-            $query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
+		} else if ($parentId && $parentModule == 'Quotes') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
                         INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
                         INNER JOIN vtiger_quotes ON vtiger_quotes.contactid = vtiger_contactdetails.contactid
                         WHERE deleted=0 AND vtiger_quotes.quoteid  = ?  AND label like ?";
 
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
-        } else if ($parentId && $parentModule == 'PurchaseOrder') {
-            $query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
+		} else if ($parentId && $parentModule == 'PurchaseOrder') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
                         INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
                         INNER JOIN vtiger_purchaseorder ON vtiger_purchaseorder.contactid = vtiger_contactdetails.contactid
                         WHERE deleted=0 AND vtiger_purchaseorder.purchaseorderid  = ?  AND label like ?";
 
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
-        } else if ($parentId && $parentModule == 'SalesOrder') {
-            $query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
+		} else if ($parentId && $parentModule == 'SalesOrder') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
                         INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
                         INNER JOIN vtiger_salesorder ON vtiger_salesorder.contactid = vtiger_contactdetails.contactid
                         WHERE deleted=0 AND vtiger_salesorder.salesorderid  = ?  AND label like ?";
 
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
-        } else if ($parentId && $parentModule == 'Invoice') {
-            $query = "SELECT ".implode(',',$searchFields)." FROM vtiger_crmentity
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
+		} else if ($parentId && $parentModule == 'Invoice') {
+			$query = "SELECT " . implode(',', $searchFields) . " FROM vtiger_crmentity
                         INNER JOIN vtiger_contactdetails ON vtiger_contactdetails.contactid = vtiger_crmentity.crmid
                         INNER JOIN vtiger_invoice ON vtiger_invoice.contactid = vtiger_contactdetails.contactid
                         WHERE deleted=0 AND vtiger_invoice.invoiceid  = ?  AND label like ?";
 
-            $params = array($parentId, "%$searchValue%");
-            $returnQuery = $db->convert2Sql($query, $params);
-            return $returnQuery;
-        }
+			$params = array($parentId, "%$searchValue%");
+			$returnQuery = $db->convert2Sql($query, $params);
+			return $returnQuery;
+		}
 
-		return parent::getSearchRecordsQuery($searchValue,$searchFields,$parentId, $parentModule);
+		return parent::getSearchRecordsQuery($searchValue, $searchFields, $parentId, $parentModule);
 	}
 
 
@@ -273,7 +278,8 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 	 * @param Vtiger_Module_Model $relatedModule
 	 * @return <String>
 	 */
-	public function getRelationQuery($recordId, $functionName, $relatedModule, $relationId) {
+	public function getRelationQuery($recordId, $functionName, $relatedModule, $relationId)
+	{
 		if ($functionName === 'get_activities') {
 			$userNameSql = getSqlForNameInDisplayFormat(array('first_name' => 'vtiger_users.first_name', 'last_name' => 'vtiger_users.last_name'), 'Users');
 
@@ -288,7 +294,7 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 						LEFT JOIN vtiger_seactivityrel ON vtiger_seactivityrel.activityid = vtiger_activity.activityid
 						LEFT JOIN vtiger_users ON vtiger_users.id = vtiger_crmentity.smownerid
 						LEFT JOIN vtiger_groups ON vtiger_groups.groupid = vtiger_crmentity.smownerid
-							WHERE vtiger_cntactivityrel.contactid = ".$recordId." AND vtiger_crmentity.deleted = 0
+							WHERE vtiger_cntactivityrel.contactid = " . $recordId . " AND vtiger_crmentity.deleted = 0
 								AND vtiger_activity.activitytype <> 'Emails'";
 
 			$relatedModuleName = $relatedModule->getName();
@@ -297,11 +303,11 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 			if ($nonAdminQuery) {
 				$query = appendFromClauseToQuery($query, $nonAdminQuery);
 
-				if(trim($nonAdminQuery)) {
+				if (trim($nonAdminQuery)) {
 					$relModuleFocus = CRMEntity::getInstance($relatedModuleName);
 					$condition = $relModuleFocus->buildWhereClauseConditionForCalendar();
-					if($condition) {
-						$query .= ' AND '.$condition;
+					if ($condition) {
+						$query .= ' AND ' . $condition;
 					}
 				}
 			}
@@ -320,21 +326,40 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 	 * @param <String> $listQuery
 	 * @return <String> Listview Query
 	 */
-	public function getQueryByModuleField($sourceModule, $field, $record, $listQuery) {
-		if (in_array($sourceModule, array('Campaigns', 'Potentials', 'Vendors', 'Products', 'Services', 'Emails'))
-				|| ($sourceModule === 'Contacts' && $field === 'contact_id' && $record)) {
+	public function getQueryByModuleField($sourceModule, $field, $record, $listQuery)
+	{
+		if (
+			in_array($sourceModule, array('Campaigns', 'Potentials', 'Vendors', 'Products', 'Services', 'Emails'))
+			|| ($sourceModule === 'Contacts' && $field === 'contact_id' && $record)
+		) {
 			switch ($sourceModule) {
-				case 'Campaigns'	: $tableName = 'vtiger_campaigncontrel';	$fieldName = 'contactid';	$relatedFieldName ='campaignid';	break;
-				case 'Potentials'	: $tableName = 'vtiger_contpotentialrel';	$fieldName = 'contactid';	$relatedFieldName ='potentialid';	break;
-				case 'Vendors'		: $tableName = 'vtiger_vendorcontactrel';	$fieldName = 'contactid';	$relatedFieldName ='vendorid';		break;
-				case 'Products'		: $tableName = 'vtiger_seproductsrel';		$fieldName = 'crmid';		$relatedFieldName ='productid';		break;
+				case 'Campaigns':
+					$tableName = 'vtiger_campaigncontrel';
+					$fieldName = 'contactid';
+					$relatedFieldName = 'campaignid';
+					break;
+				case 'Potentials':
+					$tableName = 'vtiger_contpotentialrel';
+					$fieldName = 'contactid';
+					$relatedFieldName = 'potentialid';
+					break;
+				case 'Vendors':
+					$tableName = 'vtiger_vendorcontactrel';
+					$fieldName = 'contactid';
+					$relatedFieldName = 'vendorid';
+					break;
+				case 'Products':
+					$tableName = 'vtiger_seproductsrel';
+					$fieldName = 'crmid';
+					$relatedFieldName = 'productid';
+					break;
 			}
 
-            		$db = PearDatabase::getInstance();
-		    	$params = array($record);
+			$db = PearDatabase::getInstance();
+			$params = array($record);
 			if ($sourceModule === 'Services') {
 				$condition = " vtiger_contactdetails.contactid NOT IN (SELECT relcrmid FROM vtiger_crmentityrel WHERE crmid = ? UNION SELECT crmid FROM vtiger_crmentityrel WHERE relcrmid = ?) ";
-                		$params = array($record , $record);
+				$params = array($record, $record);
 			} elseif ($sourceModule === 'Emails') {
 				$condition = ' vtiger_contactdetails.emailoptout = 0';
 			} elseif ($sourceModule === 'Contacts' && $field === 'contact_id') {
@@ -342,21 +367,21 @@ class Contacts_Module_Model extends Vtiger_Module_Model {
 			} else {
 				$condition = " vtiger_contactdetails.contactid NOT IN (SELECT $fieldName FROM $tableName WHERE $relatedFieldName = ?)";
 			}
-            		$condition = $db->convert2Sql($condition, $params);
+			$condition = $db->convert2Sql($condition, $params);
 
 			$position = stripos($listQuery, 'where');
-			if($position) {
+			if ($position) {
 				$split = preg_split('/where/i', $listQuery);
 				$overRideQuery = $split[0] . ' WHERE ' . $split[1] . ' AND ' . $condition;
 			} else {
-				$overRideQuery = $listQuery. ' WHERE ' . $condition;
+				$overRideQuery = $listQuery . ' WHERE ' . $condition;
 			}
 			return $overRideQuery;
 		}
 	}
-    
-    public function getDefaultSearchField(){
-        return "lastname";
-    }
-    
+
+	public function getDefaultSearchField()
+	{
+		return "lastname";
+	}
 }

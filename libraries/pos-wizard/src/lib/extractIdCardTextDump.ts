@@ -2,7 +2,7 @@
 import { normalizeIdCardImage } from "./normalizeIdCardImage";
 import type { IdCardExtraction } from "../types/idCardCapture";
 import { loadPaddleOcrService } from "../services/loadPaddleOcrService";
-// import { generateLlmResponse } from "../services/llmService";
+import { generateLlmResponse } from "../services/llmService";
 
 // const VTIGER_AJAX_URL = "index.php";
 // const CONTACTS_MODULE = "Contacts";
@@ -73,20 +73,23 @@ import { loadPaddleOcrService } from "../services/loadPaddleOcrService";
 //   return payload.result;
 // };
 
-const toExtraction = (result: unknown): IdCardExtraction => {
-  const data = (result ?? {}) as Partial<IdCardExtraction>;
-
-  return {
-    firstName: data.firstName ?? null,
-    lastName: data.lastName ?? null,
-    fullName: data.fullName ?? null,
-    documentNumber: data.documentNumber ?? null,
-    dateOfBirth: data.dateOfBirth ?? null,
-    nationality: data.nationality ?? null,
-    expiryDate: data.expiryDate ?? null,
-    rawText: data.rawText ?? null,
-  };
-};
+const toExtraction = (
+  result: Partial<IdCardExtraction>,
+  rawText: string,
+): IdCardExtraction => ({
+  firstName: result.firstName ?? null,
+  lastName: result.lastName ?? null,
+  fullName: result.fullName ?? null,
+  documentNumber: result.documentNumber ?? null,
+  dateOfBirth: result.dateOfBirth ?? null,
+  nationality: result.nationality ?? null,
+  issueDate: result.issueDate ?? null,
+  expiryDate: result.expiryDate ?? null,
+  residentialAddress: result.residentialAddress ?? null,
+  documentType: result.documentType ?? null,
+  issuingCountry: result.issuingCountry ?? null,
+  rawText: result.rawText ?? rawText,
+});
 
 /**
  * Sends the normalized ID image to vTiger via index.php (Contacts/ExtractIdCardTextDump).
@@ -103,9 +106,9 @@ export const extractIdCardTextDump = async (
 
   console.log("[PaddleOCR]", ocrResult);
 
-  // const response = await generateLlmResponse(ocrResult.text);
+  const extraction = await generateLlmResponse(ocrResult.text);
 
-  // console.log("[LLM]", response);
+  console.log("[LLM]", extraction);
 
   // const formData = new FormData();
 
@@ -122,6 +125,5 @@ export const extractIdCardTextDump = async (
 
   // console.log("PHP response:", result);
 
-  // return toExtraction(result);
-  return toExtraction(null as unknown as IdCardExtraction);
+  return toExtraction(extraction, ocrResult.text);
 };

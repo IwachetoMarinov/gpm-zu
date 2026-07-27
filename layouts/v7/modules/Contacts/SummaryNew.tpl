@@ -210,12 +210,12 @@
                     {assign var="piWarningExcludes" value=['transaction_2', 'table_name_2', 'transaction_3', 'table_name_3', 'matched_amt', 'posting_date', 'currency']}
 
                     {include file='ERPWarningsButton.tpl'|vtemplate_path:'Contacts'
-                            ERP_WARNING_DATA=$OROSOFT_TRANSACTION
-                            ERP_WARNING_TITLE='Orosoft Transaction Warnings'
-                            ERP_WARNING_BUTTON_LABEL='Transaction Warnings'
-                            ERP_WARNING_CLASS='erp-fields-warning'
-                            ERP_WARNING_EXCLUDES=$piWarningExcludes
-                        }
+                                    ERP_WARNING_DATA=$OROSOFT_TRANSACTION
+                                    ERP_WARNING_TITLE='Orosoft Transaction Warnings'
+                                    ERP_WARNING_BUTTON_LABEL='Transaction Warnings'
+                                    ERP_WARNING_CLASS='erp-fields-warning'
+                                    ERP_WARNING_EXCLUDES=$piWarningExcludes
+                                }
                 </span>
 
                 <div id="erp-warning-modal-overlay" class="erp-warning-modal-overlay">
@@ -463,6 +463,12 @@
                                     <td>
                                         {if in_array($TX.voucher_type, ['SAL', 'SWD'])}
                                             {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
+                                                <a href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$TX.table_name}"
+                                                    target="_blank">
+                                                    <button type="button" class="btn btn-default module-buttons">
+                                                        <span class="fa fa-download"></span>&nbsp;PI
+                                                    </button>
+                                                </a>
                                             {else}
                                                 <a href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$TX.table_name}"
                                                     target="_blank">
@@ -471,7 +477,15 @@
                                                     </button>
                                                 </a>
                                             {/if}
+                                        {else if in_array($TX.voucher_type, ['PUR'])}
+                                            <a href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$TX.table_name}"
+                                                target="_blank">
+                                                <button type="button" class="btn btn-default module-buttons">
+                                                    <span class="fa fa-download"></span>&nbsp;PI
+                                                </button>
+                                            </a>
                                         {/if}
+
                                     </td>
 
                                     {* Collection Acknowlegement button *}

@@ -2,10 +2,14 @@ import { useId, useRef } from "react";
 
 import { IdCardImageReview } from "./IdCardImageReview";
 import { useCamera } from "../hooks/useCamera";
-import { useIdCardImageFlow } from "../hooks/useIdCardImageFlow";
+import type { IdCardImageFlow } from "../hooks/useIdCardImageFlow";
 import { mapOverlayToVideoCropRect } from "../lib/mapOverlayToVideoCropRect";
 
-export const IdCameraCapture = () => {
+type IdCameraCaptureProps = {
+  flow: IdCardImageFlow;
+};
+
+export const IdCameraCapture = ({ flow }: IdCameraCaptureProps) => {
   const {
     videoRef,
     isOpening,
@@ -36,7 +40,7 @@ export const IdCameraCapture = () => {
     submitImage,
     confirmAndExtract,
     setValidationErrors,
-  } = useIdCardImageFlow({ logPrefix: "[ID capture]" });
+  } = flow;
 
   const handleOpenCamera = async () => {
     reset();

@@ -27,6 +27,9 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
         $tableName = $request->get('tableName');
         $moduleName = $request->getModule();
         $recordModel = $this->record->getRecord();
+        $transactionType = explode('/', $docNo)[0];
+
+        if($transactionType == 'PUR') $tableName = 'DW_DocPO';
 
         $allBankAccounts = [];
 
@@ -43,6 +46,15 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
 
         $docType = "PI";
         $erpDoc = (object) $activity_data;
+
+        // Get transaction type based on fi
+
+        // echo "<pre>";
+        // print_r($transactionType);
+        // echo "<br>";
+        // print_r($erpDoc);
+        // echo "<br>";
+        // echo "</pre>";
 
         // Reorder Activitity Items for DN documents based on description if it is equal to "Monthly Storage Fee Invoice"
         foreach ($erpDoc->barItems as $key => $item) {
@@ -94,7 +106,7 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
         $viewer->assign('PAGES', $this->makeDataPage($erpDoc->barItems, $docType));
         $viewer->assign('transactionWarningExcludes', ContactsHelper::getPiTransactionWarningExcludes());
         $viewer->assign('barItemWarningExcludes', ContactsHelper::getPiBarItemWarningExcludes());
-        
+
         if ($request->get('PDFDownload')) {
             $html = $viewer->view("$docType.tpl", $moduleName, true);
             $this->downloadPDF($html, $request);

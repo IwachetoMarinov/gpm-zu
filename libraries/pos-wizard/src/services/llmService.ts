@@ -1,10 +1,12 @@
-// src/services/llmService.ts
+import type { IdCardExtraction } from "../types/idCardCapture";
 
 type GenerateResponse = {
-  result: string;
+  result: IdCardExtraction;
 };
 
-export const generateLlmResponse = async (prompt: string): Promise<string> => {
+export const generateLlmResponse = async (
+  prompt: string,
+): Promise<IdCardExtraction> => {
   const response = await fetch("http://127.0.0.1:3001/generate", {
     method: "POST",
     headers: {
@@ -21,5 +23,9 @@ export const generateLlmResponse = async (prompt: string): Promise<string> => {
     );
   }
 
-  return "result" in data ? data.result : "";
+  if (!("result" in data) || !data.result) {
+    throw new Error("The LLM service returned an empty extraction result.");
+  }
+
+  return data.result;
 };
