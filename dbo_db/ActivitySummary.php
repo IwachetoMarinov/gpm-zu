@@ -34,7 +34,7 @@ class ActivitySummary
         $where = "WHERE [Party_Code] = ?";
         $params[] = $customer_id;
 
-        $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxv2] $where order by [Tx_Date] DESC";
+        $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxV2] $where order by [Tx_Date] DESC";
 
         $summary = GetDBRows::getRows($this->connection, $sql, $params);
 
