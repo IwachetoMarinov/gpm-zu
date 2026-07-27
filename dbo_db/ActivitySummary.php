@@ -36,13 +36,7 @@ class ActivitySummary
 
         $sql = "SELECT * FROM $this->database_prefix.[DW_TxHxv2] $where order by [Tx_Date] DESC";
 
-        echo $sql;
-
         $summary = GetDBRows::getRows($this->connection, $sql, $params);
-
-        echo "<pre>";
-        print_r($summary);
-        echo "</pre>";
 
         if (!is_array($summary) || count($summary) === 0) return [];
 
