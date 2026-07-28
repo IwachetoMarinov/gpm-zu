@@ -346,7 +346,7 @@
 
                                 <tr class="listViewEntries1">
                                     <!-- Document number new hyperlink for different type of transaction -->
-                                    <pre>{var_dump($TX.voucher_type)}</pre>
+                                    {* <pre>{var_dump($TX.voucher_type)}</pre> *}
                                     <td style="width: 140px; text-align: center; vertical-align: middle;">
                                         {if in_array($TX.voucher_type, ['PUR', 'PWD'])}
                                             {assign var="purchase_order_table_name" value="{$TX.table_name_3}"}
