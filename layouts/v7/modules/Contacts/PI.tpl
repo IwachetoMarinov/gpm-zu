@@ -51,10 +51,13 @@
     {assign var="end" value=1}
     {assign var="calcTotal" value=0}
     {assign var="SUB_TOTAL" value=0}
+    {assign var="ORDER_TITLE" value="Purchase & Delivery"}
     {assign var="PURCHASE_TITLE" value="YOUR PURCHASE"}
     {if $TRANSACTION_TYPE == 'PUR' || $TRANSACTION_TYPE == 'PO'}
         {assign var="PURCHASE_TITLE" value="YOUR SALE"}
+        {assign var="ORDER_TITLE" value="Sale & Delivery"}
     {/if}
+
     {for $page=1 to $PAGES}
         {if $page eq 1}
             {assign var="end" value=6}
@@ -111,7 +114,7 @@
                                 <tr>
                                     <td colspan="2" style="text-align:center">{$smarty.request.docNo}</td>
                                     <td style="text-align:center">{$ERP_DOCUMENT->documentDate}</td>
-                                    <td style="text-align:center">Purchase & Delivery</td>
+                                    <td style="text-align:center">{$ORDER_TITLE}</td>
                                 </tr>
                             </table>
                             <table class="activity-tbl">
