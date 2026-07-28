@@ -471,8 +471,13 @@
                                                     </button>
                                                 </a>
                                             {/if}
-                                        {else if in_array($TX.voucher_type, ['PUR'])}
-                                            <a href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$TX.table_name}"
+                                        {else if in_array($TX.voucher_type, ['PUR', 'PWD'])}
+                                            {assign var="sale_order_table_name" value="{$TX.table_name}"}
+                                            {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
+                                                {assign var="sae_order_table_name" value="{$TX.table_name_3}"}
+                                            {/if}
+
+                                            <a href="index.php?module=Contacts&view=ProformaInvoiceView&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$sale_order_table_name}"
                                                 target="_blank">
                                                 <button type="button" class="btn btn-default module-buttons">
                                                     <span class="fa fa-download"></span>&nbsp;PI
