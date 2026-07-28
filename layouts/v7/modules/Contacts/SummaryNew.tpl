@@ -427,7 +427,7 @@
                                             {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
                                                 {assign var="purchase_order_inv_table_name" value="{$TX.table_name_3}"}
                                             {/if}
-                                            <a href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$TX.table_name}&docType={$purchase_order_inv_table_name}"
+                                            <a href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$purchase_order_inv_table_name}&docType={$TX.voucher_type}"
                                                 target="_blank">
                                                 <button type="button" class="btn btn-default module-buttons">
                                                     <span class="fa fa-download"></span>&nbsp;INV
