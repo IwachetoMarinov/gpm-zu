@@ -53,7 +53,7 @@
     {assign var="SUB_TOTAL" value=0}
     {assign var="ORDER_TITLE" value="Purchase & Delivery"}
     {assign var="PURCHASE_TITLE" value="YOUR PURCHASE"}
-    {if $TRANSACTION_TYPE == 'PUR' || $TRANSACTION_TYPE == 'PO'}
+    {if $TRANSACTION_TYPE == 'PUR' || $TRANSACTION_TYPE == 'PO'|| $TRANSACTION_TYPE == 'PWD'}
         {assign var="PURCHASE_TITLE" value="YOUR SALE"}
         {assign var="ORDER_TITLE" value="Sale & Delivery"}
     {/if}
@@ -90,7 +90,7 @@
                     </tr>
 
                     {if isset($COMPANY) && !empty($COMPANY->get('vat_id')
-                    ) && $TRANSACTION_TYPE != 'PUR' && $TRANSACTION_TYPE != 'PO'}
+                    ) && $TRANSACTION_TYPE != 'PUR' && $TRANSACTION_TYPE != 'PO' && $TRANSACTION_TYPE != 'PWD'}
                         <tr>
                             <td style="text-align: left;font-size: 10pt; font-weight: bold;">
                                 VAT Nr: {$COMPANY->get('vat_id')}
