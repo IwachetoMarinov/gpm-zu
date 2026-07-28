@@ -29,7 +29,10 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
         $recordModel = $this->record->getRecord();
         $transactionType = explode('/', $docNo)[0];
 
-        if($transactionType == 'PUR') $tableName = 'DW_DocPO';
+        // if($transactionType == 'PUR') $tableName = 'DW_DocPO';
+        // echo "<pre>";
+        // print_r($tableName);
+        // echo "</pre>";
 
         $allBankAccounts = [];
 
