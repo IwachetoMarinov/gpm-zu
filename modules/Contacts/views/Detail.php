@@ -93,11 +93,6 @@ class Contacts_Detail_View extends Accounts_Detail_View
 		$holdings = new dbo_db\HoldingsDB();
 		$holdings_data = $holdings->getHoldings($clientID);
 
-		// echo "Holdings data: " . "\n";
-		// echo "<pre>";
-		// print_r($holdings_data);
-		// echo "</pre>";
-
 		$wallets = $holdings->getWalletBalances($clientID);
 
 		$certificate_id = $this->getCertificateId($recordId);
@@ -175,9 +170,9 @@ class Contacts_Detail_View extends Accounts_Detail_View
 			});
 		}
 
-		// echo "<pre>";
-		// print_r($activity_data);
-		// echo "</pre>";
+		echo "<pre>";
+		print_r($activity_data);
+		echo "</pre>";
 
 		// Assign safely to TPL
 		$viewer->assign('CLIENT_CURRENCY', $currency_list);
