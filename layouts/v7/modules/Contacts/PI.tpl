@@ -52,7 +52,7 @@
     {assign var="calcTotal" value=0}
     {assign var="SUB_TOTAL" value=0}
     {assign var="PURCHASE_TITLE" value="YOUR PURCHASE"}
-    {if $TRANSACTION_TYPE == 'PUR'}
+    {if $TRANSACTION_TYPE == 'PUR' || $TRANSACTION_TYPE == 'PO'}
         {assign var="PURCHASE_TITLE" value="YOUR SALE"}
     {/if}
     {for $page=1 to $PAGES}
@@ -87,7 +87,7 @@
                     </tr>
 
                     {if isset($COMPANY) && !empty($COMPANY->get('vat_id')
-                    ) && $TRANSACTION_TYPE != 'PUR'}
+                    ) && $TRANSACTION_TYPE != 'PUR' && $TRANSACTION_TYPE != 'PO'}
                         <tr>
                             <td style="text-align: left;font-size: 10pt; font-weight: bold;">
                                 VAT Nr: {$COMPANY->get('vat_id')}
