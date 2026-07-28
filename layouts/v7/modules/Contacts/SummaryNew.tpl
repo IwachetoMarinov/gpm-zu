@@ -349,10 +349,10 @@
                                     {* <pre>{var_dump($TX.voucher_type)}</pre> *}
                                     <td style="width: 140px; text-align: center; vertical-align: middle;">
                                         {if in_array($TX.voucher_type, ['PUR', 'PWD'])}
-                                            {assign var="purchase_order_table_name" value="{$TX.table_name}"}
-                                            {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
+                                            {assign var="purchase_order_table_name" value="{$TX.table_name_3}"}
+                                            {* {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
                                                 {assign var="purchase_order_table_name" value="{$TX.table_name_3}"}
-                                            {/if}
+                                            {/if} *}
                                             <a class="transaction-link"
                                                 href="index.php?module=Contacts&view=TCPrintPreview&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$purchase_order_table_name}"
                                                 target="_blank">
