@@ -95,6 +95,7 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
 
         $viewer = $this->getViewer($request);
         $viewer->assign('RECORD_MODEL', $recordModel);
+        $viewer->assign('TRANSACTION_TYPE', $transactionType);
         $viewer->assign('ALL_BANK_ACCOUNTS', $allBankAccounts);
         $viewer->assign('SELECTED_BANK', $selectedBank ?? null);
         $viewer->assign('ERP_DOCUMENT', $erpDoc);

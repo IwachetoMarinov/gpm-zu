@@ -51,6 +51,10 @@
     {assign var="end" value=1}
     {assign var="calcTotal" value=0}
     {assign var="SUB_TOTAL" value=0}
+    {assign var="PURCHASE_TITLE" value="YOUR PURCHASE"}
+    {if $TRANSACTION_TYPE == 'PUR'}
+        {assign var="PURCHASE_TITLE" value="YOUR SALE"}
+    {/if}
     {for $page=1 to $PAGES}
         {if $page eq 1}
             {assign var="end" value=6}
@@ -78,11 +82,12 @@
                     </tr>
                     <tr>
                         <td style="height: 10mm; text-decoration: underline;text-align: center">
-                            <strong>{if $wkinInvoice eq '1' || $wkinInvoice eq 1}YOUR PURCHASE{else}PROFORMA INVOICE{/if}</strong>
+                            <strong>{if $wkinInvoice eq '1' || $wkinInvoice eq 1}{$PURCHASE_TITLE}{else}PROFORMA INVOICE{/if}</strong>
                         </td>
                     </tr>
 
-                    {if isset($COMPANY) && !empty($COMPANY->get('vat_id'))}
+                    {if isset($COMPANY) && !empty($COMPANY->get('vat_id')
+                    ) && $TRANSACTION_TYPE != 'PUR'}
                         <tr>
                             <td style="text-align: left;font-size: 10pt; font-weight: bold;">
                                 VAT Nr: {$COMPANY->get('vat_id')}
