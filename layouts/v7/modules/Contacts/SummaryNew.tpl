@@ -210,12 +210,12 @@
                     {assign var="piWarningExcludes" value=['transaction_2', 'table_name_2', 'transaction_3', 'table_name_3', 'matched_amt', 'posting_date', 'currency']}
 
                     {include file='ERPWarningsButton.tpl'|vtemplate_path:'Contacts'
-                                            ERP_WARNING_DATA=$OROSOFT_TRANSACTION
-                                            ERP_WARNING_TITLE='Orosoft Transaction Warnings'
-                                            ERP_WARNING_BUTTON_LABEL='Transaction Warnings'
-                                            ERP_WARNING_CLASS='erp-fields-warning'
-                                            ERP_WARNING_EXCLUDES=$piWarningExcludes
-                                        }
+                                                ERP_WARNING_DATA=$OROSOFT_TRANSACTION
+                                                ERP_WARNING_TITLE='Orosoft Transaction Warnings'
+                                                ERP_WARNING_BUTTON_LABEL='Transaction Warnings'
+                                                ERP_WARNING_CLASS='erp-fields-warning'
+                                                ERP_WARNING_EXCLUDES=$piWarningExcludes
+                                            }
                 </span>
 
                 <div id="erp-warning-modal-overlay" class="erp-warning-modal-overlay">
@@ -429,16 +429,19 @@
                                     <!-- INV button (only for Sales/Purchase Invoice) -->
                                     <td>
                                         {if in_array($TX.voucher_type, ['PUR', 'PWD'])}
-                                            {assign var="purchase_order_inv_table_name" value="{$TX.table_name}"}
                                             {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
-                                                {assign var="purchase_order_inv_table_name" value="{$TX.table_name_3}"}
+                                                {assign var="purchase_order_inv_table_name" value="{$TX.table_name}"}
+                                                {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
+                                                    {assign var="purchase_order_inv_table_name" value="{$TX.table_name_3}"}
+                                                {/if}
+                                                <a href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$purchase_order_inv_table_name}&docType={$TX.voucher_type}"
+                                                    target="_blank">
+                                                    <button type="button" class="btn btn-default module-buttons">
+                                                        <span class="fa fa-download"></span>&nbsp;INV
+                                                    </button>
+                                                </a>
                                             {/if}
-                                            <a href="index.php?module=Contacts&view=DocumentPrintPreview&record={$RECORD->getId()}&docNo={$TX.voucher_no}&recordType={$TX.doctype}&tableName={$purchase_order_inv_table_name}&docType={$TX.voucher_type}"
-                                                target="_blank">
-                                                <button type="button" class="btn btn-default module-buttons">
-                                                    <span class="fa fa-download"></span>&nbsp;INV
-                                                </button>
-                                            </a>
+
 
                                         {else if in_array($TX.voucher_type, ['SWD'])}
                                             {if isset($TX.transaction_3) && $TX.transaction_3 neq ''}
