@@ -327,6 +327,10 @@ class ActivitySummary
 
         $sql = "SELECT * FROM $this->database_prefix.[$table_name] $where";
         $summary = GetDBRows::getRows($this->connection, $sql, $params);
+        echo "<pre>";
+        echo "Summary: ";
+        print_r($summary);
+        echo "</pre>";
 
         if (count($summary) === 0) return [];
 
