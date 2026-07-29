@@ -242,26 +242,13 @@ class ActivitySummary
         try {
             $transaction = $this->getProformaInvoiceTransaction($doc_no, $table_name);
 
-            // echo "<pre>";
-            // echo "Transaction: ";
-            // print_r($transaction);
-            // echo "</pre>";
-
-
             $where = "WHERE [Tx_No] = ?";
             $params[] = $doc_no;
 
             $sql = "
                 SELECT * FROM $this->database_prefix.[$table_name] $where";
 
-            // echo $sql;
-
             $summary = GetDBRows::getRows($this->connection, $sql, $params);
-
-            // echo "<pre>";
-            // echo "Summary: ";
-            // print_r($summary);
-            // echo "</pre>";
 
             $items = $this->mapTransactionItems($summary, $transaction);
 
@@ -327,10 +314,10 @@ class ActivitySummary
 
         $sql = "SELECT * FROM $this->database_prefix.[$table_name] $where";
         $summary = GetDBRows::getRows($this->connection, $sql, $params);
-        echo "<pre>";
-        echo "Summary: ";
-        print_r($summary);
-        echo "</pre>";
+        // echo "<pre>";
+        // echo "Summary: ";
+        // print_r($summary);
+        // echo "</pre>";
 
         if (count($summary) === 0) return [];
 
