@@ -50,15 +50,6 @@ class Contacts_ProformaInvoiceView_View extends Vtiger_Index_View
         $docType = "PI";
         $erpDoc = (object) $activity_data;
 
-        // Get transaction type based on fi
-
-        // echo "<pre>";
-        // print_r($transactionType);
-        // echo "<br>";
-        // print_r($erpDoc);
-        // echo "<br>";
-        // echo "</pre>";
-
         // Reorder Activitity Items for DN documents based on description if it is equal to "Monthly Storage Fee Invoice"
         foreach ($erpDoc->barItems as $key => $item) {
             $item = (object) $item;
